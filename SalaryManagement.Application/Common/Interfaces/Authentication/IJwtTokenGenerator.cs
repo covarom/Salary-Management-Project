@@ -1,7 +1,9 @@
-﻿namespace SalaryManagement.Application.Common.Interfaces.Authentication
+﻿using SalaryManagement.Domain.Entities;
+
+namespace SalaryManagement.Application.Common.Interfaces.Authentication
 {
     public interface IJwtTokenGenerator
     {
-        string GenerateToken(Guid userId, string firstName, string lastName);
+        string GenerateToken(User user);
     }
 }

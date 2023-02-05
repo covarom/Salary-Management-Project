@@ -20,10 +20,10 @@ namespace SalaryManagement.Api.Controllers
         {
             var authResult = _authenticationServices.Register(request.FirstName, request.Lastname, request.Email, request.Password);
             var response = new AuthenticationResponse(
-                   authResult.Id,
-                   authResult.FirstName,
-                   authResult.LastName,
-                   authResult.Email,
+                   authResult.User.Id,
+                   authResult.User.FirstName,
+                   authResult.User.LastName,
+                   authResult.User.Email,
                    authResult.Token
                 );
             return Ok(response);
@@ -34,10 +34,10 @@ namespace SalaryManagement.Api.Controllers
         {
             var authResult = _authenticationServices.Login(request.Email, request.Password);
             var response = new AuthenticationResponse(
-                   authResult.Id,
-                   authResult.FirstName,
-                   authResult.LastName,
-                   authResult.Email,
+                   authResult.User.Id,
+                   authResult.User.FirstName,
+                   authResult.User.LastName,
+                   authResult.User.Email,
                    authResult.Token
                 );
             return Ok(response);
