@@ -3,7 +3,11 @@ using SalaryManagement.Api;
 using SalaryManagement.Application;
 using SalaryManagement.Insfrastructure;
 
-var builder = WebApplication.CreateBuilder(args);
+var builder = WebApplication.CreateBuilder(new WebApplicationOptions()
+{
+    //Setting the status of deployment
+    EnvironmentName = Microsoft.Extensions.Hosting.EnvironmentName.Development
+});
 
 // Add services to the container.
 
