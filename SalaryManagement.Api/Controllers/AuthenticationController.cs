@@ -1,5 +1,4 @@
 ﻿using MapsterMapper;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using SalaryManagement.Application.Services.Authentication;
 using SalaryManagement.Contracts.Authentication;
