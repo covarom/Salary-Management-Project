@@ -3,6 +3,8 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using SalaryManagement.Application.Services.Authentication;
 using SalaryManagement.Contracts.Authentication;
+using SalaryManagement.Contracts.Response;
+using System.Net;
 
 namespace SalaryManagement.Api.Controllers
 {
@@ -25,7 +27,10 @@ namespace SalaryManagement.Api.Controllers
 
             var authResult = _authenticationServices.Register(request.FirstName, request.Lastname, request.Email, request.Password);
             AuthenticationResponse response = _mapper.Map<AuthenticationResponse>(authResult); //MapResponse(authResult);
-            return Ok(response);
+
+            var testResponse = new Response<object>(response, (int)HttpStatusCode.OK, "register success");
+            
+            return Ok(testResponse);
         }
 
         [HttpPost("login")]
@@ -35,18 +40,10 @@ namespace SalaryManagement.Api.Controllers
 
             var authResult = _authenticationServices.Login(request.Email, request.Password);
             AuthenticationResponse response = _mapper.Map<AuthenticationResponse>(authResult);
-            return Ok(response);
+
+            var testResponse = new Response<object>(response, (int)HttpStatusCode.OK, "No message");
+            return Ok(testResponse);
         }
 
-       /* private static AuthenticationResponse MapResponse(AuthenticationResult authResult)
-        {
-            return new AuthenticationResponse(
-                   authResult.User.Id,
-                   authResult.User.FirstName,
-                   authResult.User.LastName,
-                   authResult.User.Email,
-                   authResult.Token
-                );
-        }*/
     }
 }
