@@ -1,4 +1,5 @@
-﻿using SalaryManagement.Application.Common.Interfaces.Authentication;
+﻿using SalaryManagement.Application.Common.Errors;
+using SalaryManagement.Application.Common.Interfaces.Authentication;
 using SalaryManagement.Application.Common.Interfaces.Persistence;
 using SalaryManagement.Domain.Entities;
 
@@ -20,7 +21,7 @@ namespace SalaryManagement.Application.Services.Authentication
             // Validate if the user exists
             if (_userRepository.GetUserByEmail(email) is not User user)
             {
-                throw new Exception("User is not exist!");
+                throw new Exception("An error has occur, please contact your admin!");
             }
 
             // Validate if the password is correct
@@ -41,7 +42,7 @@ namespace SalaryManagement.Application.Services.Authentication
             //Check if the user is already exists
             if (_userRepository.GetUserByEmail(email) is not null)
             {
-                throw new Exception("User is already exist!");
+                throw new DuplicateEmailException();
             }
 
             //Create new user and store to DB

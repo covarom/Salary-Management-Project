@@ -9,7 +9,7 @@ namespace SalaryManagement.Contracts.Authentication
     public record AuthenticationResponse(
          Guid Id,
          string FirstName,
-         string Lastname,
+         string LastName,
          string Email,
-         string token);
+         string Token);
 }

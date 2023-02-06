@@ -3,7 +3,7 @@ using System.Net;
 using System.Text.Json;
 using Microsoft.AspNetCore.Http;
 
-namespace SalaryManagement.Api.Middleware
+namespace SalaryManagement.Api.Common.Middleware
 {
     public class ErrorHandlingMiddleware
     {
