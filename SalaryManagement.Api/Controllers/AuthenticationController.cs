@@ -43,6 +43,15 @@ namespace SalaryManagement.Api.Controllers
             var testResponse = new Response<object>(response, (int)HttpStatusCode.OK, "No message");
             return Ok(testResponse);
         }
+        
+        [HttpGet("test")]
+        public async Task<IActionResult> Test(TestRequest request)
+        {
+            await Task.CompletedTask;
+            var response = {'message':'Call thanh con api tu backend !!!!!!'};
 
+            var testResponse = new Response<object>(response, (int)HttpStatusCode.OK, "Have a message !");
+            return Ok(testResponse);
+        }
     }
 }
