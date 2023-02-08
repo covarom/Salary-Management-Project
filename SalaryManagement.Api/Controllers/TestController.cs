@@ -1,18 +1,25 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using SalaryManagement.Application.Services.UserServices;
 using SalaryManagement.Contracts.Response;
-using SalaryManagement.Domain.Entities;
 using System.Net;
 
 namespace SalaryManagement.Api.Controllers
 {
-    [Route("api/v1/test")]
+    [Route("api/v1")]
     [ApiController]
     [Authorize(AuthenticationSchemes = "Bearer")]
     public class TestController : ControllerBase
     {
-        [HttpGet]
-        public IActionResult Test()
+        private readonly IUserService _userService;
+
+        public TestController(IUserService userService)
+        {
+            _userService = userService;
+        }
+
+        [HttpGet("get-users")]
+        public IActionResult GetUsers()
         {
             var statusCode = HttpStatusCode.OK;
             var response = new Response<object>
@@ -22,7 +29,7 @@ namespace SalaryManagement.Api.Controllers
 
             try
             {
-                List<User> users = new List<User>();
+               /* List<User> users = new List<User>();
 
                 users.Add(new User
                 {
@@ -36,7 +43,9 @@ namespace SalaryManagement.Api.Controllers
                     FirstName = "Nguyen",
                     LastName = "Doan",
                     Email = "DoanNH@fpt.edu.vn"
-                });
+                });*/
+
+                var users = _userService.GetUsers();
 
                 response.Data = users;
             }

@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Configuration;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
+using SalaryManagement.Domain.Entities;
 
 namespace SalaryManagement.Infrastructure.Models;
 
@@ -19,8 +20,10 @@ public partial class SalaryManagementContext : DbContext
     {
     }
 
-   /* protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
-        => optionsBuilder.UseMySQL(_configuration.GetConnectionString("SalaryManagementDBContext"));*/
+    public DbSet<User> Users { get; set; }
+
+    /* protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
+         => optionsBuilder.UseMySQL(_configuration.GetConnectionString("SalaryManagementDBContext"));*/
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
