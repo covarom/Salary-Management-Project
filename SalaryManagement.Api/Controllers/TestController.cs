@@ -1,7 +1,9 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using SalaryManagement.Application.Common.Interfaces.Persistence;
 using SalaryManagement.Application.Services.UserServices;
 using SalaryManagement.Contracts.Response;
+using SalaryManagement.Infrastructure.Persistence.Repositories;
 using System.Net;
 
 namespace SalaryManagement.Api.Controllers
@@ -11,14 +13,14 @@ namespace SalaryManagement.Api.Controllers
     [Authorize(AuthenticationSchemes = "Bearer")]
     public class TestController : ControllerBase
     {
-        private readonly IUserService _userService;
+        private readonly IAdminRepository _adminRepository;
 
-        public TestController(IUserService userService)
+        public TestController(IAdminRepository adminRepository)
         {
-            _userService = userService;
+            _adminRepository = adminRepository;
         }
 
-        [HttpGet("get-users")]
+        [HttpGet("get-admins")]
         public IActionResult GetUsers()
         {
             var statusCode = HttpStatusCode.OK;
@@ -45,9 +47,9 @@ namespace SalaryManagement.Api.Controllers
                     Email = "DoanNH@fpt.edu.vn"
                 });*/
 
-                var users = _userService.GetUsers();
+                var admins = _adminRepository.GetAll();
 
-                response.Data = users;
+                response.Data = admins;
             }
             catch
             {
@@ -58,8 +60,6 @@ namespace SalaryManagement.Api.Controllers
             response.StatusCode = (int)statusCode;
 
             return Ok(response);
-
-            //return Ok("adssa");
         } 
     }
 }

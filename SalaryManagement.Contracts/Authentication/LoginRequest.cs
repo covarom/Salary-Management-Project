@@ -7,6 +7,6 @@ using System.Threading.Tasks;
 namespace SalaryManagement.Contracts.Authentication
 {
     public record LoginRequest(
-         string Email,
+         string Username,
          string Password);
 }

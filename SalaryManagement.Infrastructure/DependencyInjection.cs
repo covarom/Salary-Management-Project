@@ -8,11 +8,10 @@ using SalaryManagement.Application.Common.Interfaces.Authentication;
 using SalaryManagement.Application.Common.Interfaces.Persistence;
 using SalaryManagement.Application.Common.Interfaces.Services;
 using SalaryManagement.Infrastructure.Authentication;
-using SalaryManagement.Infrastructure.Models;
+using SalaryManagement.Infrastructure.Persistence;
 using SalaryManagement.Infrastructure.Persistence.Repositories;
 using SalaryManagement.Infrastructure.Services;
 using System.Text;
-
 namespace SalaryManagement.Insfrastructure
 {
     public static class DependencyInjection
@@ -28,13 +27,14 @@ namespace SalaryManagement.Insfrastructure
             return services;
         }
 
-        public static IServiceCollection AddDBContext(this IServiceCollection services,
-        ConfigurationManager configuration)
+        public static IServiceCollection AddDBContext(this IServiceCollection services, ConfigurationManager configuration)
         {
-            services.AddDbContext<SalaryManagementContext>(options =>
-        options.UseMySQL(configuration.GetConnectionString("SalaryManagementDBContext")));
-            services.AddScoped<IUserRepository, UserRepository>();
 
+           services.AddDbContext<SalaryManagementContext>(options =>
+        options.UseMySQL(configuration.GetConnectionString("SalaryManagementDBContext")));
+           // services.AddScoped<IUserRepository, UserRepository>();
+
+            services.AddScoped<IAdminRepository, AdminRepository>();
             return services;
         }
 

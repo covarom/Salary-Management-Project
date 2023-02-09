@@ -1,14 +1,13 @@
 ﻿using SalaryManagement.Application.Common.Interfaces.Persistence;
 using SalaryManagement.Domain.Entities;
-using SalaryManagement.Infrastructure.Models;
 
 namespace SalaryManagement.Infrastructure.Persistence.Repositories
 {
     public class UserRepository : IUserRepository
     {
-        private readonly SalaryManagementContext _context;
+        // private readonly SalaryManagementContext _context;
 
-        public UserRepository(SalaryManagementContext context)
+        /*public UserRepository(SalaryManagementContext context)
         {
             _context = context;
         }
@@ -36,6 +35,20 @@ namespace SalaryManagement.Infrastructure.Persistence.Repositories
         public User? GetUserByEmail(string email)
         {
             return _context.Users.FirstOrDefault(x => x.Email == email);
+        }*/
+        public bool Add(User user)
+        {
+            throw new NotImplementedException();
+        }
+
+        public IEnumerable<User> GetAll()
+        {
+            throw new NotImplementedException();
+        }
+
+        public User? GetUserByEmail(string email)
+        {
+            throw new NotImplementedException();
         }
     }
 }

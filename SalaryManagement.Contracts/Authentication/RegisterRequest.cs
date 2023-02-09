@@ -7,9 +7,9 @@ using System.Threading.Tasks;
 namespace SalaryManagement.Contracts.Authentication
 {
     public record RegisterRequest(
-    string FirstName,
-    string Lastname,
-    string Email,
-    string Password);
+    string Username,
+    string Password,
+    string Name,
+    string PhoneNumber);
        
 }

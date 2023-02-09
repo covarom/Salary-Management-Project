@@ -3,7 +3,7 @@
 namespace SalaryManagement.Application.Services.Authentication
 {
     public record AuthenticationResult(
-        User User,
+        Admin Admin,
         string Token
         );
 }

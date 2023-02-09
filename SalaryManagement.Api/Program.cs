@@ -1,7 +1,9 @@
+using Microsoft.EntityFrameworkCore;
 using Microsoft.OpenApi.Models;
 using SalaryManagement.Api;
 using SalaryManagement.Application;
 using SalaryManagement.Insfrastructure;
+using System.Configuration;
 
 var builder = WebApplication.CreateBuilder(new WebApplicationOptions()
 {
@@ -10,7 +12,6 @@ var builder = WebApplication.CreateBuilder(new WebApplicationOptions()
 });
 
 // Add services to the container.
-
 builder.Services
     .AddPresentation()
     .AddApplication()
