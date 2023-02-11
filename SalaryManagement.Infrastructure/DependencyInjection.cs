@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Options;
@@ -8,9 +9,9 @@ using SalaryManagement.Application.Common.Interfaces.Persistence;
 using SalaryManagement.Application.Common.Interfaces.Services;
 using SalaryManagement.Infrastructure.Authentication;
 using SalaryManagement.Infrastructure.Persistence;
+using SalaryManagement.Infrastructure.Persistence.Repositories;
 using SalaryManagement.Infrastructure.Services;
 using System.Text;
-
 namespace SalaryManagement.Insfrastructure
 {
     public static class DependencyInjection
@@ -22,11 +23,22 @@ namespace SalaryManagement.Insfrastructure
             //  services.AddSingleton<IJwtTokenGenerator, JwtTokenGenerator>();
             services.AddAuth(configuration);
             services.AddSingleton<IDateTimeProvider, DateTimeProvider>();
-            services.AddScoped<IUserRepository, UserRepository>();
+            services.AddDBContext(configuration);
             return services;
         }
 
-        public static IServiceCollection AddAuth(this IServiceCollection services,
+        public static IServiceCollection AddDBContext(this IServiceCollection services, ConfigurationManager configuration)
+        {
+
+           services.AddDbContext<SalaryManagementContext>(options =>
+        options.UseMySQL(configuration.GetConnectionString("SalaryManagementDBContext")));
+           // services.AddScoped<IUserRepository, UserRepository>();
+
+            services.AddScoped<IAdminRepository, AdminRepository>();
+            return services;
+        }
+
+            public static IServiceCollection AddAuth(this IServiceCollection services,
           ConfigurationManager configuration)
         {
             var jwtSettings = new JwtSettings();

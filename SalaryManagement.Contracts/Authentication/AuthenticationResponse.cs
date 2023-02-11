@@ -7,9 +7,9 @@ using System.Threading.Tasks;
 namespace SalaryManagement.Contracts.Authentication
 {
     public record AuthenticationResponse(
-         Guid Id,
-         string FirstName,
-         string LastName,
-         string Email,
+         string Id,
+         string Name,
+         string PhoneNumber,
+         string UserName,
          string Token);
 }

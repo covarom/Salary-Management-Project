@@ -7,5 +7,7 @@ namespace SalaryManagement.Application.Common.Interfaces.Persistence
         User? GetUserByEmail(string email);
 
         bool Add(User user);
+
+        IEnumerable<User> GetAll();
     }
 }

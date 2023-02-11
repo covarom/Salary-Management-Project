@@ -2,72 +2,70 @@
 using SalaryManagement.Application.Common.Interfaces.Authentication;
 using SalaryManagement.Application.Common.Interfaces.Persistence;
 using SalaryManagement.Domain.Entities;
+using System.Net;
 
 namespace SalaryManagement.Application.Services.Authentication
 {
     public class AuthenticationServices : IAuthenticationServices
     {
         private readonly IJwtTokenGenerator _jwtTokenGenerator;
-        private readonly IUserRepository _userRepository;
+        private readonly IAdminRepository _adminRepository;
 
-        public AuthenticationServices(IJwtTokenGenerator jwtTokenGenerator, IUserRepository userRepository)
+        public AuthenticationServices(IJwtTokenGenerator jwtTokenGenerator, IAdminRepository adminRepository)
         {
             _jwtTokenGenerator = jwtTokenGenerator;
-            _userRepository = userRepository;
+            _adminRepository = adminRepository;
         }
 
-        public AuthenticationResult Login(string email, string password)
+        public AuthenticationResult Login(string username, string password)
         {
             // Validate if the user exists
-            if (_userRepository.GetUserByEmail(email) is not User user)
-            {
-                throw new Exception("An error has occur, please contact your admin!");
-            }
-
-            // Validate if the password is correct
-            if (password != user.Password) {
-                throw new Exception("Invalid password");
+            if (_adminRepository.GetAdminByUsernameAndPassword(username,password) is not Admin admin)
+            {               
+                throw new Exception("An error has occur, please contact your admin!");            
             }
 
             // Create token
-            var token = _jwtTokenGenerator.GenerateToken(user);
+            var token = _jwtTokenGenerator.GenerateToken(admin);
 
             return new AuthenticationResult(
-                user,
-                token);
+                     admin,
+                     token);
         }
 
-        public AuthenticationResult Register(string firstName, string lastName, string email, string password)
+        public AuthenticationResult Register(string name, string phoneNumer, string username, string password)
         {
             //Check if the user is already exists
-            if (_userRepository.GetUserByEmail(email) is not null)
+            if (_adminRepository.GetAdminByUsername(username) is not null)
             {
-                throw new DuplicateEmailException();
+                throw new Exception("Username has already exist!");
             }
 
             //Create new user and store to DB
-            Guid userId = Guid.NewGuid();
-            var user = new User
+            string adminId = Guid.NewGuid().ToString();
+            var admin = new Admin
             {
-                Id= userId,
-                FirstName = firstName,
-                LastName = lastName,
-                Email = email,
+                AdminId= adminId,
+                Name = name,
+                PhoneNumber = phoneNumer,
+                Username = username,
                 Password = password
             };
-            bool success =  _userRepository.Add(user);
+            bool success =  _adminRepository.AddAdmin(admin);
 
             if (!success)
             {
                 throw new Exception("An error has occur, please contact your admin!");
+                //throw new Exception("An error has occur, please contact your admin!");
             }
 
             //Create JWT token
-            var token = _jwtTokenGenerator.GenerateToken(user);
+            var token = _jwtTokenGenerator.GenerateToken(admin);
 
             return new AuthenticationResult(
-             user,
-             token);
+                     admin,
+                     token                  
+                     );        
         }
     }
 }

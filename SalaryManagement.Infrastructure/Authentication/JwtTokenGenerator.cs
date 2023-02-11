@@ -20,6 +20,7 @@ namespace SalaryManagement.Infrastructure.Authentication
             _jwtSettings = jwtOptions.Value;
         }
 
+        //For just testing purpose
         public string GenerateToken(User user)
         {
             var signingCredentials = new SigningCredentials(
@@ -38,6 +39,29 @@ namespace SalaryManagement.Infrastructure.Authentication
                 issuer: _jwtSettings.Issuer,
                 audience: _jwtSettings.Audience,
                 expires:_dateTimeProvider.UtcNow.AddMinutes(_jwtSettings.ExpiredMinute),
+                claims: claims,
+                signingCredentials: signingCredentials);
+
+            return new JwtSecurityTokenHandler().WriteToken(securityToken);
+        }
+
+        public string GenerateToken(Admin admin)
+        {
+            var signingCredentials = new SigningCredentials(
+                new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_jwtSettings.SecretKey)),
+                SecurityAlgorithms.HmacSha256);
+
+            var claims = new[]
+            {
+                new Claim(JwtRegisteredClaimNames.Sub, admin.AdminId.ToString()),
+                new Claim(JwtRegisteredClaimNames.Name, admin.Name),
+                new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString()),
+            };
+
+            var securityToken = new JwtSecurityToken(
+                issuer: _jwtSettings.Issuer,
+                audience: _jwtSettings.Audience,
+                expires: _dateTimeProvider.UtcNow.AddMinutes(_jwtSettings.ExpiredMinute),
                 claims: claims,
                 signingCredentials: signingCredentials);
 
