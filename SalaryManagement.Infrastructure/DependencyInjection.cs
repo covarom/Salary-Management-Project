@@ -22,8 +22,9 @@ namespace SalaryManagement.Insfrastructure
             //  services.Configure<JwtSettings>(configuration.GetSection(JwtSettings.SectionName));
             //  services.AddSingleton<IJwtTokenGenerator, JwtTokenGenerator>();
             services.AddAuth(configuration);
-            services.AddSingleton<IDateTimeProvider, DateTimeProvider>();
+            services.AddSingleton<IDateTimeProvider, DateTimeProvider>();          
             services.AddDBContext(configuration);
+
             return services;
         }
 
@@ -35,6 +36,7 @@ namespace SalaryManagement.Insfrastructure
            // services.AddScoped<IUserRepository, UserRepository>();
 
             services.AddScoped<IAdminRepository, AdminRepository>();
+            services.AddScoped<IContractRepository, ContractRepository>();
             return services;
         }
 
