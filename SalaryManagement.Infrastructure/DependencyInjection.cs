@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.AspNetCore.Hosting;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -24,7 +25,7 @@ namespace SalaryManagement.Insfrastructure
             services.AddAuth(configuration);
             services.AddSingleton<IDateTimeProvider, DateTimeProvider>();          
             services.AddDBContext(configuration);
-
+            //services.AddAutoMapper(typeof(MappingProfile));
             return services;
         }
 
@@ -37,6 +38,8 @@ namespace SalaryManagement.Insfrastructure
 
             services.AddScoped<IAdminRepository, AdminRepository>();
             services.AddScoped<IContractRepository, ContractRepository>();
+            services.AddScoped<IAdminRepository, AdminRepository>();
+
             return services;
         }
 

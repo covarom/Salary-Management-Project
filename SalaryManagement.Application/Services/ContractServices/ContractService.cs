@@ -22,5 +22,6 @@ namespace SalaryManagement.Application.Services.ContractServices
         {
             return await _contractRepository.GetContractByIdAsync(contractId);
         }
+
     }
 }

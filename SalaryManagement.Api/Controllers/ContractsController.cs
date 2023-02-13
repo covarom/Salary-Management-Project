@@ -9,7 +9,6 @@ namespace SalaryManagement.Api.Controllers
 {
     [Route("api/v1")]
     [ApiController]
-    [Authorize]
   
     public class ContractsController : ControllerBase
     {

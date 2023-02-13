@@ -1,8 +1,9 @@
 ﻿using MapsterMapper;
 using Microsoft.AspNetCore.Mvc;
+using SalaryManagement.Api.Common.Helper;
 using SalaryManagement.Application.Services.Authentication;
+using SalaryManagement.Contracts;
 using SalaryManagement.Contracts.Authentication;
-using SalaryManagement.Contracts.Response;
 using System.Net;
 
 namespace SalaryManagement.Api.Controllers
@@ -43,7 +44,7 @@ namespace SalaryManagement.Api.Controllers
             var testResponse = new Response<object>(response, (int)HttpStatusCode.OK, "No message");
             return Ok(testResponse);
         }
-        
+
         [HttpGet("test")]
         public async Task<IActionResult> Test(string a)
         {

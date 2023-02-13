@@ -1,13 +1,13 @@
 ﻿namespace SalaryManagement.Contracts.Contracts
 {
-    public record ContractRequest(
+    public record ContractResponse(
         string ContractId,
         string File,
         DateTime StartDate,
         DateTime EndDate,
         string Job,
         string BasicSalary,
-        string BHXH,
+        string Bhxh,
         string Partner,
         string PartnerPrice,
         string EmployeeId,

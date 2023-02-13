@@ -13,11 +13,6 @@ namespace SalaryManagement.Infrastructure.Persistence.Repositories
             _context = context;
         }
 
-        public async Task<Contract> GetContractByIdAsync(string id)
-        {
-            return await _context.Contracts.FindAsync(id);
-        }
-
         public async Task<IEnumerable<Contract>> GetAllContractsAsync()
         {
             return await _context.Contracts.ToListAsync();
@@ -43,5 +38,9 @@ namespace SalaryManagement.Infrastructure.Persistence.Repositories
             await _context.SaveChangesAsync();
         }
 
+        public async Task<Contract?> GetContractByIdAsync(string id)
+        {
+            return await _context.Contracts.Include(x => x.Employee).FirstOrDefaultAsync(c => c.ContractId == id);
+        }
     }
 }
