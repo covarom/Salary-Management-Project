@@ -5,7 +5,6 @@ namespace SalaryManagement.Application.Services.ContractServices
     public interface IContractServices 
     {
         Task<Contract> GetById(string contractId);
-
         Task<IEnumerable<Contract>> GetAllContracts();
 
        /* bool AddContract(Contract contract);

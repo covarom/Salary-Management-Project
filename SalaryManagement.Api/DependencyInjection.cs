@@ -8,8 +8,9 @@ namespace SalaryManagement.Api
     {
         public static IServiceCollection AddPresentation(this IServiceCollection services)
         {
-            services.AddControllers();
-            services.AddControllers();
+            services.AddControllers().AddNewtonsoftJson(options =>
+    options.SerializerSettings.ReferenceLoopHandling = Newtonsoft.Json.ReferenceLoopHandling.Ignore
+);
             services.AddEndpointsApiExplorer();
             services.AddSwaggerGen();
             services.AddSingleton<ProblemDetailsFactory, SalaryManagementProblemDetailsFactory>();
