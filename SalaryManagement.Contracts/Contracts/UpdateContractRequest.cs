@@ -1,6 +1,12 @@
-﻿namespace SalaryManagement.Contracts.Contracts
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+
+namespace SalaryManagement.Contracts.Contracts
 {
-    public record ContractRequest(
+    public record UpdateContractRequest(
         string ContractId,
         string File,
         DateTime StartDate,

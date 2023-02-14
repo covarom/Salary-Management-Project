@@ -7,10 +7,11 @@ namespace SalaryManagement.Application.Services.ContractServices
         Task<Contract> GetById(string contractId);
         Task<IEnumerable<Contract>> GetAllContracts();
 
-       /* bool AddContract(Contract contract);
+        Task UpdateContractAsync(Contract contract);
 
-        bool RemoveContract(string id);
+        Task DeleteContractAsync(string id);
 
-        bool UpdateContract(Contract contract);*/
+        Task<Contract> AddContractAsync(Contract contract);
+
     }
 }

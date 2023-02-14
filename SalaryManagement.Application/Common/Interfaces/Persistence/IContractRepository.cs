@@ -8,7 +8,7 @@ namespace SalaryManagement.Application.Common.Interfaces.Persistence
         Task<IEnumerable<Contract>> GetAllContractsAsync();
         Task<Contract> AddContractAsync(Contract contract);
         Task UpdateContractAsync(Contract contract);
-        Task DeleteContractAsync(int id);
+        Task DeleteContractAsync(Contract contract);
 
     }
 }

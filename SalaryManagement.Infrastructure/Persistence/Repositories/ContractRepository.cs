@@ -40,7 +40,17 @@ namespace SalaryManagement.Infrastructure.Persistence.Repositories
 
         public async Task<Contract?> GetContractByIdAsync(string id)
         {
-            return await _context.Contracts.Include(x => x.Employee).FirstOrDefaultAsync(c => c.ContractId == id);
+            return await _context.Contracts.Include(x => x.Employee)
+                .Include(y => y.ContractStatus )
+                .Include(z => z.ContractType )
+                .Include(k => k.SalaryType)
+                .FirstOrDefaultAsync(c => c.ContractId == id);
+        }
+
+        public async Task DeleteContractAsync(Contract contract)
+        {
+            _context.Contracts.Remove(contract);
+            await _context.SaveChangesAsync();
         }
     }
 }
