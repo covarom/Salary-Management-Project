@@ -41,7 +41,7 @@ namespace SalaryManagement.Insfrastructure
             services.AddScoped<ICompanyRepository,CompanyRepository>();
 
             services.AddScoped<IAdminRepository, AdminRepository>();
-
+            services.AddScoped<IEmployeeRepository,EmployeeRepository>();
             return services;
         }
 

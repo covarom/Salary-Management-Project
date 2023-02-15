@@ -34,16 +34,17 @@ namespace SalaryManagement.Infrastructure.Persistence.Repositories
         public async Task<IEnumerable<Company>> GetAllCompanys()
         {
             return await _context.Companys.ToListAsync();
-        }
+        }  
 
         public async Task<bool> RemoveCompany(string id)
         {
             bool check=false;
             var company = await _context.Companys.FindAsync(id);
-            //  if(_context.Companys.Remove(company)){
-            //     check = true;
-            //  }
-            await _context.SaveChangesAsync();
+             _context.Companys.Remove(company);      
+            int changes = await _context.SaveChangesAsync();
+            if(changes>0){
+                check= true;
+            }
             return check;
         }
 
@@ -51,10 +52,10 @@ namespace SalaryManagement.Infrastructure.Persistence.Repositories
         {
             bool check=false;
             _context.Companys.Update(Company);
-            await _context.SaveChangesAsync();
-            // if(_context.Companys.Update(Company)){
-            //      check = true;
-            // }
+             int changes = await _context.SaveChangesAsync();
+            if(changes>0){
+                check= true;
+            }
              return check;
         }   
 

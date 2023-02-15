@@ -8,7 +8,7 @@ using System.Net;
 
 namespace SalaryManagement.Api.Controllers
 {
-    [Route("api/v1")]
+    [Route("api/v1/campanies")]
     [ApiController]
     [Authorize]
 
@@ -23,7 +23,7 @@ namespace SalaryManagement.Api.Controllers
             _mapper = mapper;
         }
 
-        [HttpGet("campanies/all")]
+        [HttpGet("all")]
          public async Task<IActionResult> GetAll()
         {
             var company = await _companyService.GetAllCompanys();
@@ -42,7 +42,7 @@ namespace SalaryManagement.Api.Controllers
             return Ok(company);    
         }
 
-        [HttpPost("campanies")]
+        [HttpPost("")]
         public async Task<IActionResult> AddContract(CompanyRequest cr)
         {
             await Task.CompletedTask;
@@ -59,6 +59,39 @@ namespace SalaryManagement.Api.Controllers
 
             var result = _companyService.AddCompany(company);
             return Ok(result);
+        }
+        [HttpPut("update")]
+         public async Task<IActionResult> Update(CompanyUpdate cr)
+        {
+            string id = cr.id;
+            string updateName = cr.company_name;
+             Company company = new Company
+            {
+                CompanyId= id,
+                CompanyName = updateName
+            };
+            var rs = await _companyService.UpdateCompany(company);
+            var msg ="";
+            if(rs){
+                    msg = "Update successfully";       
+            }else{  
+                    msg = "Update failed";            
+            };
+            return Ok(msg);    
+        }
+
+        [HttpDelete("delete")]
+         public async Task<IActionResult> Delete(CompanyDelete cr)
+        {
+            string id = cr.id;
+            var rs = await _companyService.RemoveCompany(id);
+            var msg ="";
+            if(rs){
+                    msg = "Delete successfully";       
+            }else{  
+                    msg = "Delete failed";            
+            };
+            return Ok(msg);      
         }
     }
         
