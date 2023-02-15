@@ -49,13 +49,13 @@ namespace SalaryManagement.Api.Controllers
             Employee Employee = new Employee
             {
                 EmployeeId=id,
-                     Name = rq.Employee_name ,
-                    Image = rq.image,
-                    DateOfBirth = rq.day_of_birth,
-                    Address = rq.address,
-                    IdentifyNumber = rq.identify_number,
-                    IsActive= true,
-                    PhoneNumber= rq.PhoneNumber
+                Name = rq.Employee_name ,
+                Image = rq.image,
+                DateOfBirth = rq.day_of_birth,
+                Address = rq.address,
+                IdentifyNumber = rq.identify_number,
+                IsActive= true,
+                PhoneNumber= rq.PhoneNumber
             };
 
 
@@ -64,16 +64,16 @@ namespace SalaryManagement.Api.Controllers
         }
         [HttpPut("update")]
          public async Task<IActionResult> Update(EmployeeUpdate rq)
-        {
-            string id = rq.id;
-            string updateName = rq.Employee_name;
-             Employee Employee = new Employee
             {
-                EmployeeId= id,
-                Name = updateName,
-                DateOfBirth = rq.day_of_birth,
-                Address = rq.address,
-                IdentifyNumber = rq.identify_number,
+            
+            Employee Employee = new Employee
+            {
+                EmployeeId = rq.Id,
+                Name = rq.Employee_name,
+                Image = rq.Image,
+                DateOfBirth = rq.Day_of_birth,
+                Address = rq.Address,
+                IdentifyNumber = rq.Identify_number,
                 IsActive= rq.IsActive,
                 PhoneNumber= rq.PhoneNumber
             };
@@ -82,7 +82,7 @@ namespace SalaryManagement.Api.Controllers
             if(rs){
                     msg = "Update successfully";       
             }else{  
-                    msg = "Update failed";            
+                return NotFound();
             };
             return Ok(msg);    
         }

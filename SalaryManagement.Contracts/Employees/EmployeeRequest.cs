@@ -9,14 +9,14 @@ namespace SalaryManagement.Contracts.Employee
         string PhoneNumber
         );
     public record EmployeeUpdate(
-        string id,
-        string Employee_name,
-        string image,
-        DateTime day_of_birth,
-        string address,
-        bool IsActive,
-        int identify_number,
-        string PhoneNumber
+        string Id,
+        string? Employee_name,
+        string? Image,
+        DateTime? Day_of_birth,
+        string? Address,
+        bool? IsActive,
+        int? Identify_number,
+        string? PhoneNumber
         );    
     public record EmployeeDelete(
         string id

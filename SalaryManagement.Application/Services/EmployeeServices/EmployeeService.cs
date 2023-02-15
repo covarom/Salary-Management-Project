@@ -1,3 +1,4 @@
+using SalaryManagement.Api.Common.Helper;
 using SalaryManagement.Application.Common.Interfaces.Persistence;
 using SalaryManagement.Domain.Entities;
 
@@ -34,7 +35,22 @@ namespace SalaryManagement.Application.Services.EmployeeServices
 
          public  async Task<bool> UpdateEmployee(Employee Employee)
         {
-            return await _EmployeeRepository.UpdateEmployee(Employee);
+
+            var existEmloyee = await _EmployeeRepository.GetById(Employee.EmployeeId);
+            if (existEmloyee != null)
+            {
+                //Update only the reference fields
+                existEmloyee.Name = StringHelper.IsNullOrEmpty(Employee.Name) ? existEmloyee.Name : Employee.Name;
+                existEmloyee.Image = StringHelper.IsNullOrEmpty(Employee.Image) ? existEmloyee.Image: Employee.Image;
+                existEmloyee.DateOfBirth = Employee.DateOfBirth == null ? existEmloyee.DateOfBirth : Employee.DateOfBirth;
+                existEmloyee.Address = StringHelper.IsNullOrEmpty(Employee.Address) ? existEmloyee.Address : Employee.Address;
+                existEmloyee.IdentifyNumber = Employee.IdentifyNumber==null ? existEmloyee.IdentifyNumber: Employee.IdentifyNumber;
+                existEmloyee.PhoneNumber = StringHelper.IsNullOrEmpty(Employee.PhoneNumber) ? existEmloyee.PhoneNumber : Employee.PhoneNumber;
+
+                return await _EmployeeRepository.UpdateEmployee(existEmloyee);
+            }
+
+            return false;
         }
     }
 }
