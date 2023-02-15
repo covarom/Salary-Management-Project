@@ -11,5 +11,5 @@ public partial class Holiday
 
     public DateTime? EndDate { get; set; }
 
-    public string? IsDelete { get; set; }
+    public bool? IsDeleted { get; set; }
 }
