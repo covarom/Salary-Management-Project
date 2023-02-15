@@ -8,7 +8,7 @@ using System.Net;
 
 namespace SalaryManagement.Api.Controllers
 {
-    [Route("api/v1/companys")]
+    [Route("api/v1")]
     [ApiController]
     [Authorize]
 
@@ -23,7 +23,7 @@ namespace SalaryManagement.Api.Controllers
             _mapper = mapper;
         }
 
-        [HttpGet("getAllCompanys")]
+        [HttpGet("campanies/all")]
          public async Task<IActionResult> GetAll()
         {
             var company = await _companyService.GetAllCompanys();
@@ -42,7 +42,7 @@ namespace SalaryManagement.Api.Controllers
             return Ok(company);    
         }
 
-        [HttpPost("addCompany")]
+        [HttpPost("campanies")]
         public async Task<IActionResult> AddContract(CompanyRequest cr)
         {
             await Task.CompletedTask;
