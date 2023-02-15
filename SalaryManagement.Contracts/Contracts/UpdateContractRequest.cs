@@ -1,12 +1,18 @@
-﻿namespace SalaryManagement.Contracts.Contracts
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+
+namespace SalaryManagement.Contracts.Contracts
 {
-    public record ContractRequest(
-        string Id,
+    public record UpdateContractRequest(
+        string ContractId,
         string File,
         DateTime StartDate,
         DateTime EndDate,
         string Job,
-        string BacsicSalary,
+        string BasicSalary,
         string BHXH,
         string Partner,
         string PartnerPrice,

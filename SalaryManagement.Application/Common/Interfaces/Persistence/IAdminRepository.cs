@@ -18,5 +18,7 @@ namespace SalaryManagement.Application.Common.Interfaces.Persistence
         Admin? GetAdminByUsernameAndPassword(string username, string password);
 
         bool AddAdmin(Admin admin);
+
+        Admin? UpdateAdmin(Admin admin);
     }
 }

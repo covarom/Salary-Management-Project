@@ -1,9 +1,9 @@
 ﻿
 using Microsoft.Extensions.DependencyInjection;
-using SalaryManagement.Application.Common.Interfaces.Persistence;
+using SalaryManagement.Application.Services.AdminServices;
 using SalaryManagement.Application.Services.Authentication;
 using SalaryManagement.Application.Services.ContractServices;
-using SalaryManagement.Application.Services.UserServices;
+using SalaryManagement.Application.Services.CompanyServices;
 
 namespace SalaryManagement.Application
 {
@@ -13,7 +13,8 @@ namespace SalaryManagement.Application
         {
             services.AddScoped<IAuthenticationServices, AuthenticationServices>();
             services.AddScoped<IContractServices, ContractService>();
-            services.AddScoped<IUserService,UserService>();
+            services.AddScoped<ICompanyServices,CompanyService>();
+            services.AddScoped<IAdminServices, AdminService>();
             
 
             return services;
