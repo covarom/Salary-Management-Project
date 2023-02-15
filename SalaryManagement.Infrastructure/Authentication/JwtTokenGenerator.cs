@@ -20,7 +20,8 @@ namespace SalaryManagement.Infrastructure.Authentication
             _jwtSettings = jwtOptions.Value;
         }
 
-        public string GenerateToken(User user)
+
+        public string GenerateToken(Admin admin)
         {
             var signingCredentials = new SigningCredentials(
                 new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_jwtSettings.SecretKey)),
@@ -28,16 +29,15 @@ namespace SalaryManagement.Infrastructure.Authentication
 
             var claims = new[]
             {
-                new Claim(JwtRegisteredClaimNames.Sub, user.Id.ToString()),
-                new Claim(JwtRegisteredClaimNames.GivenName, user.FirstName),
-                new Claim(JwtRegisteredClaimNames.FamilyName, user.LastName),
+                new Claim(JwtRegisteredClaimNames.Sub, admin.AdminId.ToString()),
+                new Claim(JwtRegisteredClaimNames.Name, admin.Name),
                 new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString()),
             };
 
             var securityToken = new JwtSecurityToken(
                 issuer: _jwtSettings.Issuer,
                 audience: _jwtSettings.Audience,
-                expires:_dateTimeProvider.UtcNow.AddMinutes(_jwtSettings.ExpiredMinute),
+                expires: _dateTimeProvider.UtcNow.AddMinutes(_jwtSettings.ExpiredMinute),
                 claims: claims,
                 signingCredentials: signingCredentials);
 
