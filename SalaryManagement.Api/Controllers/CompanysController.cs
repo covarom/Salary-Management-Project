@@ -27,11 +27,7 @@ namespace SalaryManagement.Api.Controllers
          public async Task<IActionResult> GetAll()
         {
             var company = await _companyService.GetAllCompanys();
-
-            // if(company){
-            //      var testResponse = "No company !!!";
-            //      return Ok(testResponse);
-            // }
+            
             return Ok(company);    
         }
 
@@ -51,30 +47,18 @@ namespace SalaryManagement.Api.Controllers
         {
             await Task.CompletedTask;
 
-            // if(!cr){
-            //     var msg ="Please input again !!!";
-            //     return Ok(msg);
-            // }
 
             var company_name = cr.company_name ;
-            // if(!company_name){
-            //     var msg ="Please input again !!!";
-            //     return Ok(msg);
-            // }
             string id = Guid.NewGuid().ToString();
             Company company = new Company
             {
                 CompanyId= id,
-                CompanyIdName = company_name
+                CompanyName = company_name
             };
+
+
             var result = _companyService.AddCompany(company);
-            var messageRespone = "Add successf !!!";
-            // if(!result){
-            //     messageRespone = "Add failed !!!";
-            // }else{
-            //     messageRespone = "Add successf !!!";
-            // }
-            return Ok(messageRespone);
+            return Ok(result);
         }
     }
         

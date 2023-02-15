@@ -28,12 +28,7 @@ namespace SalaryManagement.Api.Controllers
         {
             var contracts = await _contractService.GetAllContracts();
 
-            return Ok(new Response<object>
-            {
-                Data = contracts,
-                StatusCode = (int)HttpStatusCode.OK,
-                Message = string.Empty
-            });
+            return Ok(contracts);
         }
 
         [HttpGet("contracts/{id}")]
@@ -42,20 +37,10 @@ namespace SalaryManagement.Api.Controllers
             var contracts = await _contractService.GetById(id);
             if (contracts == null)
             {
-                return NotFound(new Response<object>
-                {
-                    Data = null,
-                    Message = "Not found",
-                    StatusCode =(int)HttpStatusCode.NotFound
-                });
+                return NotFound();
             }
 
-            return Ok(new Response<object>
-            {
-                Data = contracts,
-                Message = string.Empty,
-                StatusCode = (int)HttpStatusCode.OK
-            });
+            return Ok(contracts);
         }
 
         [HttpPost("contracts")]
@@ -71,7 +56,7 @@ namespace SalaryManagement.Api.Controllers
                 Job = request.Job,
                 BasicSalary = request.BasicSalary,
                 Bhxh = request.BHXH,
-                Partner = request.Partner,
+                PartnerId = request.PartnerId,
                 PartnerPrice = request.PartnerPrice,
                 EmployeeId = request.EmployeeId,
                 ContractTypeId = request.ContractTypeId,
@@ -90,12 +75,7 @@ namespace SalaryManagement.Api.Controllers
         public async Task<IActionResult> DeleteContract(string id)
         {
             await _contractService.DeleteContractAsync(id);
-  /*          if (existingContract == null)
-            {
-                return NotFound();
-            }
-*/
-           // await _contractService.DeleteContractAsync(existingContract);
+
             return NoContent();
         }
 

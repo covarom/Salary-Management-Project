@@ -1,4 +1,6 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using System;
+using System.Collections.Generic;
+using Microsoft.EntityFrameworkCore;
 using SalaryManagement.Domain.Entities;
 
 namespace SalaryManagement.Infrastructure.Persistence;
@@ -47,9 +49,13 @@ public partial class SalaryManagementContext : DbContext
             entity.ToTable("admins");
 
             entity.Property(e => e.AdminId).HasColumnName("admin_id");
-            entity.Property(e => e.IsActive)
+            entity.Property(e => e.Email)
                 .HasMaxLength(255)
-                .HasColumnName("isActive");
+                .HasColumnName("email");
+            entity.Property(e => e.Image)
+                .HasMaxLength(255)
+                .HasColumnName("image");
+            entity.Property(e => e.IsActive).HasColumnName("isActive");
             entity.Property(e => e.Name)
                 .HasMaxLength(255)
                 .HasColumnName("name");
@@ -57,7 +63,7 @@ public partial class SalaryManagementContext : DbContext
                 .HasMaxLength(255)
                 .HasColumnName("password");
             entity.Property(e => e.PhoneNumber)
-                .HasMaxLength(255)
+                .HasMaxLength(20)
                 .HasColumnName("phone_number");
             entity.Property(e => e.Username)
                 .HasMaxLength(255)
@@ -71,9 +77,9 @@ public partial class SalaryManagementContext : DbContext
             entity.ToTable("companys");
 
             entity.Property(e => e.CompanyId).HasColumnName("company_id");
-            entity.Property(e => e.CompanyIdName)
+            entity.Property(e => e.CompanyName)
                 .HasMaxLength(255)
-                .HasColumnName("company_id_name");
+                .HasColumnName("company_name");
         });
 
         modelBuilder.Entity<Contract>(entity =>
@@ -88,52 +94,56 @@ public partial class SalaryManagementContext : DbContext
 
             entity.HasIndex(e => e.EmployeeId, "employee_id");
 
+            entity.HasIndex(e => e.PartnerId, "partner_id");
+
             entity.HasIndex(e => e.SalaryTypeId, "salary_type_id");
 
             entity.Property(e => e.ContractId).HasColumnName("contract_id");
-            entity.Property(e => e.BasicSalary)
-                .HasMaxLength(255)
-                .HasColumnName("basic_salary");
-            entity.Property(e => e.Bhxh)
-                .HasMaxLength(255)
-                .HasColumnName("BHXH");
+            entity.Property(e => e.BasicSalary).HasColumnName("basic_salary");
+            entity.Property(e => e.Bhxh).HasColumnName("bhxh");
             entity.Property(e => e.ContractStatusId).HasColumnName("contract_status_id");
             entity.Property(e => e.ContractTypeId).HasColumnName("contract_type_id");
             entity.Property(e => e.EmployeeId).HasColumnName("employee_id");
             entity.Property(e => e.EndDate)
-                .HasColumnType("timestamp")
+                .HasColumnType("date")
                 .HasColumnName("end_date");
             entity.Property(e => e.File)
                 .HasMaxLength(255)
                 .HasColumnName("file");
+            entity.Property(e => e.IsDeleted).HasColumnName("isDeleted");
             entity.Property(e => e.Job)
                 .HasMaxLength(255)
                 .HasColumnName("job");
-            entity.Property(e => e.Partner)
-                .HasMaxLength(255)
-                .HasColumnName("partner");
-            entity.Property(e => e.PartnerPrice)
-                .HasMaxLength(255)
-                .HasColumnName("partner_price");
+            entity.Property(e => e.PartnerId).HasColumnName("partner_id");
+            entity.Property(e => e.PartnerPrice).HasColumnName("partner_price");
             entity.Property(e => e.SalaryTypeId).HasColumnName("salary_type_id");
             entity.Property(e => e.StartDate)
-                .HasColumnType("timestamp")
+                .HasColumnType("date")
                 .HasColumnName("start_date");
 
             entity.HasOne(d => d.ContractStatus).WithMany(p => p.Contracts)
                 .HasForeignKey(d => d.ContractStatusId)
+                .OnDelete(DeleteBehavior.ClientSetNull)
                 .HasConstraintName("contracts_ibfk_4");
 
             entity.HasOne(d => d.ContractType).WithMany(p => p.Contracts)
                 .HasForeignKey(d => d.ContractTypeId)
+                .OnDelete(DeleteBehavior.ClientSetNull)
                 .HasConstraintName("contracts_ibfk_2");
 
             entity.HasOne(d => d.Employee).WithMany(p => p.Contracts)
                 .HasForeignKey(d => d.EmployeeId)
+                .OnDelete(DeleteBehavior.ClientSetNull)
                 .HasConstraintName("contracts_ibfk_1");
+
+            entity.HasOne(d => d.Partner).WithMany(p => p.Contracts)
+                .HasForeignKey(d => d.PartnerId)
+                .OnDelete(DeleteBehavior.ClientSetNull)
+                .HasConstraintName("contracts_ibfk_5");
 
             entity.HasOne(d => d.SalaryType).WithMany(p => p.Contracts)
                 .HasForeignKey(d => d.SalaryTypeId)
+                .OnDelete(DeleteBehavior.ClientSetNull)
                 .HasConstraintName("contracts_ibfk_3");
         });
 
@@ -144,6 +154,7 @@ public partial class SalaryManagementContext : DbContext
             entity.ToTable("contract_status");
 
             entity.Property(e => e.ContractStatusId).HasColumnName("contract_status_id");
+            entity.Property(e => e.IsDeleted).HasColumnName("isDeleted");
             entity.Property(e => e.StatusName)
                 .HasMaxLength(255)
                 .HasColumnName("status_name");
@@ -156,6 +167,7 @@ public partial class SalaryManagementContext : DbContext
             entity.ToTable("contract_types");
 
             entity.Property(e => e.ContractTypeId).HasColumnName("contract_type_id");
+            entity.Property(e => e.IsDeleted).HasColumnName("isDeleted");
             entity.Property(e => e.TypeName)
                 .HasMaxLength(255)
                 .HasColumnName("type_name");
@@ -167,32 +179,24 @@ public partial class SalaryManagementContext : DbContext
 
             entity.ToTable("employees");
 
-            entity.HasIndex(e => e.CompanyId, "company_id");
-
             entity.Property(e => e.EmployeeId).HasColumnName("employee_id");
             entity.Property(e => e.Address)
                 .HasMaxLength(255)
                 .HasColumnName("address");
-            entity.Property(e => e.CompanyId).HasColumnName("company_id");
             entity.Property(e => e.DateOfBirth)
-                .HasColumnType("timestamp")
+                .HasColumnType("date")
                 .HasColumnName("date_of_birth");
-            entity.Property(e => e.IdentifyNumber)
+            entity.Property(e => e.IdentifyNumber).HasColumnName("identify_number");
+            entity.Property(e => e.Image)
                 .HasMaxLength(255)
-                .HasColumnName("identify_number");
-            entity.Property(e => e.IsActive)
-                .HasMaxLength(255)
-                .HasColumnName("isActive");
+                .HasColumnName("image");
+            entity.Property(e => e.IsActive).HasColumnName("isActive");
             entity.Property(e => e.Name)
                 .HasMaxLength(255)
                 .HasColumnName("name");
             entity.Property(e => e.PhoneNumber)
-                .HasMaxLength(255)
+                .HasMaxLength(20)
                 .HasColumnName("phone_number");
-
-            entity.HasOne(d => d.Company).WithMany(p => p.Employees)
-                .HasForeignKey(d => d.CompanyId)
-                .HasConstraintName("employees_ibfk_1");
         });
 
         modelBuilder.Entity<Holiday>(entity =>
@@ -203,13 +207,11 @@ public partial class SalaryManagementContext : DbContext
 
             entity.Property(e => e.HolidayId).HasColumnName("holiday_id");
             entity.Property(e => e.EndDate)
-                .HasColumnType("timestamp")
+                .HasColumnType("date")
                 .HasColumnName("end_date");
-            entity.Property(e => e.IsDelete)
-                .HasMaxLength(255)
-                .HasColumnName("isDelete");
+            entity.Property(e => e.IsDeleted).HasColumnName("isDeleted");
             entity.Property(e => e.StartDate)
-                .HasColumnType("timestamp")
+                .HasColumnType("date")
                 .HasColumnName("start_date");
         });
 
@@ -224,16 +226,14 @@ public partial class SalaryManagementContext : DbContext
             entity.Property(e => e.LeaveTimeId).HasColumnName("leave_time_id");
             entity.Property(e => e.EmployeeId).HasColumnName("employee_id");
             entity.Property(e => e.EndDate)
-                .HasColumnType("timestamp")
+                .HasColumnType("date")
                 .HasColumnName("end_date");
-            entity.Property(e => e.IsDelete)
-                .HasMaxLength(255)
-                .HasColumnName("isDelete");
+            entity.Property(e => e.IsDeleted).HasColumnName("isDeleted");
             entity.Property(e => e.Reason)
                 .HasColumnType("text")
                 .HasColumnName("reason");
             entity.Property(e => e.StartDate)
-                .HasColumnType("timestamp")
+                .HasColumnType("date")
                 .HasColumnName("start_date");
             entity.Property(e => e.Status)
                 .HasMaxLength(255)
@@ -254,14 +254,10 @@ public partial class SalaryManagementContext : DbContext
 
             entity.Property(e => e.OvertimeId).HasColumnName("overtime_id");
             entity.Property(e => e.EmployeeId).HasColumnName("employee_id");
-            entity.Property(e => e.Hours)
-                .HasMaxLength(255)
-                .HasColumnName("hours");
-            entity.Property(e => e.IsDelete)
-                .HasMaxLength(255)
-                .HasColumnName("isDelete");
+            entity.Property(e => e.Hours).HasColumnName("hours");
+            entity.Property(e => e.IsDeleted).HasColumnName("isDeleted");
             entity.Property(e => e.OvertimeDay)
-                .HasColumnType("timestamp")
+                .HasColumnType("date")
                 .HasColumnName("overtime_day");
             entity.Property(e => e.Status)
                 .HasMaxLength(255)
@@ -282,21 +278,15 @@ public partial class SalaryManagementContext : DbContext
 
             entity.Property(e => e.PayrollId).HasColumnName("payroll_id");
             entity.Property(e => e.Date)
-                .HasColumnType("timestamp")
+                .HasColumnType("date")
                 .HasColumnName("date");
             entity.Property(e => e.EmployeeId).HasColumnName("employee_id");
-            entity.Property(e => e.IsDelete)
-                .HasMaxLength(255)
-                .HasColumnName("isDelete");
+            entity.Property(e => e.IsDeleted).HasColumnName("isDeleted");
             entity.Property(e => e.Note)
                 .HasColumnType("text")
                 .HasColumnName("note");
-            entity.Property(e => e.Tax)
-                .HasMaxLength(255)
-                .HasColumnName("tax");
-            entity.Property(e => e.Total)
-                .HasMaxLength(255)
-                .HasColumnName("total");
+            entity.Property(e => e.Tax).HasColumnName("tax");
+            entity.Property(e => e.Total).HasColumnName("total");
 
             entity.HasOne(d => d.Employee).WithMany(p => p.Payrolls)
                 .HasForeignKey(d => d.EmployeeId)
@@ -310,6 +300,7 @@ public partial class SalaryManagementContext : DbContext
             entity.ToTable("salary_types");
 
             entity.Property(e => e.SalaryTypeId).HasColumnName("salary_type_id");
+            entity.Property(e => e.IsDeleted).HasColumnName("isDeleted");
             entity.Property(e => e.SalaryTypeName)
                 .HasMaxLength(255)
                 .HasColumnName("salary_type_name");

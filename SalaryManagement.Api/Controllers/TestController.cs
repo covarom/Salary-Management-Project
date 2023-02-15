@@ -1,9 +1,7 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using SalaryManagement.Application.Common.Interfaces.Persistence;
-using SalaryManagement.Application.Services.UserServices;
 using SalaryManagement.Contracts;
-using SalaryManagement.Infrastructure.Persistence.Repositories;
 using System.Net;
 
 namespace SalaryManagement.Api.Controllers
