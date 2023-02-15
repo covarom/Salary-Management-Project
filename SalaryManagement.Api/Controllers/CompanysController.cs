@@ -53,7 +53,7 @@ namespace SalaryManagement.Api.Controllers
             Company company = new Company
             {
                 CompanyId= id,
-                CompanyIdName = company_name
+                CompanyName = company_name
             };
 
 

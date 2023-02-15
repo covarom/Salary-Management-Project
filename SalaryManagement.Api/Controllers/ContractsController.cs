@@ -56,7 +56,7 @@ namespace SalaryManagement.Api.Controllers
                 Job = request.Job,
                 BasicSalary = request.BasicSalary,
                 Bhxh = request.BHXH,
-                Partner = request.Partner,
+                PartnerId = request.PartnerId,
                 PartnerPrice = request.PartnerPrice,
                 EmployeeId = request.EmployeeId,
                 ContractTypeId = request.ContractTypeId,
