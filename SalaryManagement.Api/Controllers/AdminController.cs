@@ -29,9 +29,6 @@ namespace SalaryManagement.Api.Controllers
         public async Task<IActionResult> GetProfile()
         {
 
-            var statusCode = HttpStatusCode.OK;
-            var message = "";
-
             string token = Request.Headers["Authorization"].ToString().Replace("Bearer ", "");
 
             // Use the token for further processing.
@@ -39,24 +36,12 @@ namespace SalaryManagement.Api.Controllers
 
             if (admin == null)
             {
-                statusCode = HttpStatusCode.NotFound;
-                message = "not found the user";
-                return NotFound(new Response<object>
-                {
-                    StatusCode = (int)statusCode,
-                    Message = message,
-                    Data = null
-                });
+                return NotFound();
             }
 
             AdminResponse response = _mapper.Map<AdminResponse>(admin);
 
-            return Ok(new Response<object>
-            {
-                StatusCode = (int)statusCode,
-                Message = message,
-                Data = response
-            });
+            return Ok(admin);
         }
     }
 
