@@ -1,5 +1,6 @@
 ﻿
 using SalaryManagement.Application.Common.Interfaces.Persistence;
+using SalaryManagement.Contracts;
 using SalaryManagement.Domain.Entities;
 
 namespace SalaryManagement.Application.Services.ContractServices
@@ -27,9 +28,11 @@ namespace SalaryManagement.Application.Services.ContractServices
             }           
         }
 
-        public async Task<IEnumerable<Contract>> GetAllContracts()
+        public async Task<PaginatedResponse<Contract>> GetAllContracts(int page, int pageSize, string? sortColumn, bool? isDescending = false, string? keyword = null)
         {
-            return await _contractRepository.GetAllContractsAsync();
+           // Get the contracts from the repository
+            var response = await _contractRepository.GetContractsAsync(page, pageSize, keyword, sortColumn, isDescending);
+            return response;
         }
 
         public async Task<Contract> GetById(string contractId)

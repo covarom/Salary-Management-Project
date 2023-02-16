@@ -33,7 +33,7 @@ namespace SalaryManagement.Insfrastructure
         {
 
            services.AddDbContext<SalaryManagementContext>(options =>
-        options.UseMySQL(configuration.GetConnectionString("SalaryManagementDBContext")));
+        options.UseMySQL(configuration.GetConnectionString("SalaryManagementDBContext")).EnableSensitiveDataLogging());
            // services.AddScoped<IUserRepository, UserRepository>();
 
             services.AddScoped<IAdminRepository, AdminRepository>();

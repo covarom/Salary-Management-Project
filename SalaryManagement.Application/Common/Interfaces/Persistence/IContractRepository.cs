@@ -1,4 +1,5 @@
-﻿using SalaryManagement.Domain.Entities;
+﻿using SalaryManagement.Contracts;
+using SalaryManagement.Domain.Entities;
 
 namespace SalaryManagement.Application.Common.Interfaces.Persistence
 {
@@ -9,6 +10,8 @@ namespace SalaryManagement.Application.Common.Interfaces.Persistence
         Task<Contract> AddContractAsync(Contract contract);
         Task UpdateContractAsync(Contract contract);
         Task DeleteContractAsync(Contract contract);
+        Task<PaginatedResponse<Contract>> GetContractsAsync(int pageNumber, int pageSize, string? searchKeyword, string? sortBy, bool? isDesc);
+
 
     }
 }
