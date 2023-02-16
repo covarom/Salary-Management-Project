@@ -4,6 +4,7 @@ using SalaryManagement.Application.Services.AdminServices;
 using SalaryManagement.Application.Services.Authentication;
 using SalaryManagement.Application.Services.ContractServices;
 using SalaryManagement.Application.Services.CompanyServices;
+using SalaryManagement.Application.Services.HolidayServices;
 using SalaryManagement.Application.Services.EmployeeServices;
 
 namespace SalaryManagement.Application
@@ -18,6 +19,7 @@ namespace SalaryManagement.Application
             services.AddScoped<IAdminServices, AdminService>();
             services.AddScoped<IEmployeeServices, EmployeeService>();
 
+            services.AddScoped<IHolidayService, HolidayServices>();
             return services;
         }
     }
