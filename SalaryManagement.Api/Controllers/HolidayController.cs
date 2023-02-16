@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using SalaryManagement.Application.Services.ContractServices;
 using SalaryManagement.Application.Services.HolidayServices;
+using SalaryManagement.Contracts;
 using SalaryManagement.Domain.Entities;
 using SalaryManagement.Infrastructure.Persistence;
 using System.Net;
@@ -23,47 +24,130 @@ namespace SalaryManagement.Api.Controllers
             _mapper = mapper;
         }
 
-        [HttpGet("getAllHolidays")]
+        [HttpGet("get-all")]
         public async Task<IActionResult> GetAllHoliday()
         {
+            var response = new Response<object>();
             var holidays = await _holidayService.GetAllHoliday();
-            return Ok(holidays);
+            if(holidays != null)
+            {
+                response.StatusCode = 200;
+                response.Message = "Successfully";
+                response.Data = holidays;
+            }
+            else
+            {
+                response.StatusCode = 404;
+                response.Message = "Failed";
+            }
+            return Ok(response);
         }
 
         [HttpGet("{id}")]
         public async Task<IActionResult> FindById(string id)
         {
+            var response = new Response<object>();
             var holiday = await _holidayService.GetHolidaysById(id);
-            return Ok(holiday);
+            if (holiday != null)
+            {
+                response.StatusCode = 200;
+                response.Message = "Successfully";
+                response.Data = holiday;
+            }
+            else
+            {
+                response.StatusCode = 404;
+                response.Message = "Not found";
+            }
+            return Ok(response);
         }
 
-        [HttpPost("add")]
-        public async Task<IActionResult> AddHoliday(Holiday holiday)
+        [HttpPost("")]
+        public async Task<IActionResult> AddHoliday(HolidayRequest request)
         {
+            var response = new Response<object>();
+            await Task.CompletedTask;
+
+            string id = Guid.NewGuid().ToString();
+            Holiday holiday = new Holiday
+            {
+                HolidayId = id,
+                StartDate = request.StartDate,
+                EndDate = request.EndDate,
+                IsDeleted = true
+            };
             var result = await _holidayService.AddHoliday(holiday);
-            return Ok(result);
+
+            if (result != null)
+            {
+                response.StatusCode = 200;
+                response.Message = "Successfully";
+                response.Data = result;
+            }
+            else
+            {
+                response.StatusCode = 404;
+                response.Message = "Failed";
+            }
+            return Ok(response);
         }
 
-        [HttpDelete("{id}")]
-        public async Task<IActionResult> DeleteHoliday(string id)
+        [HttpDelete("delete")]
+        public async Task<IActionResult> DeleteHoliday(HolidayDelete request)
         {
-            var result = await _holidayService.DeleteHoliday(id);
-            if(result is null)
+            var response = new Response<object>();
+            string id = request.Id;
+
+            Holiday holiday = await _holidayService.GetHolidaysById(id);
+
+            if (holiday != null)
             {
-                return NotFound("Holiday not found!!!");
+                var result = await _holidayService.DeleteHoliday(id);
+                if (result)
+                {
+                    response.StatusCode = 200;
+                    response.Message = "Successfully";
+                }
+                else
+                {
+                    response.StatusCode = 404;
+                    response.Message = "Failed";
+                }
+            } 
+            else
+            {
+                response.StatusCode = 404;
+                response.Message = "Not found";
             }
-            return Ok(result);
+            return Ok(response);
         }
 
-        [HttpPut("{id}")]
-        public async Task<IActionResult> UpdateHoliday(string id, Holiday request)
+        [HttpPut("update")]
+        public async Task<IActionResult> UpdateHoliday(HolidayUpdate request)
         {
-            var result = await _holidayService.UpdateHoliday(id, request);
-            if(result is null)
+            var response = new Response<object>();
+
+            Holiday holiday = new Holiday
             {
-                return NotFound("Holiday not found!!!");
+                HolidayId = request.Id,
+                StartDate = request.StartDate,
+                EndDate = request.EndDate,
+                IsDeleted = request.IsDelete
+            };
+
+            var result = await _holidayService.UpdateHoliday(holiday);
+
+            if (result)
+            {
+                response.StatusCode = 200;
+                response.Message = "Successfully";
             }
-            return Ok(result);
+            else
+            {
+                response.StatusCode = 404;
+                response.Message = "Failed";
+            }
+            return Ok(response);
         }
     }
 }

@@ -7,8 +7,8 @@ namespace SalaryManagement.Application.Common.Interfaces.Persistence
         Task<Holiday> GetHolidayById(string id);
         Task<IEnumerable<Holiday>> GetAllHolliday();
         Task<Holiday> AddHoliday(Holiday holiday);
-        Task<Holiday> UpdateHoliday(string id, Holiday request);
-        Task<IEnumerable<Holiday>> DeleteHoliday(string id);
+        Task<bool> UpdateHoliday(Holiday holiday);
+        Task<bool> DeleteHoliday(string id);
 
     }
 }
