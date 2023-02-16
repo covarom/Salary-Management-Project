@@ -10,9 +10,8 @@ using System.Net;
 
 namespace SalaryManagement.Api.Controllers
 {
-    [Route("api/v1")]
+    [Route("api/v1/holidays")]
     [ApiController]
-    [Authorize]
     public class HolidayController : ControllerBase
     {
         private readonly IHolidayService _holidayService;
@@ -24,19 +23,47 @@ namespace SalaryManagement.Api.Controllers
             _mapper = mapper;
         }
 
-        //private static List<Holiday> holidays = new List<Holiday>
-        //{
-
-        //    new Holiday{HolidayId = "hld_1",StartDate =  new DateTime(2023, 01, 07),EndDate =  new DateTime(2023, 01, 10),IsDelete = "1" },
-        //     new Holiday{HolidayId = "hld_2",StartDate =  new DateTime(2023, 02, 07),EndDate =  new DateTime(2023, 02, 10),IsDelete = "0" }
-        //};
-
-
-        [HttpGet("get-all-holiday")]
+        [HttpGet("getAllHolidays")]
         public async Task<IActionResult> GetAllHoliday()
         {
             var holidays = await _holidayService.GetAllHoliday();
             return Ok(holidays);
+        }
+
+        [HttpGet("{id}")]
+        public async Task<IActionResult> FindById(string id)
+        {
+            var holiday = await _holidayService.GetHolidaysById(id);
+            return Ok(holiday);
+        }
+
+        [HttpPost("add")]
+        public async Task<IActionResult> AddHoliday(Holiday holiday)
+        {
+            var result = await _holidayService.AddHoliday(holiday);
+            return Ok(result);
+        }
+
+        [HttpDelete("{id}")]
+        public async Task<IActionResult> DeleteHoliday(string id)
+        {
+            var result = await _holidayService.DeleteHoliday(id);
+            if(result is null)
+            {
+                return NotFound("Holiday not found!!!");
+            }
+            return Ok(result);
+        }
+
+        [HttpPut("{id}")]
+        public async Task<IActionResult> UpdateHoliday(string id, Holiday request)
+        {
+            var result = await _holidayService.UpdateHoliday(id, request);
+            if(result is null)
+            {
+                return NotFound("Holiday not found!!!");
+            }
+            return Ok(result);
         }
     }
 }

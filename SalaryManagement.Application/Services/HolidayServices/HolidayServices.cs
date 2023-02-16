@@ -1,10 +1,5 @@
 ﻿using SalaryManagement.Application.Common.Interfaces.Persistence;
 using SalaryManagement.Domain.Entities;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace SalaryManagement.Application.Services.HolidayServices
 {
@@ -12,29 +7,34 @@ namespace SalaryManagement.Application.Services.HolidayServices
     {
         private readonly IHolidayRepository _repository;
 
-        //public async List<Holiday> AddHoliday(Holiday holiday)
-        //{
-        //    return await _repository.AddHoliday(holiday);
-        //}
+        public HolidayServices(IHolidayRepository holidayRepository)
+        {
+            _repository = holidayRepository;
+        }
 
         public async Task<IEnumerable<Holiday>> GetAllHoliday()
         {
             return await _repository.GetAllHolliday();
         }
 
-        public Task<Holiday> GetHolidaysById(string id)
+        public async Task<Holiday> GetHolidaysById(string id)
         {
-            throw new NotImplementedException();
+            return await _repository.GetHolidayById(id);
         }
 
-        public List<Holiday> RemoveHoliday(string id)
+        public async Task<IEnumerable<Holiday>> DeleteHoliday(string id)
         {
-            throw new NotImplementedException();
+            return await _repository.DeleteHoliday(id);
         }
 
-        public List<Holiday> UpdateHoliday(string id, Holiday request)
+        public async Task<Holiday> UpdateHoliday(string id, Holiday request)
         {
-            throw new NotImplementedException();
+            return await _repository.UpdateHoliday(id, request);
+        }
+
+        public async Task<Holiday> AddHoliday(Holiday holiday)
+        {
+            return await _repository.AddHoliday(holiday);
         }
     }
 }

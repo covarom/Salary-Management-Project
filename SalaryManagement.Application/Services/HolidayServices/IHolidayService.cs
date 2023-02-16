@@ -10,13 +10,14 @@ namespace SalaryManagement.Application.Services.HolidayServices
     public interface IHolidayService
     {
         Task<Holiday> GetHolidaysById(string id);
+
         Task<IEnumerable<Holiday>> GetAllHoliday();
 
-        //List<Holiday> AddHoliday(Holiday holiday);
+        Task<Holiday> AddHoliday(Holiday holiday);
 
-        List<Holiday> RemoveHoliday(String id);
+        Task<IEnumerable<Holiday>> DeleteHoliday(string id);
 
-        List<Holiday> UpdateHoliday(String id, Holiday request);
+        Task<Holiday> UpdateHoliday(String id, Holiday request);
 
     }
 }

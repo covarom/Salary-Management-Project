@@ -1,4 +1,5 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.AspNetCore.Http.HttpResults;
+using Microsoft.EntityFrameworkCore;
 using SalaryManagement.Application.Common.Interfaces.Persistence;
 using SalaryManagement.Domain.Entities;
 
@@ -8,9 +9,14 @@ namespace SalaryManagement.Infrastructure.Persistence.Repositories
     {
         private readonly SalaryManagementContext _context;
 
+        public HolidayRepository(SalaryManagementContext context)
+        {
+            _context = context;
+        }
+
         public async Task<Holiday> GetHolidayById(string id)
         {
-            return await _context.Holidays.FindAsync(id);
+            return await _context.Holidays.SingleOrDefaultAsync(x => x.HolidayId.Equals(id));
         }
         public async Task<IEnumerable<Holiday>> GetAllHolliday()
         {
@@ -24,16 +30,31 @@ namespace SalaryManagement.Infrastructure.Persistence.Repositories
             return holiday;
         }
 
-        public async Task UpdateHoliday(Holiday holiday)
-        {
-            _context.Holidays.Update(holiday);
-            await _context.SaveChangesAsync();
-        }
-        public async Task DeleteHoliday(string id)
+        public async Task<Holiday> UpdateHoliday(string id, Holiday request)
         {
             var holiday = await _context.Holidays.FindAsync(id);
+            if(holiday == null)
+            {
+                return null;
+            }
+            holiday.HolidayId = id;
+            holiday.StartDate = request.StartDate;
+            holiday.EndDate = request.EndDate;
+            holiday.IsDeleted = request.IsDeleted;
+            await _context.SaveChangesAsync();
+
+            return holiday;
+        }
+        public async Task<IEnumerable<Holiday>> DeleteHoliday(string id)
+        {
+            var holiday = await _context.Holidays.FindAsync(id);
+            if (holiday !is null)
+            {
+                return null;
+            }
             _context.Holidays.Remove(holiday);
             await _context.SaveChangesAsync();
+            return await _context.Holidays.ToListAsync();
         }
     }
 }
