@@ -24,9 +24,13 @@ namespace SalaryManagement.Api.Controllers
         }
 
         [HttpGet("contracts")]
-        public async Task<IActionResult> GetAll()
+        public async Task<IActionResult> GetAll(int pageNumber, int pageSize, string? searchKeyword, string? sortBy, bool isDesc)
         {
-            var contracts = await _contractService.GetAllContracts();
+            if(pageSize == 0)
+            {
+                pageSize= 10;
+            }
+            var contracts = await _contractService.GetAllContracts(pageNumber, pageSize, sortBy, isDesc, searchKeyword);
 
             return Ok(contracts);
         }

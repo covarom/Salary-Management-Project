@@ -17,7 +17,7 @@ public partial class Employee
 
     public int? IdentifyNumber { get; set; }
 
-    public bool? IsActive { get; set; }
+    public bool? IsActive { get; set; } 
 
     public string? PhoneNumber { get; set; }
 
