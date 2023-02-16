@@ -1,11 +1,12 @@
-﻿using SalaryManagement.Domain.Entities;
+﻿using SalaryManagement.Contracts;
+using SalaryManagement.Domain.Entities;
 
 namespace SalaryManagement.Application.Services.ContractServices
 {
     public interface IContractServices 
     {
         Task<Contract> GetById(string contractId);
-        Task<IEnumerable<Contract>> GetAllContracts();
+        Task<PaginatedResponse<Contract>> GetAllContracts(int page, int pageSize, string sortColumn, bool? isDescending, string keyword = null);
 
         Task UpdateContractAsync(Contract contract);
 
