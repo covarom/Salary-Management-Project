@@ -24,13 +24,20 @@ namespace SalaryManagement.Infrastructure.Persistence.Repositories
             return salaryType;
         }
 
-        public async Task<IEnumerable<SalaryType>> DeleteSalaryType(string id)
+        public async Task<bool> DeleteSalaryType(string id)
         {
+            bool check = false;
             var salaryType = await _context.SalaryTypes.FindAsync(id);
-
             _context.SalaryTypes.Remove(salaryType);
-            await _context.SaveChangesAsync();
-            return await _context.SalaryTypes.ToListAsync();
+
+            int change = await _context.SaveChangesAsync();
+
+            if (change > 0)
+            {
+                check = true;
+            }
+
+            return check;
         }
 
         public async Task<IEnumerable<SalaryType>> GetAll()
@@ -43,16 +50,19 @@ namespace SalaryManagement.Infrastructure.Persistence.Repositories
             return await _context.SalaryTypes.SingleOrDefaultAsync(x => x.SalaryTypeId.Equals(id));
         }
 
-        public async Task<SalaryType> UpdateSalaryType(string id, SalaryType request)
-        {
-            var salaryType = await _context.SalaryTypes.FindAsync(id);
+        public async Task<bool> UpdateSalaryType(SalaryType salaryType)
+        {   
+            bool check = false;
+            _context.SalaryTypes.Update(salaryType);
+            
+            int change = await _context.SaveChangesAsync();
 
-            salaryType.SalaryTypeId = id;
-            salaryType.SalaryTypeName = request.SalaryTypeName;
-            salaryType.IsDeleted = request.IsDeleted;
+            if (change > 0)
+            {
+                check = true;
+            }
 
-            await _context.SaveChangesAsync();
-            return salaryType;
+            return check;
         }
     }
 }

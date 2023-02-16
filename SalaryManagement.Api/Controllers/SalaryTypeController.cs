@@ -1,7 +1,9 @@
 ﻿using MapsterMapper;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using MySqlX.XDevAPI.Common;
 using SalaryManagement.Application.Services.SalaryTypeService;
+using SalaryManagement.Contracts;
 using SalaryManagement.Domain.Entities;
 
 namespace SalaryManagement.Api.Controllers
@@ -22,44 +24,126 @@ namespace SalaryManagement.Api.Controllers
         [HttpGet("get-all")]
         public async Task<IActionResult> GetAll()
         {
+            var response = new Response<object>();
             var salaryType = await _salaryTypeService.GetAll();
-            return Ok(salaryType);
+            if (salaryType != null)
+            {
+                response.StatusCode = 200;
+                response.Message = "Successfully";
+                response.Data = salaryType;
+            }
+            else
+            {
+                response.StatusCode = 404;
+                response.Message = "Failed";
+            }
+            return Ok(response);
         }
 
         [HttpGet("{id}")]
         public async Task<IActionResult> FindById(string id)
         {
+            var response = new Response<object>();
             var salaryType = await _salaryTypeService.GetById(id);
-            return Ok(salaryType);
+            if (salaryType != null)
+            {
+                response.StatusCode = 200;
+                response.Message = "Successfully";
+                response.Data = salaryType;
+            }
+            else
+            {
+                response.StatusCode = 404;
+                response.Message = "Not found";
+            }
+            return Ok(response);
         }
 
         [HttpPost("")]
-        public async Task<IActionResult> AddSalaryType(SalaryType salaryType)
+        public async Task<IActionResult> AddSalaryType(SalaryTypeRequest request)
         {
+            var response = new Response<object>();
+            await Task.CompletedTask;
+
+            string id = Guid.NewGuid().ToString();
+
+            SalaryType salaryType = new SalaryType {
+                SalaryTypeId= id,
+                SalaryTypeName= request.SalaryTypeName,
+                IsDeleted = true
+            };
             var result = await _salaryTypeService.AddSalaryType(salaryType);
-            return Ok(result);
+
+            if (result != null)
+            {
+                response.StatusCode = 200;
+                response.Message = "Successfully";
+                response.Data = result;
+            }
+            else
+            {
+                response.StatusCode = 404;
+                response.Message = "Failed";
+            }
+            return Ok(response);
         }
 
-        [HttpDelete("{id}")]
-        public async Task<IActionResult> DeleteSalaryType(string id)
+        [HttpDelete("delete")]
+        public async Task<IActionResult> DeleteSalaryType(SalaryTypeDelete request)
         {
-            var result = await _salaryTypeService.DeleteSalaryType(id);
-            if (result is null)
+            var response = new Response<object>();
+            string id = request.Id;
+
+            SalaryType salaryType = await _salaryTypeService.GetById(id);
+
+            if(salaryType != null)
             {
-                return NotFound("Holiday not found!!!");
+                var result = await _salaryTypeService.DeleteSalaryType(id);
+                if (result)
+                {
+                    response.StatusCode = 200;
+                    response.Message = "Successfully";
+                }
+                else
+                {
+                    response.StatusCode = 404;
+                    response.Message = "Failed";
+                }
             }
-            return Ok(result);
+            else
+            {
+                response.StatusCode = 404;
+                response.Message = "Not found";
+            }
+            return Ok(response);
         }
 
-        [HttpPut("{id}")]
-        public async Task<IActionResult> UpdateSalaryType(string id, SalaryType request)
+        [HttpPut("update")]
+        public async Task<IActionResult> UpdateSalaryType(SalaryTypeUpdate request)
         {
-            var result = await _salaryTypeService.UpdateSalaryType(id, request);
-            if (result is null)
+            var response = new Response<object>();
+
+            SalaryType salaryType = new SalaryType
             {
-                return NotFound("Holiday not found!!!");
+                SalaryTypeId = request.Id,
+                SalaryTypeName = request.SalaryTypeName,
+                IsDeleted = request.IsDelete
+            };
+
+            var result = await _salaryTypeService.UpdateSalaryType(salaryType);
+
+
+            if(result)
+            {
+                response.StatusCode = 200;
+                response.Message = "Successfully";
             }
-            return Ok(result);
+            else
+            {
+                response.StatusCode = 404;
+                response.Message = "Failed";
+            }
+            return Ok(response);
         }
     }
 }

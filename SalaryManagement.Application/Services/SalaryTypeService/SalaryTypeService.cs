@@ -1,4 +1,5 @@
-﻿using SalaryManagement.Application.Common.Interfaces.Persistence;
+﻿using SalaryManagement.Api.Common.Helper;
+using SalaryManagement.Application.Common.Interfaces.Persistence;
 using SalaryManagement.Domain.Entities;
 using System;
 using System.Collections.Generic;
@@ -21,7 +22,7 @@ namespace SalaryManagement.Application.Services.SalaryTypeService
             return await _repository.AddSalaryType(salaryType);
         }
 
-        public async Task<IEnumerable<SalaryType>> DeleteSalaryType(string id)
+        public async Task<bool> DeleteSalaryType(string id)
         {
             return await _repository.DeleteSalaryType(id);
         }
@@ -36,9 +37,17 @@ namespace SalaryManagement.Application.Services.SalaryTypeService
             return await _repository.GetById(id);
         }
 
-        public async  Task<SalaryType> UpdateSalaryType(string id, SalaryType request)
+        public async  Task<bool> UpdateSalaryType(SalaryType salaryType)
         {
-            return await _repository.UpdateSalaryType(id, request);
+            var existSalaryType = await _repository.GetById(salaryType.SalaryTypeId);
+            if(existSalaryType != null)
+            {
+                existSalaryType.SalaryTypeName = StringHelper.IsNullOrEmpty(salaryType.SalaryTypeName) ? existSalaryType.SalaryTypeName: salaryType.SalaryTypeName;
+                existSalaryType.IsDeleted = StringHelper.IsNullOrEmpty(salaryType.IsDeleted.ToString()) ? existSalaryType.IsDeleted : salaryType.IsDeleted;
+
+                return await _repository.UpdateSalaryType(existSalaryType);
+            }
+            return false;
         }
     }
 }

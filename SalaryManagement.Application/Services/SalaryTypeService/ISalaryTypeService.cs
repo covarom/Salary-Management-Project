@@ -12,7 +12,7 @@ namespace SalaryManagement.Application.Services.SalaryTypeService
         Task<SalaryType> GetById(string id);
         Task<IEnumerable<SalaryType>> GetAll();
         Task<SalaryType> AddSalaryType(SalaryType salaryType);
-        Task<SalaryType> UpdateSalaryType(string id, SalaryType request);
-        Task<IEnumerable<SalaryType>> DeleteSalaryType(string id);
+        Task<bool> UpdateSalaryType(SalaryType salaryType);
+        Task<bool> DeleteSalaryType(string id);
     }
 }
