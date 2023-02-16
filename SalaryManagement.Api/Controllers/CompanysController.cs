@@ -8,7 +8,7 @@ using System.Net;
 
 namespace SalaryManagement.Api.Controllers
 {
-    [Route("api/v1/campanies")]
+    [Route("api/v1/companies")]
     [ApiController]
     [Authorize]
 

@@ -121,7 +121,7 @@ namespace SalaryManagement.Infrastructure.Persistence.Repositories
             {
                 CurrentPage = currentPage,
                 TotalPages = totalPages,
-                IntemPerPage = pageSize,
+                ItemPerPage = pageSize,
                 TotalCount = totalCount,
                 Results = results
             };
