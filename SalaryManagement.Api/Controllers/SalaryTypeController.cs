@@ -1,4 +1,5 @@
 ﻿using MapsterMapper;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using MySqlX.XDevAPI.Common;
@@ -10,6 +11,7 @@ namespace SalaryManagement.Api.Controllers
 {
     [Route("api/v1/salaryType")]
     [ApiController]
+    [Authorize]
     public class SalaryTypeController : ControllerBase
     {
         private readonly ISalaryTypeService _salaryTypeService;

@@ -13,6 +13,7 @@ namespace SalaryManagement.Api.Controllers
 {
     [Route("api/v1/holidays")]
     [ApiController]
+    [Authorize]
     public class HolidayController : ControllerBase
     {
         private readonly IHolidayService _holidayService;
