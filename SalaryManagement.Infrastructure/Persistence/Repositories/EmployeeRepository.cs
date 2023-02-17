@@ -63,7 +63,7 @@ namespace SalaryManagement.Infrastructure.Persistence.Repositories
         public async Task<string> GetEmployeeIdByName(string EmployeeName)
         {
             Employee employee = null;
-            employee = _context.Employees.SingleOrDefault(e => e.Name.Equals(EmployeeName.Trim()));
+            employee = _context.Employees.SingleOrDefault(e => e.Name.Contains(EmployeeName.Trim()));
 
             return employee.EmployeeId;
         }

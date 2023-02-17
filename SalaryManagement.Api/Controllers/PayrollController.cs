@@ -1,4 +1,5 @@
 ﻿using MapsterMapper;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using SalaryManagement.Application.Common.Interfaces.Persistence;
@@ -10,6 +11,7 @@ namespace SalaryManagement.Api.Controllers
 {
     [Route("api/v1/")]
     [ApiController]
+    [Authorize]
     public class PayrollController : ControllerBase
     {
         private readonly IPayrollService _payrollService;
@@ -64,8 +66,8 @@ namespace SalaryManagement.Api.Controllers
                 IsDeleted = request.IsDelate,
                 EmployeeId = await _employeeRepository.GetEmployeeIdByName(request.EmployeeName)
             };
+                
             var result = _payrollService.AddPayroll(payroll);
-
             return Ok(result);
         }
 
