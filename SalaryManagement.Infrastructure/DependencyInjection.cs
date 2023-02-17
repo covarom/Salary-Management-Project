@@ -45,6 +45,7 @@ namespace SalaryManagement.Insfrastructure
 
             services.AddScoped<IHolidayRepository, HolidayRepository>();
             services.AddScoped<ISalaryTypeRepository, SalaryTypeRepository>();
+            services.AddScoped<IPayrollRepository, PayrollRepository>();
 
             return services;
         }
