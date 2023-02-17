@@ -1,10 +1,7 @@
 ﻿using MapsterMapper;
 using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
-using MySqlX.XDevAPI.Common;
 using SalaryManagement.Application.Services.SalaryTypeService;
-using SalaryManagement.Contracts;
 using SalaryManagement.Domain.Entities;
 
 namespace SalaryManagement.Api.Controllers
@@ -26,45 +23,28 @@ namespace SalaryManagement.Api.Controllers
         [HttpGet("get-all")]
         public async Task<IActionResult> GetAll()
         {
-            var response = new Response<object>();
             var salaryType = await _salaryTypeService.GetAll();
-            if (salaryType != null)
-            {
-                response.StatusCode = 200;
-                response.Message = "Successfully";
-                response.Data = salaryType;
-            }
-            else
-            {
-                response.StatusCode = 404;
-                response.Message = "Failed";
-            }
-            return Ok(response);
+
+            return Ok(salaryType);
         }
 
         [HttpGet("{id}")]
         public async Task<IActionResult> FindById(string id)
         {
-            var response = new Response<object>();
             var salaryType = await _salaryTypeService.GetById(id);
-            if (salaryType != null)
+            if(salaryType == null)
             {
-                response.StatusCode = 200;
-                response.Message = "Successfully";
-                response.Data = salaryType;
+                return NotFound("Salary type not found");
             }
             else
             {
-                response.StatusCode = 404;
-                response.Message = "Not found";
+                return Ok(salaryType);
             }
-            return Ok(response);
         }
 
         [HttpPost("")]
         public async Task<IActionResult> AddSalaryType(SalaryTypeRequest request)
         {
-            var response = new Response<object>();
             await Task.CompletedTask;
 
             string id = Guid.NewGuid().ToString();
@@ -76,25 +56,14 @@ namespace SalaryManagement.Api.Controllers
             };
             var result = await _salaryTypeService.AddSalaryType(salaryType);
 
-            if (result != null)
-            {
-                response.StatusCode = 200;
-                response.Message = "Successfully";
-                response.Data = result;
-            }
-            else
-            {
-                response.StatusCode = 404;
-                response.Message = "Failed";
-            }
-            return Ok(response);
+            return Ok(result);
         }
 
         [HttpDelete("delete")]
         public async Task<IActionResult> DeleteSalaryType(SalaryTypeDelete request)
         {
-            var response = new Response<object>();
             string id = request.Id;
+            var msg = "";
 
             SalaryType salaryType = await _salaryTypeService.GetById(id);
 
@@ -103,28 +72,23 @@ namespace SalaryManagement.Api.Controllers
                 var result = await _salaryTypeService.DeleteSalaryType(id);
                 if (result)
                 {
-                    response.StatusCode = 200;
-                    response.Message = "Successfully";
+                    msg = "Delete successfully";
                 }
                 else
                 {
-                    response.StatusCode = 404;
-                    response.Message = "Failed";
+                    msg = "Delete failed";
                 }
             }
             else
             {
-                response.StatusCode = 404;
-                response.Message = "Not found";
+                msg = "Salary type not found";
             }
-            return Ok(response);
+            return Ok(msg);
         }
 
         [HttpPut("update")]
         public async Task<IActionResult> UpdateSalaryType(SalaryTypeUpdate request)
         {
-            var response = new Response<object>();
-
             SalaryType salaryType = new SalaryType
             {
                 SalaryTypeId = request.Id,
@@ -133,19 +97,17 @@ namespace SalaryManagement.Api.Controllers
             };
 
             var result = await _salaryTypeService.UpdateSalaryType(salaryType);
+            var msg = "";
 
-
-            if(result)
+            if (result)
             {
-                response.StatusCode = 200;
-                response.Message = "Successfully";
+                msg = "Update successfully";
             }
             else
             {
-                response.StatusCode = 404;
-                response.Message = "Failed";
+                return NotFound("Salary type not found");
             }
-            return Ok(response);
+            return Ok(msg);
         }
     }
 }
