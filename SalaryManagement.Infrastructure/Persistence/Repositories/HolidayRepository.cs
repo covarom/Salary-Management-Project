@@ -39,13 +39,8 @@ namespace SalaryManagement.Infrastructure.Persistence.Repositories
 
             if (change > 0)
             {
-                check =  true;
+                check = true;
             }
-            holiday.HolidayId = id;
-            holiday.StartDate = request.StartDate;
-            holiday.EndDate = request.EndDate;
-            holiday.IsDeleted = request.IsDeleted;
-            await _context.SaveChangesAsync();
 
             return check;
         }
