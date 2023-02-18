@@ -15,7 +15,7 @@ public partial class LeaveLog
 
     public string? Status { get; set; }
 
-    public string? IsDelete { get; set; }
+    public bool? IsDeleted { get; set; }
 
     public string? EmployeeId { get; set; }
 

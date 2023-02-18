@@ -9,11 +9,11 @@ public partial class OvertimeLog
 
     public DateTime? OvertimeDay { get; set; }
 
-    public string? Hours { get; set; }
+    public int? Hours { get; set; }
 
     public string? Status { get; set; }
 
-    public string? IsDelete { get; set; }
+    public bool? IsDeleted { get; set; }
 
     public string? EmployeeId { get; set; }
 

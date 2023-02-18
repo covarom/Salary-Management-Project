@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.AspNetCore.Hosting;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -24,7 +25,7 @@ namespace SalaryManagement.Insfrastructure
             services.AddAuth(configuration);
             services.AddSingleton<IDateTimeProvider, DateTimeProvider>();          
             services.AddDBContext(configuration);
-
+            //services.AddAutoMapper(typeof(MappingProfile));
             return services;
         }
 
@@ -32,12 +33,17 @@ namespace SalaryManagement.Insfrastructure
         {
 
            services.AddDbContext<SalaryManagementContext>(options =>
-        options.UseMySQL(configuration.GetConnectionString("SalaryManagementDBContext")));
+        options.UseMySQL(configuration.GetConnectionString("SalaryManagementDBContext")).EnableSensitiveDataLogging());
            // services.AddScoped<IUserRepository, UserRepository>();
 
-            services.AddScoped<IAdminRepository, AdminRepository>();
+            services.AddScoped<IAdminRepository, AdminRepository>(); 
             services.AddScoped<IContractRepository, ContractRepository>();
             services.AddScoped<ICompanyRepository,CompanyRepository>();
+
+            services.AddScoped<IAdminRepository, AdminRepository>();
+            services.AddScoped<IEmployeeRepository,EmployeeRepository>();
+
+            services.AddScoped<IHolidayRepository, HolidayRepository>();
 
             return services;
         }

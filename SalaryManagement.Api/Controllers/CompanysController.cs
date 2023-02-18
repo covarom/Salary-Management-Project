@@ -8,7 +8,7 @@ using System.Net;
 
 namespace SalaryManagement.Api.Controllers
 {
-    [Route("api/v1/companys")]
+    [Route("api/v1/companies")]
     [ApiController]
     [Authorize]
 
@@ -23,15 +23,11 @@ namespace SalaryManagement.Api.Controllers
             _mapper = mapper;
         }
 
-        [HttpGet("getAllCompanys")]
+        [HttpGet("all")]
          public async Task<IActionResult> GetAll()
         {
             var company = await _companyService.GetAllCompanys();
-
-            // if(company){
-            //      var testResponse = "No company !!!";
-            //      return Ok(testResponse);
-            // }
+            
             return Ok(company);    
         }
 
@@ -46,35 +42,56 @@ namespace SalaryManagement.Api.Controllers
             return Ok(company);    
         }
 
-        [HttpPost("addCompany")]
+        [HttpPost("")]
         public async Task<IActionResult> AddContract(CompanyRequest cr)
         {
             await Task.CompletedTask;
 
-            // if(!cr){
-            //     var msg ="Please input again !!!";
-            //     return Ok(msg);
-            // }
 
             var company_name = cr.company_name ;
-            // if(!company_name){
-            //     var msg ="Please input again !!!";
-            //     return Ok(msg);
-            // }
             string id = Guid.NewGuid().ToString();
             Company company = new Company
             {
                 CompanyId= id,
-                CompanyIdName = company_name
+                CompanyName = company_name
             };
+
+
             var result = _companyService.AddCompany(company);
-            var messageRespone = "Add successf !!!";
-            // if(!result){
-            //     messageRespone = "Add failed !!!";
-            // }else{
-            //     messageRespone = "Add successf !!!";
-            // }
-            return Ok(messageRespone);
+            return Ok(result);
+        }
+        [HttpPut("update")]
+         public async Task<IActionResult> Update(CompanyUpdate cr)
+        {
+            string id = cr.id;
+            string updateName = cr.company_name;
+             Company company = new Company
+            {
+                CompanyId= id,
+                CompanyName = updateName
+            };
+            var rs = await _companyService.UpdateCompany(company);
+            var msg ="";
+            if(rs){
+                    msg = "Update successfully";       
+            }else{  
+                    msg = "Update failed";            
+            };
+            return Ok(msg);    
+        }
+
+        [HttpDelete("delete")]
+         public async Task<IActionResult> Delete(CompanyDelete cr)
+        {
+            string id = cr.id;
+            var rs = await _companyService.RemoveCompany(id);
+            var msg ="";
+            if(rs){
+                    msg = "Delete successfully";       
+            }else{  
+                    msg = "Delete failed";            
+            };
+            return Ok(msg);      
         }
     }
         

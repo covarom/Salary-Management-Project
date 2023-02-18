@@ -1,13 +1,17 @@
-﻿using SalaryManagement.Domain.Entities;
+﻿using SalaryManagement.Contracts;
+using SalaryManagement.Domain.Entities;
 
 namespace SalaryManagement.Application.Common.Interfaces.Persistence
 {
     public interface IContractRepository
     {
-        Task<Contract> GetContractByIdAsync(string id);
+        Task<Contract?> GetContractByIdAsync(string id);
         Task<IEnumerable<Contract>> GetAllContractsAsync();
         Task<Contract> AddContractAsync(Contract contract);
         Task UpdateContractAsync(Contract contract);
-        Task DeleteContractAsync(int id);
+        Task DeleteContractAsync(Contract contract);
+        Task<PaginatedResponse<Contract>> GetContractsAsync(int pageNumber, int pageSize, string? searchKeyword, string? sortBy, bool? isDesc);
+
+
     }
 }
