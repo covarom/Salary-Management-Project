@@ -44,7 +44,17 @@ namespace SalaryManagement.Infrastructure.Persistence.Repositories
 
         public async Task<PaginatedResponse<Payroll>> GetAll(int pageNumber, int pageSize, string? keyword, string? sortBy, bool? isDesc)
         {
-            var query = _context.Payrolls.Include(e => e.Employee).AsQueryable();
+            var query =  _context.Payrolls.Include(e => e.Employee).Select(p => new Payroll
+            {
+                PayrollId = p.PayrollId,
+                Total = p.Total,
+                Tax = p.Tax,
+                Note = p.Note,
+                Date = p.Date,
+                IsDeleted = p.IsDeleted,
+                EmployeeId = p.EmployeeId,
+                Employee = p.Employee
+            }).AsQueryable();
 
             if(!string.IsNullOrEmpty(keyword))
             {
