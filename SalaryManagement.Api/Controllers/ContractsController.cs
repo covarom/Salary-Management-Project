@@ -74,6 +74,37 @@ namespace SalaryManagement.Api.Controllers
 
         }
 
+        [HttpPut("contracts/{id}")]
+        public async Task<IActionResult> UpdateContract(string id, [FromBody] UpdateContractRequest request)
+        {
+            await Task.CompletedTask;
+            var contract = new Contract
+            {
+                File = request.File,
+                StartDate = request.StartDate,
+                EndDate = request.EndDate,
+                Job = request.Job,
+                BasicSalary = request.BasicSalary,
+                Bhxh = request.BHXH,
+                PartnerId = request.PartnerId,
+                PartnerPrice = request.PartnerPrice,
+                EmployeeId = request.EmployeeId,
+                ContractTypeId = request.ContractTypeId,
+                SalaryTypeId = request.SalaryTypeId,
+                ContractStatusId = request.ContractStatusId
+            };
+
+
+            var updatedContract = await _contractService.UpdateContractAsync(id, contract);
+
+            if (updatedContract == null)
+            {
+                return NotFound();
+            }
+
+            return Ok(updatedContract);
+        }
+
 
         [HttpDelete("contract/{id}")]
         public async Task<IActionResult> DeleteContract(string id)
