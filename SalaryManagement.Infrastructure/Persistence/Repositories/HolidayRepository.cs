@@ -30,12 +30,16 @@ namespace SalaryManagement.Infrastructure.Persistence.Repositories
             return holiday;
         }
 
-        public async Task<Holiday> UpdateHoliday(string id, Holiday request)
+        public async Task<bool> UpdateHoliday(Holiday holiday)
         {
-            var holiday = await _context.Holidays.FindAsync(id);
-            if(holiday == null)
+            bool check = false;
+            _context.Holidays.Update(holiday);
+
+            int change = await _context.SaveChangesAsync();
+
+            if (change > 0)
             {
-                return null;
+                check =  true;
             }
             holiday.HolidayId = id;
             holiday.StartDate = request.StartDate;
@@ -43,18 +47,22 @@ namespace SalaryManagement.Infrastructure.Persistence.Repositories
             holiday.IsDeleted = request.IsDeleted;
             await _context.SaveChangesAsync();
 
-            return holiday;
+            return check;
         }
-        public async Task<IEnumerable<Holiday>> DeleteHoliday(string id)
+        public async Task<bool> DeleteHoliday(string id)
         {
+            bool check = false;
             var holiday = await _context.Holidays.FindAsync(id);
-            if (holiday !is null)
-            {
-                return null;
-            }
             _context.Holidays.Remove(holiday);
-            await _context.SaveChangesAsync();
-            return await _context.Holidays.ToListAsync();
+
+            int change = await _context.SaveChangesAsync();
+
+            if (change > 0)
+            {
+                check = true;
+            }
+
+            return check;
         }
     }
 }
