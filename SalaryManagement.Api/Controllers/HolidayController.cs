@@ -1,8 +1,12 @@
 ﻿using MapsterMapper;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using SalaryManagement.Application.Services.ContractServices;
 using SalaryManagement.Application.Services.HolidayServices;
 using SalaryManagement.Domain.Entities;
+using SalaryManagement.Infrastructure.Persistence;
+using System.Net;
 
 namespace SalaryManagement.Api.Controllers
 {
@@ -38,8 +42,8 @@ namespace SalaryManagement.Api.Controllers
             }
             else
             {
-                return Ok(holiday);
-            }
+            return Ok(holiday);
+        }
         }
 
         [HttpPost("")]
@@ -70,7 +74,7 @@ namespace SalaryManagement.Api.Controllers
 
             if (holiday != null)
             {
-                var result = await _holidayService.DeleteHoliday(id);
+            var result = await _holidayService.DeleteHoliday(id);
                 if (result)
                 {
                     msg = "Delete successfully";
@@ -102,7 +106,7 @@ namespace SalaryManagement.Api.Controllers
             var msg = "";
 
             if (result)
-            {
+        {
                 msg = "Update successfully";
             }
             else

@@ -41,7 +41,12 @@ namespace SalaryManagement.Infrastructure.Persistence.Repositories
             {
                 check =  true;
             }
-            
+            holiday.HolidayId = id;
+            holiday.StartDate = request.StartDate;
+            holiday.EndDate = request.EndDate;
+            holiday.IsDeleted = request.IsDeleted;
+            await _context.SaveChangesAsync();
+
             return check;
         }
         public async Task<bool> DeleteHoliday(string id)

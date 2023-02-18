@@ -33,7 +33,7 @@ namespace SalaryManagement.Application.Services.HolidayServices
             //return await _repository.UpdateHoliday(id, request);
             var existHoliday = await _repository.GetHolidayById(holiday.HolidayId);
             if(existHoliday != null)
-            {
+        {
                 existHoliday.StartDate = StringHelper.IsNullOrEmpty(holiday.StartDate.ToString()) ? existHoliday.StartDate : holiday.StartDate;
                 existHoliday.EndDate = StringHelper.IsNullOrEmpty(holiday.EndDate.ToString()) ? existHoliday.EndDate : holiday.EndDate;
                 existHoliday.IsDeleted = StringHelper.IsNullOrEmpty(holiday.IsDeleted.ToString()) ? existHoliday.IsDeleted : holiday.IsDeleted;
