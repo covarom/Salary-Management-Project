@@ -10,7 +10,9 @@ namespace SalaryManagement.Application.Common.Interfaces.Persistence
         Task<bool> RemoveEmployee(string EmployeeId);
         Task<bool> UpdateEmployee(Employee Employee);
 
+
         Task<string> GetEmployeeIdByName(string EmployeeName);
+
 
     }
 }

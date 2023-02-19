@@ -51,9 +51,11 @@ namespace SalaryManagement.Infrastructure.Persistence.Repositories
          public async Task<bool> UpdateCompany(Company Company)
         {
             bool check=false;
+
             var company = await _context.Companys.FindAsync(Company.CompanyId);
             company.CompanyName = Company.CompanyName;
             _context.Companys.Update(company);
+
              int changes = await _context.SaveChangesAsync();
             if(changes>0){
                 check= true;
