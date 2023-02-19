@@ -39,6 +39,10 @@ namespace SalaryManagement.Api.Controllers
             //      var testResponse = "Không có công ty nào !!!";
             //      return Ok(testResponse);
             // }
+             if (company == null)
+            {
+                return NotFound();
+            }
             return Ok(company);    
         }
 
