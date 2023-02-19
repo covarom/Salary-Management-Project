@@ -26,10 +26,26 @@ namespace SalaryManagement.Infrastructure.Persistence.Repositories
             return contract;
         }
 
-        public async Task UpdateContractAsync(Contract contract)
+        public async Task<Contract?> UpdateContractAsync(Contract contract)
         {
-            _context.Contracts.Update(contract);
-            await _context.SaveChangesAsync();
+            _context.Entry(contract).State = EntityState.Modified;
+
+            try
+            {
+                await _context.SaveChangesAsync();
+                return contract;
+            }
+            catch (DbUpdateConcurrencyException)
+            {
+                if (!ContractExists(contract.ContractId))
+                {
+                    return null;
+                }
+                else
+                {
+                    throw;
+                }
+            }
         }
 
         public async Task DeleteContractAsync(int id)
@@ -127,7 +143,11 @@ namespace SalaryManagement.Infrastructure.Persistence.Repositories
             };
         }
 
-      
+        private bool ContractExists(string id)
+        {
+            return _context.Contracts.Any(e => e.ContractId == id);
+        }
     }
+
 }
 
