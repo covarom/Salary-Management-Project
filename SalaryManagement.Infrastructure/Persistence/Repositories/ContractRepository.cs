@@ -1,4 +1,4 @@
-﻿using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore;
 using SalaryManagement.Application.Common.Interfaces.Persistence;
 using SalaryManagement.Contracts;
 using SalaryManagement.Domain.Entities;
@@ -144,11 +144,11 @@ namespace SalaryManagement.Infrastructure.Persistence.Repositories
         }
 
 
+
         private bool ContractExists(string id)
         {
             return _context.Contracts.Any(e => e.ContractId == id);
         }
-
     }
 
 }
