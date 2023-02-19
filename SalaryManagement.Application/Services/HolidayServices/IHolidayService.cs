@@ -1,4 +1,4 @@
-using SalaryManagement.Domain.Entities;
+﻿using SalaryManagement.Domain.Entities;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -18,5 +18,6 @@ namespace SalaryManagement.Application.Services.HolidayServices
         Task<bool> DeleteHoliday(string id);
 
         Task<bool> UpdateHoliday(Holiday holiday);
+
     }
 }
