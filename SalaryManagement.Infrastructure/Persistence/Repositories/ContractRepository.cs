@@ -167,12 +167,27 @@ namespace SalaryManagement.Infrastructure.Persistence.Repositories
             var query = _context.Contracts.
                 Select(c => new Contract
                 {
-                ContractId = c.ContractId,
-                Job = c.Job,
-                StartDate = c.StartDate,
-                EndDate = c.EndDate,
-                Employee = c.Employee,
-                Partner = c.Partner
+                    ContractId = c.ContractId,
+                    Job = c.Job,
+                    StartDate = c.StartDate,
+                    EndDate = c.EndDate,
+                    BasicSalary= c.BasicSalary,
+                    Bhtn = c.Bhtn,
+                    Bhxh= c.Bhxh,
+                    Bhyt= c.Bhyt,
+                    ContractStatus= c.ContractStatus,
+                    ContractType= c.ContractType,
+                    CreatedAt= c.CreatedAt,
+                    DeletedAt= c.DeletedAt,
+                    EmployeeId= c.EmployeeId,
+                    File = c.File,
+                    PartnerId= c.PartnerId,
+                    PartnerPrice= c.PartnerPrice,
+                    SalaryType= c.SalaryType,
+                    Tax = c.Tax,
+                    UpdatedAt = c.UpdatedAt,
+                    Employee = c.Employee,
+                    Partner = c.Partner
                 })
                 .AsQueryable();
 
