@@ -148,6 +148,7 @@ namespace SalaryManagement.Infrastructure.Persistence.Repositories
         {
             return _context.Contracts.Any(e => e.ContractId == id);
         }
+
     }
 
 }

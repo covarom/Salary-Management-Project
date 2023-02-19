@@ -1,4 +1,6 @@
+
 using SalaryManagement.Api.Common.Helper;
+
 
 using SalaryManagement.Application.Common.Interfaces.Persistence;
 using SalaryManagement.Domain.Entities;
@@ -25,10 +27,14 @@ namespace SalaryManagement.Application.Services.HolidayServices
         }
 
 
+
+
         public async Task<bool> DeleteHoliday(string id)
         {
             return await _repository.DeleteHoliday(id);
         }
+
+
 
 
         public async Task<bool> UpdateHoliday(Holiday holiday)

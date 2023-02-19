@@ -1,4 +1,6 @@
+
 using SalaryManagement.Domain.Entities;
+
 
 namespace SalaryManagement.Application.Common.Interfaces.Persistence
 {
@@ -9,5 +11,7 @@ namespace SalaryManagement.Application.Common.Interfaces.Persistence
         Task<Holiday> AddHoliday(Holiday holiday);
         Task<bool> UpdateHoliday(Holiday holiday);
         Task<bool> DeleteHoliday(string id);
+
+
     }
 }
