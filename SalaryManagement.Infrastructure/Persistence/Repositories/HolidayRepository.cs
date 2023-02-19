@@ -29,7 +29,6 @@ namespace SalaryManagement.Infrastructure.Persistence.Repositories
             await _context.SaveChangesAsync();
             return holiday;
         }
-        
         public async Task<bool> UpdateHoliday(Holiday holiday)
         {
             bool check = false;

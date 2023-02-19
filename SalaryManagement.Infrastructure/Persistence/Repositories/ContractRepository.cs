@@ -144,7 +144,6 @@ namespace SalaryManagement.Infrastructure.Persistence.Repositories
         }
 
 
-
         private bool ContractExists(string id)
         {
             return _context.Contracts.Any(e => e.ContractId == id);

@@ -42,10 +42,12 @@ namespace SalaryManagement.Insfrastructure
 
             services.AddScoped<IAdminRepository, AdminRepository>();
             services.AddScoped<IEmployeeRepository,EmployeeRepository>();
+
             services.AddScoped<IHolidayRepository, HolidayRepository>();
             services.AddScoped<ILeaveLogRepository, LeaveLogRepository>();
             services.AddScoped<ISalaryTypeRepository, SalaryTypeRepository>();
             services.AddScoped<IPayrollRepository, PayrollRepository>();
+            
             return services;
         }
 

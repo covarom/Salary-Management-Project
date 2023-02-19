@@ -28,6 +28,7 @@ namespace SalaryManagement.Api.Controllers
         public async Task<IActionResult> GetAllHoliday()
         {
             var holidays = await _holidayService.GetAllHoliday();
+
             return Ok(holidays);
         }
 
@@ -43,6 +44,7 @@ namespace SalaryManagement.Api.Controllers
             {
             return Ok(holiday);
             }
+        }
         }
 
         [HttpPost("")]

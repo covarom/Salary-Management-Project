@@ -18,5 +18,6 @@ namespace SalaryManagement.Application.Services.HolidayServices
         Task<bool> DeleteHoliday(string id);
 
         Task<bool> UpdateHoliday(Holiday holiday);
+
     }
 }
