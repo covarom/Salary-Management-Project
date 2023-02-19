@@ -9,7 +9,17 @@
 
         public static bool IsNullOrEmpty(this string value)
         {
-            return string.IsNullOrEmpty(value);
+
+            if(!string.IsNullOrEmpty(value))
+            {
+                if(value.Trim().Length == 0)
+                {
+                    return true;
+                }
+                return false;
+            }
+            return true;
+
         }
 
         public static string Truncate(this string value, int maxLength)

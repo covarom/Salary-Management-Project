@@ -8,7 +8,7 @@ namespace SalaryManagement.Application.Common.Interfaces.Persistence
         Task<Contract?> GetContractByIdAsync(string id);
         Task<IEnumerable<Contract>> GetAllContractsAsync();
         Task<Contract> AddContractAsync(Contract contract);
-        Task UpdateContractAsync(Contract contract);
+        Task<Contract?> UpdateContractAsync(Contract contract);
         Task DeleteContractAsync(Contract contract);
         Task<PaginatedResponse<Contract>> GetContractsAsync(int pageNumber, int pageSize, string? searchKeyword, string? sortBy, bool? isDesc);
 
