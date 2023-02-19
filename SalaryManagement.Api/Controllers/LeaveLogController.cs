@@ -21,14 +21,14 @@ namespace SalaryManagement.Api.Controllers
             _mapper = mapper;
         }
 
-        [HttpGet("get/all")]
+        [HttpGet("all")]
         public async Task<IActionResult> GetAllLeaveLogs()
         {
             var leaveLogs = await _leaveLogService.GetAllLeaveLogs();
             return Ok(leaveLogs);
         }
 
-        [HttpGet("get/{id}/leave-log")]
+        [HttpGet("{id}")]
         public async Task<IActionResult> GetLeaveLogsById(string id)
         {
             if(id.IsNullOrEmpty())
@@ -43,7 +43,7 @@ namespace SalaryManagement.Api.Controllers
             return Ok(leaveLog);
         }
 
-        [HttpPost("create")]
+        [HttpPost("")]
         public async Task<IActionResult> AddNewLeaveLog(LeaveLogRequest leaveLog)
         {
             await Task.CompletedTask;
@@ -69,7 +69,7 @@ namespace SalaryManagement.Api.Controllers
             return NotFound();
         }
 
-        [HttpPut("update")]
+        [HttpPut("")]
         public async Task<IActionResult> UpdateLeaveLog(LeaveLogRequest leaveLog)
         {
             if (!IsValidRequest(leaveLog))
@@ -108,7 +108,7 @@ namespace SalaryManagement.Api.Controllers
             return NotFound();
         }
 
-        [HttpDelete("delete/{id}")]
+        [HttpDelete("{id}")]
         public async Task<IActionResult> DeleteLeaveLog(string id)
         {
             if (id.IsNullOrEmpty())
