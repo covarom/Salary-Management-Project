@@ -1,4 +1,4 @@
-﻿using SalaryManagement.Domain.Entities;
+using SalaryManagement.Domain.Entities;
 using System;
 using System.Collections.Generic;
 using System.Linq;

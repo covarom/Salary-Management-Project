@@ -1,4 +1,4 @@
-﻿using MapsterMapper;
+using MapsterMapper;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -43,6 +43,7 @@ namespace SalaryManagement.Api.Controllers
             else
             {
             return Ok(holiday);
+            }
         }
         }
 
