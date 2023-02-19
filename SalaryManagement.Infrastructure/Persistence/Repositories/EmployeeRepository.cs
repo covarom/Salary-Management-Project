@@ -58,7 +58,14 @@ namespace SalaryManagement.Infrastructure.Persistence.Repositories
                 check= true;
             }
              return check;
-        }   
 
+        }
+
+        public async Task<string> GetEmployeeIdByName(string EmployeeName)
+        {
+            Employee employee = null;
+            employee = _context.Employees.SingleOrDefault(e => e.Name.Contains(EmployeeName.Trim()));
+            return employee.EmployeeId;
+        }
     }
 }

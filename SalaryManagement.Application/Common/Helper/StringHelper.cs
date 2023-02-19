@@ -1,4 +1,4 @@
-﻿namespace SalaryManagement.Api.Common.Helper
+namespace SalaryManagement.Api.Common.Helper
 {
     public static class StringHelper
     {
