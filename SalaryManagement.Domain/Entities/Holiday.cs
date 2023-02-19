@@ -14,4 +14,6 @@ public partial class Holiday
     public DateTime? EndDate { get; set; }
 
     public bool? IsDeleted { get; set; }
+
+    public string? HolidayName { get; set; }
 }
