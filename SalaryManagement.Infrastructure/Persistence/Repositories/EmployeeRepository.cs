@@ -58,6 +58,7 @@ namespace SalaryManagement.Infrastructure.Persistence.Repositories
                 check= true;
             }
              return check;
+
         }
 
         public async Task<string> GetEmployeeIdByName(string EmployeeName)
@@ -67,5 +68,6 @@ namespace SalaryManagement.Infrastructure.Persistence.Repositories
 
             return employee.EmployeeId;
         }
+
     }
 }
