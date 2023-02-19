@@ -1,4 +1,4 @@
-using MapsterMapper;
+﻿using MapsterMapper;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -36,16 +36,16 @@ namespace SalaryManagement.Api.Controllers
         public async Task<IActionResult> FindById(string id)
         {
             var holiday = await _holidayService.GetHolidaysById(id);
-            if(holiday == null)
+            if (holiday == null)
             {
                 return NotFound("Holiday not found");
             }
             else
             {
-            return Ok(holiday);
+                return Ok(holiday);
             }
         }
-        }
+
 
         [HttpPost("")]
         public async Task<IActionResult> AddHoliday(HolidayRequest request)
@@ -75,7 +75,7 @@ namespace SalaryManagement.Api.Controllers
 
             if (holiday != null)
             {
-            var result = await _holidayService.DeleteHoliday(id);
+                var result = await _holidayService.DeleteHoliday(id);
                 if (result)
                 {
                     msg = "Delete successfully";
@@ -84,11 +84,12 @@ namespace SalaryManagement.Api.Controllers
                 {
                     msg = "Delete failed";
                 }
-            } 
+            }
             else
             {
                 msg = "Holiday not found";
             }
+
             return Ok(msg);
         }
 
@@ -107,13 +108,14 @@ namespace SalaryManagement.Api.Controllers
             var msg = "";
 
             if (result)
-        {
+            {
                 msg = "Update successfully";
             }
             else
             {
                 return NotFound("Holiday not found");
             }
+
             return Ok(msg);
         }
     }
