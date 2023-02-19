@@ -72,7 +72,8 @@ namespace SalaryManagement.Api.Controllers
              Company company = new Company
             {
                 CompanyId= id,
-                CompanyName = updateName
+                CompanyName = updateName,
+                Address = cr.company_address
             };
             var rs = await _companyService.UpdateCompany(company);
             var msg ="";
