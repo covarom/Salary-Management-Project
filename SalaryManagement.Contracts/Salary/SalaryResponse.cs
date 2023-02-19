@@ -2,7 +2,7 @@
 
 namespace SalaryManagement.Contracts.Salary
 
-{ 
+{
     public record EmployeeSalaryResponse
     {
         public string EmployeeId { get; init; }
@@ -23,5 +23,5 @@ namespace SalaryManagement.Contracts.Salary
 
         public double TotalSalary { get; init; }
     }
-{
+}
    
