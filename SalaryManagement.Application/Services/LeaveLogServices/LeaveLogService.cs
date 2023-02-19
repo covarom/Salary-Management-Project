@@ -22,7 +22,7 @@ namespace SalaryManagement.Application.Services.LeaveLogServices
             return _leaveLogRepository.CreateNewLeaveLog(leaveLog);
         }
 
-        public Task DeleteLeaveLogById(string leaveTimeId)
+        public Task<bool> DeleteLeaveLogById(string leaveTimeId)
         {
             return _leaveLogRepository.DeleteLeaveLogById(leaveTimeId);
         }
@@ -37,7 +37,7 @@ namespace SalaryManagement.Application.Services.LeaveLogServices
             return _leaveLogRepository.GetLeaveLogById(leaveTimeId);
         }
 
-        public Task<LeaveLog> UpdateLeaveLog(LeaveLog leaveLog)
+        public Task<bool> UpdateLeaveLog(LeaveLog leaveLog)
         {
             return _leaveLogRepository.UpdateLeaveLog(leaveLog);
         }

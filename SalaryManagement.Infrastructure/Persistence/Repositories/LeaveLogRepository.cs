@@ -1,4 +1,5 @@
-﻿using SalaryManagement.Application.Common.Interfaces.Persistence;
+﻿using Microsoft.EntityFrameworkCore;
+using SalaryManagement.Application.Common.Interfaces.Persistence;
 using SalaryManagement.Domain.Entities;
 using System;
 using System.Collections.Generic;
@@ -17,19 +18,37 @@ namespace SalaryManagement.Infrastructure.Persistence.Repositories
             _context = context;
         }
 
-        public Task<LeaveLog> CreateNewLeaveLog(LeaveLog leaveLog)
+        public async Task<LeaveLog> CreateNewLeaveLog(LeaveLog leaveLog)
         {
-            throw new NotImplementedException();
+            _context.LeaveLogs.Add(leaveLog);
+            var changes = await _context.SaveChangesAsync();
+            return changes > 0 ? leaveLog : null;
         }
 
-        public Task<IEnumerable<LeaveLog>> GetAllLeaveLogs()
+        public async Task<bool> DeleteLeaveLogById(string leaveTimeId)
         {
-            throw new NotImplementedException();
+            var leaveLog = await _context.LeaveLogs.SingleOrDefaultAsync(x => x.LeaveTimeId.Equals(leaveTimeId));
+            if (leaveLog == null) return false;
+            leaveLog.IsDeleted = true;
+            var changes = await _context.SaveChangesAsync();
+            return changes > 0;
         }
 
-        public Task<LeaveLog> GetLeaveLogById(string leaveTimeId)
+        public async Task<IEnumerable<LeaveLog>> GetAllLeaveLogs()
         {
-            throw new NotImplementedException();
+            return await _context.LeaveLogs.ToListAsync();
+        }
+
+        public async Task<LeaveLog> GetLeaveLogById(string leaveTimeId)
+        {
+            return await _context.LeaveLogs.SingleOrDefaultAsync(x => x.LeaveTimeId.Equals(leaveTimeId));
+        }
+
+        public async Task<bool> UpdateLeaveLog(LeaveLog leaveLog)
+        {
+            _context.LeaveLogs.Update(leaveLog);
+            int changes = await _context.SaveChangesAsync();
+            return changes > 0;
         }
     }
 }

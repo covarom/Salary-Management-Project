@@ -12,7 +12,7 @@ namespace SalaryManagement.Application.Services.LeaveLogServices
         Task<IEnumerable<LeaveLog>> GetAllLeaveLogs();
         Task<LeaveLog> GetLeaveLogById(string leaveTimeId);
         Task<LeaveLog> CreateNewLeaveLog(LeaveLog leaveLog);
-        Task<LeaveLog> UpdateLeaveLog(LeaveLog leaveLog);
-        Task DeleteLeaveLogById(string leaveTimeId);
+        Task<bool> UpdateLeaveLog(LeaveLog leaveLog);
+        Task<bool> DeleteLeaveLogById(string leaveTimeId);
     }
 }
