@@ -1,6 +1,7 @@
 ﻿using SalaryManagement.Contracts.Employee;
 
 namespace SalaryManagement.Contracts.Salary
+
 { 
     public record EmployeeSalaryResponse
     {
@@ -22,5 +23,5 @@ namespace SalaryManagement.Contracts.Salary
 
         public double TotalSalary { get; init; }
     }
-
-}
+{
+   
