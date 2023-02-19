@@ -1,4 +1,4 @@
-﻿using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore;
 using SalaryManagement.Application.Common.Interfaces.Persistence;
 using SalaryManagement.Contracts;
 using SalaryManagement.Domain.Entities;

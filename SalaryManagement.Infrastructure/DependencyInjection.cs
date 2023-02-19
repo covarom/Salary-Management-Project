@@ -1,4 +1,4 @@
-﻿using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
@@ -45,9 +45,10 @@ namespace SalaryManagement.Insfrastructure
 
 
             services.AddScoped<IHolidayRepository, HolidayRepository>();
+            services.AddScoped<ILeaveLogRepository, LeaveLogRepository>();
             services.AddScoped<ISalaryTypeRepository, SalaryTypeRepository>();
             services.AddScoped<IPayrollRepository, PayrollRepository>();
-
+            
 
             return services;
         }

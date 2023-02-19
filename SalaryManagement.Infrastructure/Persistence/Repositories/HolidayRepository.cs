@@ -1,4 +1,6 @@
-﻿using Microsoft.AspNetCore.Http.HttpResults;
+
+using Microsoft.AspNetCore.Http.HttpResults;
+
 using Microsoft.EntityFrameworkCore;
 using SalaryManagement.Application.Common.Interfaces.Persistence;
 using SalaryManagement.Domain.Entities;
@@ -29,6 +31,7 @@ namespace SalaryManagement.Infrastructure.Persistence.Repositories
             await _context.SaveChangesAsync();
             return holiday;
         }
+
 
         public async Task<bool> UpdateHoliday(Holiday holiday)
         {

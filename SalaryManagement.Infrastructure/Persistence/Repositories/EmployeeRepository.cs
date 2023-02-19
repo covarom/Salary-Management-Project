@@ -65,9 +65,7 @@ namespace SalaryManagement.Infrastructure.Persistence.Repositories
         {
             Employee employee = null;
             employee = _context.Employees.SingleOrDefault(e => e.Name.Contains(EmployeeName.Trim()));
-
             return employee.EmployeeId;
         }
-
     }
 }

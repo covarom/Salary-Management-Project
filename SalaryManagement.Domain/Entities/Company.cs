@@ -10,5 +10,7 @@ public partial class Company
 
     public string? CompanyName { get; set; }
 
+    public string? Address { get; set; }
+
     public virtual ICollection<Contract> Contracts { get; } = new List<Contract>();
 }
