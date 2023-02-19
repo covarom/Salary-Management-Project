@@ -1,4 +1,5 @@
-﻿using SalaryManagement.Application.Common.Interfaces.Persistence;
+using SalaryManagement.Api.Common.Helper;
+using SalaryManagement.Application.Common.Interfaces.Persistence;
 using SalaryManagement.Domain.Entities;
 
 namespace SalaryManagement.Application.Services.HolidayServices
@@ -22,14 +23,26 @@ namespace SalaryManagement.Application.Services.HolidayServices
             return await _repository.GetHolidayById(id);
         }
 
-        public async Task<IEnumerable<Holiday>> DeleteHoliday(string id)
+
+        public async Task<bool> DeleteHoliday(string id)
         {
             return await _repository.DeleteHoliday(id);
         }
 
-        public async Task<Holiday> UpdateHoliday(string id, Holiday request)
+
+        public async Task<bool> UpdateHoliday(Holiday holiday)
         {
-            return await _repository.UpdateHoliday(id, request);
+            //return await _repository.UpdateHoliday(id, request);
+            var existHoliday = await _repository.GetHolidayById(holiday.HolidayId);
+            if(existHoliday != null)
+        {
+                existHoliday.StartDate = StringHelper.IsNullOrEmpty(holiday.StartDate.ToString()) ? existHoliday.StartDate : holiday.StartDate;
+                existHoliday.EndDate = StringHelper.IsNullOrEmpty(holiday.EndDate.ToString()) ? existHoliday.EndDate : holiday.EndDate;
+                existHoliday.IsDeleted = StringHelper.IsNullOrEmpty(holiday.IsDeleted.ToString()) ? existHoliday.IsDeleted : holiday.IsDeleted;
+
+                return await _repository.UpdateHoliday(existHoliday);
+            }
+            return false;
         }
 
         public async Task<Holiday> AddHoliday(Holiday holiday)

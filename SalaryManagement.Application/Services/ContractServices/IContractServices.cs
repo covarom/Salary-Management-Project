@@ -8,7 +8,7 @@ namespace SalaryManagement.Application.Services.ContractServices
         Task<Contract> GetById(string contractId);
         Task<PaginatedResponse<Contract>> GetAllContracts(int page, int pageSize, string sortColumn, bool? isDescending, string keyword = null);
 
-        Task UpdateContractAsync(Contract contract);
+        Task<Contract?> UpdateContractAsync(string id, Contract contract);
 
         Task DeleteContractAsync(string id);
 
