@@ -5,7 +5,8 @@ namespace SalaryManagement.Contracts.Companys
         );
     public record CompanyUpdate(
         string id,
-        string company_name
+        string company_name,
+        string company_address
         );    
     public record CompanyDelete(
         string id
