@@ -35,6 +35,10 @@ public partial class Contract
 
     public string ContractStatusId { get; set; } = null!;
 
+    public DateTime? CreatedAt { get; set; }
+
+    public DateTime? UpdatedAt { get; set; }
+
     public virtual ContractStatus ContractStatus { get; set; } = null!;
 
     public virtual ContractType ContractType { get; set; } = null!;
