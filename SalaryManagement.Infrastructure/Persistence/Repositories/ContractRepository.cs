@@ -248,15 +248,23 @@ namespace SalaryManagement.Infrastructure.Persistence.Repositories
 
             return response;
         }
-          public async Task<IEnumerable<Contract>> GetContractByCompanyId(string id)
+
+          public async Task<Contract> GetContractByCompanyId(string id)
         {
-            var contract =  await _context.Contracts.Include(x => x.Partner.CompanyId == id)
-                .ToListAsync();
+            // var contract =  _context.Contracts.AnyAsync(c => c.PartnerId == id && c.DeletedAt == null);
+
+            var contract = await _context.Contracts.Include(x => x.Partner).FirstOrDefaultAsync(x => x.PartnerId == id);
+
 
             if (contract == null) return null;
 
             return contract;
         }
+
+
+      
+        
+
     }
 
 }
