@@ -23,7 +23,7 @@ namespace SalaryManagement.Infrastructure.Persistence.Repositories
 
         public async Task<Employee> GetById(string id)
         {   
-            return await _context.Employees.SingleOrDefaultAsync(x => x.EmployeeId.Equals(id));
+            return await _context.Employees.SingleOrDefaultAsync(x => x.EmployeeId.Equals(id) && x.IsActive == true);
         }
 
         // public async Employee GetEmployeeByName(string name)
@@ -33,7 +33,6 @@ namespace SalaryManagement.Infrastructure.Persistence.Repositories
         // }
         public async Task<IEnumerable<Employee>> GetAllEmployee()
         {
-            Console.Write("Geeks");
             return await _context.Employees.ToListAsync();
         }  
 
@@ -41,7 +40,8 @@ namespace SalaryManagement.Infrastructure.Persistence.Repositories
         {
             bool check=false;
             var Employee = await _context.Employees.FindAsync(id);
-             _context.Employees.Remove(Employee);      
+            Employee.IsActive = false;
+             _context.Employees.Update(Employee);      
             int changes = await _context.SaveChangesAsync();
             if(changes>0){
                 check= true;
