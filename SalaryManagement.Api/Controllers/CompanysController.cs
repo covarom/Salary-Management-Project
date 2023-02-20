@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using SalaryManagement.Api.Common.Helper;
 using SalaryManagement.Application.Services.CompanyServices;
+using SalaryManagement.Application.Services.ContractServices;
 using SalaryManagement.Contracts.Companys;
 using SalaryManagement.Domain.Entities;
 using System.Net;
@@ -16,12 +17,14 @@ namespace SalaryManagement.Api.Controllers
      public class CompanysController : ControllerBase
     {
         private readonly ICompanyServices _companyService;
+        private readonly IContractServices _contractService;
         private readonly IMapper _mapper;
 
-        public CompanysController(ICompanyServices companyService, IMapper mapper)
+        public CompanysController(ICompanyServices companyService, IMapper mapper, IContractServices contractServices)
         {
             _companyService = companyService;
             _mapper = mapper;
+            _contractService = contractServices;
         }
 
         [HttpGet("all")]
@@ -95,6 +98,10 @@ namespace SalaryManagement.Api.Controllers
          public async Task<IActionResult> Delete(CompanyDelete cr)
         {
             string id = cr.id;
+            var contractList = await _contractService.GetContractByCompanyId(id);
+            if(contractList != null){
+                return BadRequest("Could not delete from the specified tables");
+            }
             var rs = await _companyService.RemoveCompany(id);
             var msg ="";
             if(rs){
