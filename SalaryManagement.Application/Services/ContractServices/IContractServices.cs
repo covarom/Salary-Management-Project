@@ -20,6 +20,8 @@ namespace SalaryManagement.Application.Services.ContractServices
 
         Task<PaginatedResponse<ContractResponse>> GetAllContracts(int pageNumber, int pageSize, string? sortBy, bool isDesc, string? searchKeyword);
 
+
         Task<Contract>GetContractByCompanyId(string companyId);
+
     }
 }

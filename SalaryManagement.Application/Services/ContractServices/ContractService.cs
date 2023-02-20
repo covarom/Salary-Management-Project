@@ -61,7 +61,9 @@ namespace SalaryManagement.Application.Services.ContractServices
         {
             return await _contractRepository.GetContractByIdAsync(contractId);
         }
+
          public async Task<Contract> GetContractByCompanyId(string companyId)
+
         {
             return await _contractRepository.GetContractByCompanyId(companyId);
         }
