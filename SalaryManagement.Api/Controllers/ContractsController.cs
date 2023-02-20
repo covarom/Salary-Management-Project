@@ -9,6 +9,7 @@ using SalaryManagement.Contracts.Contracts;
 using SalaryManagement.Domain.Contracts;
 using SalaryManagement.Domain.Entities;
 using System.Collections.Generic;
+using System.Diagnostics.Contracts;
 using System.Net;
 
 namespace SalaryManagement.Api.Controllers
@@ -54,80 +55,126 @@ namespace SalaryManagement.Api.Controllers
             return Ok(contracts);
         }
 
-        /*
 
         [HttpPost("contracts")]
-        public async Task<IActionResult> AddContract([FromBody]ContractRequest request)
+        public async Task<ActionResult<ContractResponse>> AddContract(ContractRequest request)
         {
-            await Task.CompletedTask;
-            var contract = new Contract
-            {
-                ContractId = Guid.NewGuid().ToString(),
-                File = request.File,
-                StartDate = request.StartDate,
-                EndDate = request.EndDate,
-                Job = request.Job,
-                BasicSalary = request.BasicSalary,
-                Bhxh = request.Bhxh,
-                Bhyt = request.Bhyt,
-                Bhtn = request.Bhtn,
-                Tax = request.Tax,
-                PartnerId = request.PartnerId,
-                PartnerPrice = request.PartnerPrice,
-                EmployeeId = request.EmployeeId,
-                ContractType = request.ContractType,
-                SalaryType = request.SalaryType,
-                ContractStatus = request.ContractStatus
-            };
-
-            var addedContract = await _contractService.AddContractAsync(contract);
-
-            return CreatedAtAction(nameof(Find), new { id = contract.ContractId }, addedContract);
-
+            var response = await _contractService.AddContractAsync(request);
+            return Ok(response);
         }
 
         [HttpPut("contracts/{id}")]
         public async Task<IActionResult> UpdateContract(string id, [FromBody] ContractRequest request)
         {
-            await Task.CompletedTask;
-            var contract = new Contract
+            try
             {
-                File = request.File,
-                StartDate = request.StartDate,
-                EndDate = request.EndDate,
-                Job = request.Job,
-                BasicSalary = request.BasicSalary,
-                Bhxh = request.Bhxh,
-                Bhyt = request.Bhyt,
-                Bhtn = request.Bhtn,
-                Tax = request.Tax,
-                PartnerId = request.PartnerId,
-                PartnerPrice = request.PartnerPrice,
-                EmployeeId = request.EmployeeId,
-                ContractType = request.ContractType,
-                SalaryType = request.SalaryType,
-                ContractStatus = request.ContractStatus
-            };
+                var existingContract = await _contractService.GetContractById(id);
 
+                if (existingContract == null)
+                {
+                    return NotFound();
+                }
 
-            var updatedContract = await _contractService.UpdateContractAsync(id, contract);
+                var contract = existingContract;//request.Adapt(existingContract);
 
-            if (updatedContract == null)
-            {
-                return NotFound();
+                if (!string.IsNullOrEmpty(request.File))
+                {
+                    contract.File = request.File;
+                }
+
+                if (request.StartDate.HasValue)
+                {
+                    contract.StartDate = request.StartDate.Value;
+                }
+
+                if (request.EndDate.HasValue)
+                {
+                    contract.EndDate = request.EndDate.Value;
+                }
+
+                if (!string.IsNullOrEmpty(request.Job))
+                {
+                    contract.Job = request.Job;
+                }
+
+                if (request.BasicSalary.HasValue)
+                {
+                    contract.BasicSalary = request.BasicSalary.Value;
+                }
+
+                if (request.Bhxh.HasValue)
+                {
+                    contract.Bhxh = request.Bhxh.Value;
+                }
+
+                if (request.Bhyt.HasValue)
+                {
+                    contract.Bhyt = request.Bhyt.Value;
+                }
+
+                if (request.Bhtn.HasValue)
+                {
+                    contract.Bhtn = request.Bhtn.Value;
+                }
+
+                if (request.Tax.HasValue)
+                {
+                    contract.Tax = request.Tax.Value;
+                }
+
+                if (!string.IsNullOrEmpty(request.PartnerId))
+                {
+                    contract.PartnerId = request.PartnerId;
+                }
+
+                if (request.PartnerPrice.HasValue)
+                {
+                    contract.PartnerPrice = request.PartnerPrice.Value;
+                }
+
+                if (!string.IsNullOrEmpty(request.EmployeeId))
+                {
+                    contract.EmployeeId = request.EmployeeId;
+                }
+
+                if (!string.IsNullOrEmpty(request.SalaryType))
+                {
+                    contract.SalaryType = request.SalaryType;
+                }
+
+                if (!string.IsNullOrEmpty(request.ContractStatus))
+                {
+                    contract.ContractStatus = request.ContractStatus;
+                }
+
+                if (!string.IsNullOrEmpty(request.ContractType))
+                {
+                    contract.ContractType = request.ContractType;
+                }
+
+                await _contractService.UpdateContract(contract);
+
+                return Ok(contract);
             }
-
-            return Ok(updatedContract);
+            catch (Exception ex)
+            {
+                // Log the exception
+                return StatusCode(StatusCodes.Status500InternalServerError, "An error occurred while updating the contract.");
+            }
         }
 
-
-        [HttpDelete("contract/{id}")]
+        [HttpDelete("contracts/{id}")]
         public async Task<IActionResult> DeleteContract(string id)
         {
-            await _contractService.DeleteContractAsync(id);
+            var result = await _contractService.DeleteContractAsync(id);
+
+            if (!result)
+            {
+                return BadRequest();
+            }
 
             return NoContent();
-        }*/
+        }
 
     }   
 }

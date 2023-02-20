@@ -13,14 +13,14 @@ namespace SalaryManagement.Domain.Contracts
         public double? Bhyt { get; init; }
         public double? Bhtn { get; init; }
         public double? Tax { get; init; }
-        public string PartnerId { get; init; } = null!;
+        public string? PartnerId { get; init; } = null!;
         public double? PartnerPrice { get; init; }
-        public bool? DeletedAt { get; init; }
+       /* public bool? DeletedAt { get; init; }
         public bool? CreatedAt { get; init; }
-        public bool? UpdatedAt { get; init; }
-        public string EmployeeId { get; init; } = null!;
-        public SalaryTypeEnum? SalaryType { get; init; } // Converted to enum
-        public ContractStatusEnum? ContractStatus { get; init; } // Converted to enum
-        public ContractTypeEnum? ContractType { get; init; } // Converted to enum
+        public bool? UpdatedAt { get; init; }*/
+        public string? EmployeeId { get; init; } = null!;
+        public string? SalaryType { get; init; } // Converted to enum
+        public string? ContractStatus { get; init; } // Converted to enum
+        public string? ContractType { get; init; } // Converted to enum
     }
 }
