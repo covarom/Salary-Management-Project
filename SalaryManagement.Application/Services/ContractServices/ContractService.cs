@@ -3,7 +3,9 @@ using SalaryManagement.Api.Common.Helper;
 using SalaryManagement.Application.Common.Interfaces.Persistence;
 using SalaryManagement.Contracts;
 using SalaryManagement.Contracts.Contracts;
+using SalaryManagement.Domain.Contracts;
 using SalaryManagement.Domain.Entities;
+using Mapster; 
 
 namespace SalaryManagement.Application.Services.ContractServices
 {
@@ -16,14 +18,36 @@ namespace SalaryManagement.Application.Services.ContractServices
             _contractRepository = contractRepository;
         }
 
-        public async Task<Contract> AddContractAsync(Contract contract)
+        public async Task<ContractResponse> AddContractAsync(ContractRequest request)
         {
-            return await _contractRepository.AddContractAsync(contract);
+            var contract = request.Adapt<Contract>();
+            contract.ContractId = Guid.NewGuid().ToString();
+            contract.CreatedAt = DateTime.Now;
+
+            await _contractRepository.AddAsync(contract);
+            await _contractRepository.SaveChangesAsync();
+
+            var response = contract.Adapt<ContractResponse>();
+            return response;
+        }
+
+        public async Task UpdateContract(Contract contractToUpdate)
+        {
+            contractToUpdate.UpdatedAt = DateTime.Now;
+
+            await _contractRepository.SaveChangesAsync();
         }
 
         public async Task<bool> DeleteContractAsync(string id)
         {
-               return await _contractRepository.DeleteContractAsync(id);   
+                var contract = await _contractRepository.GetContractById(id);
+
+                if (contract == null)
+                {
+                    return false;
+                }
+
+               return await _contractRepository.DeleteContractAsync(contract);   
         }
 
        /* public async Task<PaginatedResponse<Contract>> GetAllContracts(int page, int pageSize, string? sortColumn, bool? isDescending = false, string? keyword = null)
@@ -73,6 +97,11 @@ namespace SalaryManagement.Application.Services.ContractServices
         public async Task<PaginatedResponse<ContractResponse>> GetAllContracts(int pageNumber, int pageSize, string? sortBy, bool isDesc, string? searchKeyword)
         {
             return await _contractRepository.GetAllContracts(pageNumber, pageSize, sortBy, isDesc, searchKeyword);
+        }
+
+        public async Task<Contract?> GetContractById(string contractId)
+        {
+            return await _contractRepository.GetContractById(contractId);
         }
     }
 }

@@ -5,6 +5,7 @@ using SalaryManagement.Contracts.Contracts;
 using SalaryManagement.Domain.Entities;
 using System.Linq.Dynamic.Core;
 using Mapster;
+using SalaryManagement.Domain.Common.Enum;
 
 namespace SalaryManagement.Infrastructure.Persistence.Repositories
 {
@@ -22,47 +23,52 @@ namespace SalaryManagement.Infrastructure.Persistence.Repositories
             return await _context.Contracts.ToListAsync();
         }
 
-        public async Task<Contract> AddContractAsync(Contract contract)
+        public async Task AddAsync(Contract contract)
         {
-            _context.Contracts.Add(contract);
-            await _context.SaveChangesAsync();
-            return contract;
+            await _context.Contracts.AddAsync(contract);
         }
 
-        public async Task<Contract?> UpdateContractAsync(Contract contract)
+        public async Task SaveChangesAsync()
         {
-            _context.Entry(contract).State = EntityState.Modified;
+            await _context.SaveChangesAsync();
+        }
 
+        public async Task UpdateContract(Contract contractToUpdate)
+        {
+            _context.Entry(contractToUpdate).State = EntityState.Modified;
+
+            await _context.SaveChangesAsync();
+        }
+
+        public async Task<Contract?> GetContractById(string contractId)
+        {
+            return await _context.Contracts.FirstOrDefaultAsync(c => c.ContractId.Equals(contractId) && (c.DeletedAt == null));
+        } 
+
+        public async Task<bool> DeleteContractAsync(Contract contract)
+        {
             try
             {
-                await _context.SaveChangesAsync();
-                return contract;
-            }
-            catch (DbUpdateConcurrencyException)
-            {
-                if (!ContractExists(contract.ContractId))
-                {
-                    return null;
-                }
-                else
-                {
-                    throw;
-                }
-            }
-        }
+                contract.ContractStatus = ContractStatusEnum.Terminated.ToString();
+                contract.DeletedAt = DateTime.UtcNow;
 
-        public async Task DeleteContractAsync(int id)
-        {
-            var contract = await _context.Contracts.FindAsync(id);
-            _context.Contracts.Remove(contract);
-            await _context.SaveChangesAsync();
+                // Update the contract in the database
+                _context.Contracts.Update(contract);
+                await _context.SaveChangesAsync();
+                return true;
+            }
+            catch(Exception ex)
+            {
+                return false;
+            }
+            
         }
 
         public async Task<ContractResponse?> GetContractByIdAsync(string id)
         {
             var contract =  await _context.Contracts.Include(x => x.Employee)
                 .Include(x => x.Partner)
-                .FirstOrDefaultAsync(c => c.ContractId == id);
+                .FirstOrDefaultAsync(c => c.ContractId == id && c.DeletedAt == null);
 
             if (contract == null) return null;
 
@@ -71,7 +77,8 @@ namespace SalaryManagement.Infrastructure.Persistence.Repositories
 
         public async Task<bool> DeleteContractAsync(string contractId)
         {
-             var contract = await _context.Contracts.FindAsync(contractId);
+             var contract = await _context.Contracts.FirstOrDefaultAsync(c => c.ContractId == contractId && c.DeletedAt == null);
+
 
             if (contract != null)
             {
@@ -190,6 +197,9 @@ namespace SalaryManagement.Infrastructure.Persistence.Repositories
                     Partner = c.Partner
                 })
                 .AsQueryable();
+
+            //Not get the deleted one
+            query = query.Where(c => c.DeletedAt == null);
 
             // apply search filter if searchKeyword is not null or empty
             if (!string.IsNullOrEmpty(searchKeyword))
