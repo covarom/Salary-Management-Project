@@ -18,6 +18,6 @@ namespace SalaryManagement.Application.Common.Interfaces.Persistence
 
         Task<Contract?> GetContractById(string contractId);
 
-        Task<IEnumerable<Contract>>GetContractByCompanyId(string id);
+        Task<Contract>GetContractByCompanyId(string id);
     }
 }
