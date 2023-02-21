@@ -9,8 +9,7 @@ namespace SalaryManagement.Application.Services.PayrollService
         string Note,
         DateTime Date,
         bool IsDelete,
-        string EmloyeeId,
-        Employee Employee
+        string EmloyeeId
     );
     public record PayrollUpdate
     (

@@ -67,9 +67,17 @@ namespace SalaryManagement.Api.Controllers
                 EmployeeId = request.EmloyeeId,
                 Employee = await _employeeRepository.GetById(request.EmloyeeId)
             };
-                
-            var result = _payrollService.AddPayroll(payroll);
-            return Ok(result);
+            var existPayroll = _employeeRepository.GetById(payroll.PayrollId);
+            if(existPayroll != null)
+            {
+                var result = _payrollService.AddPayroll(payroll);
+                return Ok(result);
+            }
+            else
+            {
+                return BadRequest();
+            }
+           
         }
 
         [HttpPut("update")]
