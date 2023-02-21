@@ -75,6 +75,7 @@ namespace SalaryManagement.Api.Controllers
         [HttpPut("update")]
         public async Task<IActionResult> Updatepayroll(PayrollUpdate request)
         {
+
             Payroll payroll = new Payroll
             {
                 PayrollId = request.Id,
@@ -100,27 +101,21 @@ namespace SalaryManagement.Api.Controllers
         [HttpDelete("delete")]
         public async Task<IActionResult> DeletePayroll(PayrollDelete request)
         {
-            string id = request.Id;
-            var msg = "";
-
-            Payroll payroll = await _payrollService.GetById(id);
-
-            if (payroll != null)
+            Payroll payroll = new Payroll
             {
-                var result = await _payrollService.DeletePayroll(id);
-                if (result)
-                {
-                    msg = "Delete successfully";
-                }
-                else
-                {
-                    msg = "Delete failed";
-                }
+                PayrollId = request.Id,
+                IsDeleted = false
+            };
+            var result = await _payrollService.DeletePayroll(payroll);
+            var msg = "";
+            if (result)
+            {
+                msg = "Delete successfully";
             }
             else
             {
-                msg = "Payroll not found";
-            }
+                return NotFound();
+            };
             return Ok(msg);
         }
     }

@@ -9,6 +9,6 @@ namespace SalaryManagement.Application.Common.Interfaces.Persistence
         Task<PaginatedResponse<Payroll>> GetAll(int pageNumber, int pageSize, string? keyword, string? sortBy, bool? isDesc);
         Task<Payroll> AddPayroll(Payroll payroll);
         Task<bool> UpdatePayroll(Payroll payroll);
-        Task<bool> DeletePayroll(string id);
+        Task<bool> DeletePayroll(Payroll payroll);
     }
 }

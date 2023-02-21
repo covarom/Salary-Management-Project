@@ -73,34 +73,24 @@ namespace SalaryManagement.Api.Controllers
         [HttpDelete("delete")]
         public async Task<IActionResult> DeleteHoliday(HolidayDelete request)
         {
-            string id = request.Id;
+            Holiday holiday = new Holiday
+            {
+                HolidayId = request.Id,
+                IsDeleted= false
+            };
+
+            var result = await _holidayService.DeleteHoliday(holiday);
             var msg = "";
 
-            Holiday holiday = await _holidayService.GetHolidaysById(id);
+            if (result)
 
-            if (holiday != null)
             {
-
-                var result = await _holidayService.DeleteHoliday(id);
-
-                if (result)
-                {
-                    msg = "Delete successfully";
-                }
-                else
-                {
-                    msg = "Delete failed";
-                }
-
+                msg = "Update successfully";
             }
-
             else
             {
-                msg = "Holiday not found";
+                return NotFound("Holiday not found");
             }
-
-
-
             return Ok(msg);
         }
 

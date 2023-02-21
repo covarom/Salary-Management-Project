@@ -19,7 +19,6 @@ namespace SalaryManagement.Application.Services.PayrollService
         double Tax,
         string Note,
         DateTime Date,
-        bool IsDelete,
         string EmployeeId
     );
 

@@ -11,8 +11,7 @@
         string Id,
         DateTime StartDate,
         DateTime EndDate,
-        string HolidayName,
-        bool IsDelete
+        string HolidayName
         );
 
     public record HolidayDelete(
