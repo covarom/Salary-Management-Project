@@ -17,5 +17,9 @@ namespace SalaryManagement.Application.Common.Interfaces.Persistence
         Task<PaginatedResponse<ContractResponse>> GetAllContracts(int pageNumber, int pageSize, string? sortBy, bool isDesc, string? searchKeyword);
 
         Task<Contract?> GetContractById(string contractId);
+
+
+        Task<Contract>GetContractByCompanyId(string id);
+
     }
 }
