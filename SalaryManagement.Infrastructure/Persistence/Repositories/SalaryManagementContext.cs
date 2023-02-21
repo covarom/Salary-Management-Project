@@ -182,6 +182,9 @@ public partial class SalaryManagementContext : DbContext
             entity.Property(e => e.Address)
                 .HasMaxLength(255)
                 .HasColumnName("address");
+            entity.Property(e => e.Code)
+                .HasMaxLength(255)
+                .HasColumnName("code");
             entity.Property(e => e.DateOfBirth)
                 .HasColumnType("date")
                 .HasColumnName("date_of_birth");
