@@ -2,8 +2,8 @@
 {
     public enum SalaryTypeEnum
     {
-        Hourly,
-        Monthly
+        Gross,
+        Net
     }
 
 }
