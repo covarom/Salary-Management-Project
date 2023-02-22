@@ -50,5 +50,18 @@ namespace SalaryManagement.Infrastructure.Persistence.Repositories
             int changes = await _context.SaveChangesAsync();
             return changes > 0;
         }
+
+        public async Task<int> GetTotalLeaveDaysByEmployeeIdAndMonthAsync(string employeeId)
+        {
+            var startOfMonth = new DateTime(DateTime.Now.Year, DateTime.Now.Month, 1);
+            var today = DateTime.Now.Date;
+
+            var totalDays = await _context.LeaveLogs
+                .Where(l => l.EmployeeId == employeeId && l.StartDate >= startOfMonth && l.StartDate <= today)
+                .CountAsync();
+
+            return totalDays;
+        }
+
     }
 }
