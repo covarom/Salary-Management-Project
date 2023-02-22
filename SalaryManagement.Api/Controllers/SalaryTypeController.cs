@@ -6,7 +6,7 @@ using SalaryManagement.Domain.Entities;
 
 namespace SalaryManagement.Api.Controllers
 {
-    [Route("api/v1/salaryType")]
+    [Route("api/v1/salary-type")]
     [ApiController]
     [Authorize]
     public class SalaryTypeController : ControllerBase
@@ -20,7 +20,7 @@ namespace SalaryManagement.Api.Controllers
             _mapper = mapper;
         }
 
-        /*[HttpGet("get-all")]
+        [HttpGet("get-all")]
         public async Task<IActionResult> GetAll()
         {
             var salaryType = await _salaryTypeService.GetAll();
@@ -108,6 +108,6 @@ namespace SalaryManagement.Api.Controllers
                 return NotFound("Salary type not found");
             }
             return Ok(msg);
-        }*/
+        }
     }
 }

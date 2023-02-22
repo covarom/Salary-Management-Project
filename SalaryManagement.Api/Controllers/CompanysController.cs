@@ -1,7 +1,9 @@
 using MapsterMapper;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using SalaryManagement.Api.Common.Helper;
 using SalaryManagement.Application.Services.CompanyServices;
+using SalaryManagement.Application.Services.ContractServices;
 using SalaryManagement.Contracts.Companys;
 using SalaryManagement.Domain.Entities;
 using System.Net;
@@ -15,12 +17,14 @@ namespace SalaryManagement.Api.Controllers
      public class CompanysController : ControllerBase
     {
         private readonly ICompanyServices _companyService;
+        private readonly IContractServices _contractService;
         private readonly IMapper _mapper;
 
-        public CompanysController(ICompanyServices companyService, IMapper mapper)
+        public CompanysController(ICompanyServices companyService, IMapper mapper, IContractServices contractServices)
         {
             _companyService = companyService;
             _mapper = mapper;
+            _contractService = contractServices;
         }
 
         [HttpGet("all")]
@@ -53,11 +57,15 @@ namespace SalaryManagement.Api.Controllers
 
 
             var company_name = cr.company_name ;
+            if(company_name =="" || cr.address ==""){
+                return BadRequest();
+            }
             string id = Guid.NewGuid().ToString();
             Company company = new Company
             {
                 CompanyId= id,
-                CompanyName = company_name
+                CompanyName = company_name,
+                Address = cr.address
             };
 
 
@@ -69,25 +77,31 @@ namespace SalaryManagement.Api.Controllers
         {
             string id = cr.id;
             string updateName = cr.company_name;
-             Company company = new Company
-            {
-                CompanyId= id,
-                CompanyName = updateName
+            string updateAddress = cr.company_address;
+            if(cr.id == ""){
+                return BadRequest();
+            }
+            var companyExist = await _companyService.GetById(id);
+            if(companyExist == null){
+                return NotFound();
+            }
+            companyExist.CompanyName =  updateName.IsNullOrEmpty() ?companyExist.CompanyName : updateName.Trim();
+             companyExist.Address = updateAddress.IsNullOrEmpty() ? companyExist.Address : updateAddress.Trim();   
+            var rs = await _companyService.UpdateCompany(companyExist);
+            if(!rs){
+                  return BadRequest();            
             };
-            var rs = await _companyService.UpdateCompany(company);
-            var msg ="";
-            if(rs){
-                    msg = "Update successfully";       
-            }else{  
-                    msg = "Update failed";            
-            };
-            return Ok(msg);    
+              return Ok("Update successfully") ;
         }
 
         [HttpDelete("delete")]
          public async Task<IActionResult> Delete(CompanyDelete cr)
         {
             string id = cr.id;
+            var contractList = await _contractService.GetContractByCompanyId(id);
+            if(contractList != null){
+                return BadRequest("Could not delete from the specified tables");
+            }
             var rs = await _companyService.RemoveCompany(id);
             var msg ="";
             if(rs){

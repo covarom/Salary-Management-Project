@@ -9,8 +9,6 @@ namespace SalaryManagement.Api.Common.Helper
 
         public static bool IsNullOrEmpty(this string value)
         {
-
-
             if(!string.IsNullOrEmpty(value))
             {
                 if(value.Trim().Length == 0)
@@ -20,7 +18,6 @@ namespace SalaryManagement.Api.Common.Helper
                 return false;
             }
             return true;
-
         }
 
         public static string Truncate(this string value, int maxLength)
