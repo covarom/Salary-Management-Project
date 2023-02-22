@@ -18,7 +18,7 @@ namespace SalaryManagement.Api.Controllers
             _adminRepository = adminRepository;
         }
 
-        [HttpGet("get-admins")]
+       /* [HttpGet("get-admins")]
         public IActionResult GetUsers()
         {
             var statusCode = HttpStatusCode.OK;
@@ -29,7 +29,7 @@ namespace SalaryManagement.Api.Controllers
 
             try
             {
-               /* List<User> users = new List<User>();
+               *//* List<User> users = new List<User>();
 
                 users.Add(new User
                 {
@@ -43,7 +43,7 @@ namespace SalaryManagement.Api.Controllers
                     FirstName = "Nguyen",
                     LastName = "Doan",
                     Email = "DoanNH@fpt.edu.vn"
-                });*/
+                });*//*
 
                 var admins = _adminRepository.GetAll();
 
@@ -58,6 +58,6 @@ namespace SalaryManagement.Api.Controllers
             response.StatusCode = (int)statusCode;
 
             return Ok(response);
-        } 
+        } */
     }
 }
