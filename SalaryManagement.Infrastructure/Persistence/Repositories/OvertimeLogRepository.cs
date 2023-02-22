@@ -5,6 +5,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Microsoft.EntityFrameworkCore;
 
 namespace SalaryManagement.Infrastructure.Persistence.Repositories
 {
@@ -17,29 +18,38 @@ namespace SalaryManagement.Infrastructure.Persistence.Repositories
             _context = context;
         }
 
-        public Task<OvertimeLog> AddNewOvertimeLog(OvertimeLog overtimeLog)
+        public async Task<OvertimeLog> AddNewOvertimeLog(OvertimeLog overtimeLog)
         {
-            throw new NotImplementedException();
+            _context.Add(overtimeLog);
+            var changes = await _context.SaveChangesAsync();
+            return changes > 0 ? overtimeLog : null;
         }
 
-        public Task DeleteOvertimeLog(string id)
+        public async Task<bool> DeleteOvertimeLog(string id)
         {
-            throw new NotImplementedException();
+            var log = await _context.OvertimeLogs.SingleOrDefaultAsync(x => x.OvertimeId.Equals(id));
+            if (log == null) return false;
+
+            log.IsDeleted = true;
+            var changes = await _context.SaveChangesAsync();
+            return changes > 0;
         }
 
-        public Task<IEnumerable<OvertimeLog>> GetAllOvertimeLogs()
+        public async Task<IEnumerable<OvertimeLog>> GetAllOvertimeLogs()
         {
-            throw new NotImplementedException();
+            return await _context.OvertimeLogs.ToListAsync();
         }
 
-        public Task<OvertimeLog> GetOvertimeLogById(string id)
+        public async Task<OvertimeLog> GetOvertimeLogById(string id)
         {
-            throw new NotImplementedException();
+            return await _context.OvertimeLogs.SingleOrDefaultAsync(x => x.OvertimeId.Equals(id));
         }
 
-        public Task<OvertimeLog> UpdateOvertimeLog(OvertimeLog overtimeLog)
+        public async Task<bool> UpdateOvertimeLog(OvertimeLog overtimeLog)
         {
-            throw new NotImplementedException();
+            _context.Update(overtimeLog);
+            var changes = await _context.SaveChangesAsync();
+            return changes > 0;
         }
     }
 }

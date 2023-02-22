@@ -62,7 +62,7 @@ namespace SalaryManagement.Api.Controllers
                 EmployeeId= leaveLog.employeeId,
             };
             var result = _leaveLogService.CreateNewLeaveLog(log);
-            if(result.Equals(null))
+            if(!result.Equals(null))
             {
                 return Ok(result);
             }

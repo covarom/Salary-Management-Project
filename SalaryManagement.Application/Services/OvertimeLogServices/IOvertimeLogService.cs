@@ -12,7 +12,7 @@ namespace SalaryManagement.Application.Services.OvertimeLogServices
         public Task<OvertimeLog> GetOvertimeLogById(string id);
         public Task<IEnumerable<OvertimeLog>> GetAllOverTimeLogs();
         public Task<OvertimeLog> AddNewOvertimeLog(OvertimeLog overtimeLog);
-        public Task<OvertimeLog> UpdateOvertimeLog(OvertimeLog overtimeLog);
-        public Task DeleteOvertimeLog(string id);
+        public Task<bool> UpdateOvertimeLog(OvertimeLog overtimeLog);
+        public Task<bool> DeleteOvertimeLog(string id);
     }
 }

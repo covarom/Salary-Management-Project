@@ -13,6 +13,7 @@ using SalaryManagement.Application.Services.SalaryTypeService;
 using SalaryManagement.Application.Services.PayrollService;
 
 using SalaryManagement.Application.Services.EmployeeServices;
+using SalaryManagement.Application.Services.OvertimeLogServices;
 
 
 namespace SalaryManagement.Application
@@ -26,9 +27,8 @@ namespace SalaryManagement.Application
             services.AddScoped<ICompanyServices,CompanyService>();
             services.AddScoped<IAdminServices, AdminService>();
             services.AddScoped<IEmployeeServices, EmployeeService>();
-
             services.AddScoped<ILeaveLogService, LeaveLogService>();
-
+            services.AddScoped<IOvertimeLogService, OvertimeLogService>();
             services.AddScoped<IHolidayService, HolidayServices>();
             services.AddScoped<ISalaryTypeService, SalaryTypeService>();
             services.AddScoped<IPayrollService, PayrollService>();
