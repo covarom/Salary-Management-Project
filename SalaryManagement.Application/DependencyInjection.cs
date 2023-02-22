@@ -12,7 +12,6 @@ using SalaryManagement.Application.Services.LeaveLogServices;
 using SalaryManagement.Application.Services.SalaryTypeService;
 using SalaryManagement.Application.Services.PayrollService;
 
-using SalaryManagement.Application.Services.EmployeeServices;
 using SalaryManagement.Application.Services.OvertimeLogServices;
 
 using SalaryManagement.Application.Services.SalaryServices;
