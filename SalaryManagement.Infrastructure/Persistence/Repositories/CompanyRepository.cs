@@ -48,16 +48,25 @@ namespace SalaryManagement.Infrastructure.Persistence.Repositories
             return check;
         }
 
-         public async Task<bool> UpdateCompany(Company Company)
+         public async Task<bool> UpdateCompany(Company company)
         {
             bool check=false;
 
-            var company = await _context.Companys.FindAsync(Company.CompanyId);
-            company.CompanyName = Company.CompanyName;
-            _context.Companys.Update(company);
+            // var company = await _context.Companys.FindAsync(Company.CompanyId);
+            // company.CompanyName = Company.CompanyName;
+            //  company.Address = Company.Address;
+            // _context.Companys.Update(company);
 
-             int changes = await _context.SaveChangesAsync();
-            if(changes>0){
+            //  int changes = await _context.SaveChangesAsync();
+            // if(changes>0){
+            //     check= true;
+            // }
+            //  return check;
+            _context.Entry(company).State = EntityState.Modified;
+
+          
+                int changes = await _context.SaveChangesAsync();
+              if(changes>0){
                 check= true;
             }
              return check;

@@ -62,6 +62,7 @@ namespace SalaryManagement.Api.Controllers
                 HolidayId = id,
                 StartDate = request.StartDate,
                 EndDate = request.EndDate,
+                HolidayName= request.HolidayName,
                 IsDeleted = true
             };
             var result = await _holidayService.AddHoliday(holiday);
@@ -111,7 +112,7 @@ namespace SalaryManagement.Api.Controllers
                 HolidayId = request.Id,
                 StartDate = request.StartDate,
                 EndDate = request.EndDate,
-                IsDeleted = request.IsDelete
+                HolidayName = request.HolidayName
             };
 
             var result = await _holidayService.UpdateHoliday(holiday);

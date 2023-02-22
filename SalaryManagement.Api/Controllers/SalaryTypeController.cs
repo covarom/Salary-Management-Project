@@ -6,7 +6,7 @@ using SalaryManagement.Domain.Entities;
 
 namespace SalaryManagement.Api.Controllers
 {
-    [Route("api/v1/salaryType")]
+    [Route("api/v1/salary-type")]
     [ApiController]
     [Authorize]
     public class SalaryTypeController : ControllerBase

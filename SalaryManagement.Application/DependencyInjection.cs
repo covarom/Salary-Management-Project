@@ -15,6 +15,8 @@ using SalaryManagement.Application.Services.PayrollService;
 using SalaryManagement.Application.Services.EmployeeServices;
 using SalaryManagement.Application.Services.OvertimeLogServices;
 
+using SalaryManagement.Application.Services.SalaryServices;
+using SalaryManagement.Application.Services.OverTimeServices;
 
 namespace SalaryManagement.Application
 {
@@ -32,6 +34,8 @@ namespace SalaryManagement.Application
             services.AddScoped<IHolidayService, HolidayServices>();
             services.AddScoped<ISalaryTypeService, SalaryTypeService>();
             services.AddScoped<IPayrollService, PayrollService>();
+            services.AddScoped<IOvertimeService, OvertimeService>();
+            services.AddScoped<ISalaryService, SalaryService>();
             return services;
         }
     }
