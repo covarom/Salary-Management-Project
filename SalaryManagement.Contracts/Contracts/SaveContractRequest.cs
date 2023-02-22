@@ -10,8 +10,8 @@
         string PartnerId,
         double PartnerPrice,
         string EmployeeId,
-        string ContractTypeId,
-        string SalaryTypeId,
-        string ContractStatusId
+        string ContractType,
+        string SalaryType,
+        string ContractStatus
         );
 }
