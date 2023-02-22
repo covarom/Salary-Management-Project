@@ -1,6 +1,4 @@
-﻿using SalaryManagement.Domain.Entities;
-
-namespace SalaryManagement.Application.Services.PayrollService
+﻿namespace SalaryManagement.Application.Services.PayrollService
 {
     public record PayrollRequest
     (
@@ -8,9 +6,8 @@ namespace SalaryManagement.Application.Services.PayrollService
         double Tax,
         string Note,
         DateTime Date,
-        bool IsDelete,
-        string EmloyeeId,
-        Employee Employee
+        bool IsDelate,
+        string EmployeeName
     );
     public record PayrollUpdate
     (
@@ -19,7 +16,7 @@ namespace SalaryManagement.Application.Services.PayrollService
         double Tax,
         string Note,
         DateTime Date,
-        bool IsDelete,
+        bool IsDelate,
         string EmployeeId
     );
 

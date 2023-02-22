@@ -63,9 +63,8 @@ namespace SalaryManagement.Api.Controllers
                 Tax = request.Tax,
                 Note = request.Note,
                 Date = request.Date,
-                IsDeleted = request.IsDelete,
-                EmployeeId = request.EmloyeeId,
-                Employee = await _employeeRepository.GetById(request.EmloyeeId)
+                IsDeleted = request.IsDelate,
+                EmployeeId = await _employeeRepository.GetEmployeeIdByName(request.EmployeeName)
             };
                 
             var result = _payrollService.AddPayroll(payroll);
@@ -82,6 +81,7 @@ namespace SalaryManagement.Api.Controllers
                 Tax = request.Tax,
                 Note = request.Note,
                 Date = request.Date,
+                IsDeleted = request.IsDelate,
                 EmployeeId = request.EmployeeId
             };
             var result = await _payrollService.UpdatePayroll(payroll);

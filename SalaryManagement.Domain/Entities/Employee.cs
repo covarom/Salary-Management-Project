@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Text.Json.Serialization;
 
 namespace SalaryManagement.Domain.Entities;
 
@@ -17,11 +18,10 @@ public partial class Employee
 
     public int? IdentifyNumber { get; set; }
 
-    public bool? IsActive { get; set; }
+    public bool? IsActive { get; set; } 
 
     public string? PhoneNumber { get; set; }
 
-    public string? Code { get; set; }
 
     public virtual ICollection<Contract> Contracts { get; } = new List<Contract>();
 
@@ -29,5 +29,6 @@ public partial class Employee
 
     public virtual ICollection<OvertimeLog> OvertimeLogs { get; } = new List<OvertimeLog>();
 
+    [JsonIgnore]
     public virtual ICollection<Payroll> Payrolls { get; } = new List<Payroll>();
 }

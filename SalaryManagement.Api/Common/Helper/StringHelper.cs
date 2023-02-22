@@ -1,4 +1,4 @@
-namespace SalaryManagement.Api.Common.Helper
+﻿namespace SalaryManagement.Api.Common.Helper
 {
     public static class StringHelper
     {
@@ -9,18 +9,7 @@ namespace SalaryManagement.Api.Common.Helper
 
         public static bool IsNullOrEmpty(this string value)
         {
-
-
-            if(!string.IsNullOrEmpty(value))
-            {
-                if(value.Trim().Length == 0)
-                {
-                    return true;
-                }
-                return false;
-            }
-            return true;
-
+            return string.IsNullOrEmpty(value);
         }
 
         public static string Truncate(this string value, int maxLength)

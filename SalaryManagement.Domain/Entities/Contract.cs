@@ -25,25 +25,27 @@ public partial class Contract
 
     public double? PartnerPrice { get; set; }
 
+    public bool? IsDeleted { get; set; }
+
     public string EmployeeId { get; set; } = null!;
+
+    public string ContractTypeId { get; set; } = null!;
+
+    public string SalaryTypeId { get; set; } = null!;
+
+    public string ContractStatusId { get; set; } = null!;
 
     public DateTime? CreatedAt { get; set; }
 
     public DateTime? UpdatedAt { get; set; }
 
-    public DateTime? DeletedAt { get; set; }
+    public virtual ContractStatus ContractStatus { get; set; } = null!;
 
-    public double? Bhyt { get; set; }
-
-    public double? Bhtn { get; set; }
-
-    public string? SalaryType { get; set; }
-
-    public string? ContractStatus { get; set; }
-
-    public string? ContractType { get; set; }
+    public virtual ContractType ContractType { get; set; } = null!;
 
     public virtual Employee Employee { get; set; } = null!;
 
     public virtual Company Partner { get; set; } = null!;
+
+    public virtual SalaryType SalaryType { get; set; } = null!;
 }
