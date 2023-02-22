@@ -51,19 +51,7 @@ namespace SalaryManagement.Application.Services.PayrollService
 
         public async Task<bool> UpdatePayroll(Payroll payroll)
         {
-            var existPayroll = await _repository.GetById(payroll.PayrollId);
-            if (existPayroll != null) 
-            {
-                existPayroll.Total = StringHelper.IsNullOrEmpty(payroll.Total.ToString()) ? existPayroll.Total : payroll.Total;
-                existPayroll.Tax = StringHelper.IsNullOrEmpty(payroll.Tax.ToString()) ? existPayroll.Tax : payroll.Tax;
-                existPayroll.Note = StringHelper.IsNullOrEmpty(payroll.Note) ? existPayroll.Note : payroll.Note;
-                existPayroll.Date = payroll.Date == null ? existPayroll.Date : payroll.Date;
-                existPayroll.EmployeeId = StringHelper.IsNullOrEmpty(payroll.EmployeeId) ? existPayroll.EmployeeId : payroll.EmployeeId;
-
-                return await _repository.UpdatePayroll(existPayroll);
-            }
-
-            return false;
+            return await _repository.UpdatePayroll(payroll);
         }
     }
 }

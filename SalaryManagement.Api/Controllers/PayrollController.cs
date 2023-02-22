@@ -6,6 +6,7 @@ using SalaryManagement.Application.Common.Interfaces.Persistence;
 using SalaryManagement.Application.Services.HolidayServices;
 using SalaryManagement.Application.Services.PayrollService;
 using SalaryManagement.Domain.Entities;
+using System.Diagnostics.Contracts;
 
 namespace SalaryManagement.Api.Controllers
 {
@@ -67,43 +68,50 @@ namespace SalaryManagement.Api.Controllers
                 EmployeeId = request.EmloyeeId,
                 Employee = await _employeeRepository.GetById(request.EmloyeeId)
             };
-            var existPayroll = _employeeRepository.GetById(payroll.PayrollId);
-            if(existPayroll != null)
-            {
-                var result = _payrollService.AddPayroll(payroll);
-                return Ok(result);
-            }
-            else
-            {
-                return BadRequest();
-            }
-           
+            var result = _payrollService.AddPayroll(payroll);
+            return Ok(result);
+
         }
 
         [HttpPut("update")]
-        public async Task<IActionResult> Updatepayroll(PayrollUpdate request)
+        public async Task<IActionResult> UpdatePayroll(PayrollUpdate request)
         {
+            var existPayroll = await _payrollService.GetById(request.Id);
 
-            Payroll payroll = new Payroll
-            {
-                PayrollId = request.Id,
-                Total = request.Total,
-                Tax = request.Tax,
-                Note = request.Note,
-                Date = request.Date,
-                EmployeeId = request.EmployeeId
-            };
-            var result = await _payrollService.UpdatePayroll(payroll);
-            var msg = "";
-            if (result)
-            {
-                msg = "Update successfully";
-            }
-            else
+            if (existPayroll == null)
             {
                 return NotFound();
-            };
-            return Ok(msg);
+            }
+
+            var payroll = existPayroll;
+            if (request.Total.HasValue)
+            {
+                payroll.Total = request.Total.Value;
+            }
+
+            if (request.Tax.HasValue)
+            {
+                payroll.Tax = request.Tax.Value;
+            }
+
+            if (!string.IsNullOrEmpty(request.Note))
+            {
+                payroll.Note = request.Note;
+            }
+
+            if (request.Date.HasValue)
+            {
+                payroll.Date = request.Date.Value;
+            }
+
+            if (!string.IsNullOrEmpty(request.EmployeeId))
+            {
+                payroll.EmployeeId = request.EmployeeId;
+                //payroll.EmployeeId = await _employeeRepository.GetEmployeeIdByName(payroll.Employee.Name);
+            }
+            await _payrollService.UpdatePayroll(payroll);
+            return Ok(payroll);
+
         }
 
         [HttpDelete("delete")]

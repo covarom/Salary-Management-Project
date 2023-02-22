@@ -12,14 +12,14 @@ namespace SalaryManagement.Application.Services.PayrollService
         string EmloyeeId
     );
     public record PayrollUpdate
-    (
-        string Id,
-        double Total,
-        double Tax,
-        string Note,
-        DateTime Date,
-        string EmployeeId
-    );
+    {
+        public string? Id { get; init; }
+        public double? Total { get; init; }
+        public double? Tax { get; init; }
+        public string? Note { get; init; }
+        public DateTime? Date { get; init; }
+        public string? EmployeeId { get; init; }
+    }
 
     public record PayrollDelete
     (
