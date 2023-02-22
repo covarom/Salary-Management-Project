@@ -3,6 +3,7 @@
     public record HolidayRequest(
         DateTime StartDate,
         DateTime EndDate,
+        string HolidayName,
         bool IsDelete
         );
 
@@ -10,6 +11,7 @@
         string Id,
         DateTime StartDate,
         DateTime EndDate,
+        string HolidayName,
         bool IsDelete
         );
 
