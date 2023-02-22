@@ -212,6 +212,7 @@ public partial class SalaryManagementContext : DbContext
                 .HasColumnType("date")
                 .HasColumnName("end_date");
             entity.Property(e => e.IsDeleted).HasColumnName("isDeleted");
+            entity.Property(e => e.IsPaid).HasColumnName("isPaid");
             entity.Property(e => e.StartDate)
                 .HasColumnType("date")
                 .HasColumnName("start_date");

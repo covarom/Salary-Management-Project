@@ -20,7 +20,7 @@ namespace SalaryManagement.Api.Controllers
             _mapper = mapper;
         }
 
-        /*[HttpGet("get-all")]
+      /*  [HttpGet("get-all")]
         public async Task<IActionResult> GetAll()
         {
             var salaryType = await _salaryTypeService.GetAll();
