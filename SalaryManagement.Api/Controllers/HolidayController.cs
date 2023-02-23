@@ -97,9 +97,9 @@ namespace SalaryManagement.Api.Controllers
         }
 
         [HttpPut("holidays/{holidayId}")]
-        public async Task<IActionResult> UpdateHoliday(HolidayUpdate request)
+        public async Task<IActionResult> UpdateHoliday(string holidayId, HolidayUpdate request)
         {
-            var existHoliday = await _holidayService.GetHolidaysById(request.Id);
+            var existHoliday = await _holidayService.GetHolidaysById(holidayId);
             if (existHoliday == null)
             {
                 return NotFound();

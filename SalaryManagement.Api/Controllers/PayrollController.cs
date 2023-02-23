@@ -66,7 +66,6 @@ namespace SalaryManagement.Api.Controllers
                 Date = request.Date,
                 IsDeleted = request.IsDelete,
                 EmployeeId = request.EmloyeeId,
-                Employee = await _employeeRepository.GetById(request.EmloyeeId),
                 TotalDeduction = request.TotalDeduction,
                 TotalBonus = request.TotalBonus
 
@@ -77,9 +76,9 @@ namespace SalaryManagement.Api.Controllers
         }
 
         [HttpPut("payrolls/{payrollId}")]
-        public async Task<IActionResult> UpdatePayroll(PayrollUpdate request)
+        public async Task<IActionResult> UpdatePayroll(string payrollId, PayrollUpdate request)
         {
-            var existPayroll = await _payrollService.GetById(request.Id);
+            var existPayroll = await _payrollService.GetById(payrollId);
 
             if (existPayroll == null)
             {

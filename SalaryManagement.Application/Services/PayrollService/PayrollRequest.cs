@@ -16,7 +16,6 @@ namespace SalaryManagement.Application.Services.PayrollService
     );
     public record PayrollUpdate
     {
-        public string? Id { get; init; }
         public double? Total { get; init; }
         public double? Tax { get; init; }
         public string? Note { get; init; }
