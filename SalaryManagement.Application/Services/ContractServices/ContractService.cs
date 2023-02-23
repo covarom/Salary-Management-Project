@@ -105,6 +105,7 @@ namespace SalaryManagement.Application.Services.ContractServices
             return await _contractRepository.GetAllContracts(pageNumber, pageSize, sortBy, isDesc, searchKeyword);
         }
 
+
         public async Task<Contract> GetContractById(string contractId)
         {
             return await _contractRepository.GetContractById(contractId);
