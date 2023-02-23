@@ -6,6 +6,7 @@ using SalaryManagement.Application.Common.Interfaces.Persistence;
 using SalaryManagement.Application.Services.HolidayServices;
 using SalaryManagement.Application.Services.PayrollService;
 using SalaryManagement.Domain.Entities;
+using System.Diagnostics.Contracts;
 
 namespace SalaryManagement.Api.Controllers
 {
@@ -65,62 +66,84 @@ namespace SalaryManagement.Api.Controllers
                 Date = request.Date,
                 IsDeleted = request.IsDelete,
                 EmployeeId = request.EmloyeeId,
-                Employee = await _employeeRepository.GetById(request.EmloyeeId)
+                TotalDeduction = request.TotalDeduction,
+                TotalBonus = request.TotalBonus
+
             };
-                
             var result = _payrollService.AddPayroll(payroll);
             return Ok(result);
+
         }
 
         [HttpPut("payrolls/{payrollId}")]
-        public async Task<IActionResult> Updatepayroll(string payrollId, PayrollUpdate request)
+        public async Task<IActionResult> UpdatePayroll(string payrollId, PayrollUpdate request)
+        {
+            var existPayroll = await _payrollService.GetById(payrollId);
+
+            if (existPayroll == null)
+            {
+                return NotFound();
+            }
+
+            var payroll = existPayroll;
+            if (request.Total.HasValue)
+            {
+                payroll.Total = request.Total.Value;
+            }
+
+            if (request.Tax.HasValue)
+            {
+                payroll.Tax = request.Tax.Value;
+            }
+
+            if (!string.IsNullOrEmpty(request.Note))
+            {
+                payroll.Note = request.Note;
+            }
+
+            if (request.Date.HasValue)
+            {
+                payroll.Date = request.Date.Value;
+            }
+
+            if (!string.IsNullOrEmpty(request.EmployeeId))
+            {
+                payroll.EmployeeId = request.EmployeeId;
+                //payroll.EmployeeId = await _employeeRepository.GetEmployeeIdByName(payroll.Employee.Name);
+            }
+
+            if (request.TotalDeduction.HasValue)
+            {
+                payroll.TotalDeduction = request.TotalDeduction.Value;
+            }
+
+            if (request.TotalBonus.HasValue)
+            {
+                payroll.TotalBonus = request.TotalBonus.Value;
+            }
+            await _payrollService.UpdatePayroll(payroll);
+            return Ok(payroll);
+
+        }
+
+        [HttpDelete("payrolls/{payrollId}")]
+        public async Task<IActionResult> DeletePayroll(PayrollDelete request)
         {
             Payroll payroll = new Payroll
             {
-                PayrollId = payrollId,
-                Total = request.Total,
-                Tax = request.Tax,
-                Note = request.Note,
-                Date = request.Date,
-                EmployeeId = request.EmployeeId
+                PayrollId = request.Id,
+                IsDeleted = false
             };
-            var result = await _payrollService.UpdatePayroll(payroll);
+            var result = await _payrollService.DeletePayroll(payroll);
             var msg = "";
             if (result)
             {
-                msg = "Update successfully";
+                msg = "Delete successfully";
             }
             else
             {
                 return NotFound();
             };
-            return Ok(msg);
-        }
-
-        [HttpDelete("payrolls/{payrollId}")]
-        public async Task<IActionResult> DeletePayroll(string payrollId)
-        {
-            string id = payrollId;
-            var msg = "";
-
-            Payroll payroll = await _payrollService.GetById(id);
-
-            if (payroll != null)
-            {
-                var result = await _payrollService.DeletePayroll(id);
-                if (result)
-                {
-                    msg = "Delete successfully";
-                }
-                else
-                {
-                    msg = "Delete failed";
-                }
-            }
-            else
-            {
-                msg = "Payroll not found";
-            }
             return Ok(msg);
         }
     }

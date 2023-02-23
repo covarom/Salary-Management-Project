@@ -29,9 +29,16 @@ namespace SalaryManagement.Application.Services.HolidayServices
 
 
 
-        public async Task<bool> DeleteHoliday(string id)
+        public async Task<bool> DeleteHoliday(Holiday holiday)
         {
-            return await _repository.DeleteHoliday(id);
+            var existHoliday = await _repository.GetHolidayById(holiday.HolidayId);
+            if (existHoliday != null)
+            {
+                existHoliday.IsDeleted = false;
+
+                return await _repository.DeleteHoliday(existHoliday);
+            }
+            return false;
         }
 
 
@@ -39,17 +46,7 @@ namespace SalaryManagement.Application.Services.HolidayServices
 
         public async Task<bool> UpdateHoliday(Holiday holiday)
         {
-            //return await _repository.UpdateHoliday(id, request);
-            var existHoliday = await _repository.GetHolidayById(holiday.HolidayId);
-            if(existHoliday != null)
-        {
-                existHoliday.StartDate = StringHelper.IsNullOrEmpty(holiday.StartDate.ToString()) ? existHoliday.StartDate : holiday.StartDate;
-                existHoliday.EndDate = StringHelper.IsNullOrEmpty(holiday.EndDate.ToString()) ? existHoliday.EndDate : holiday.EndDate;
-                existHoliday.IsDeleted = StringHelper.IsNullOrEmpty(holiday.IsDeleted.ToString()) ? existHoliday.IsDeleted : holiday.IsDeleted;
-
-                return await _repository.UpdateHoliday(existHoliday);
-            }
-            return false;
+            return await _repository.UpdateHoliday(holiday);
         }
 
         public async Task<Holiday> AddHoliday(Holiday holiday)

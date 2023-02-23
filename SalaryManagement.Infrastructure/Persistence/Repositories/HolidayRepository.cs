@@ -47,11 +47,10 @@ namespace SalaryManagement.Infrastructure.Persistence.Repositories
 
             return check;
         }
-        public async Task<bool> DeleteHoliday(string id)
+        public async Task<bool> DeleteHoliday(Holiday holiday)
         {
             bool check = false;
-            var holiday = await _context.Holidays.FindAsync(id);
-            _context.Holidays.Remove(holiday);
+            _context.Holidays.Update(holiday);
 
             int change = await _context.SaveChangesAsync();
 

@@ -15,6 +15,6 @@ namespace SalaryManagement.Application.Services.PayrollService
         //Task<IEnumerable<Payroll>> GetAll();
         Task<Payroll> AddPayroll(Payroll payroll);
         Task<bool> UpdatePayroll(Payroll payroll);
-        Task<bool> DeletePayroll(string id);
+        Task<bool> DeletePayroll(Payroll payroll);
     }
 }

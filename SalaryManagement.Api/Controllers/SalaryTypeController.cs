@@ -52,7 +52,6 @@ namespace SalaryManagement.Api.Controllers
             SalaryType salaryType = new SalaryType {
                 SalaryTypeId= id,
                 SalaryTypeName= request.SalaryTypeName,
-                IsDeleted = true
             };
             var result = await _salaryTypeService.AddSalaryType(salaryType);
 
@@ -92,8 +91,7 @@ namespace SalaryManagement.Api.Controllers
             SalaryType salaryType = new SalaryType
             {
                 SalaryTypeId = request.Id,
-                SalaryTypeName = request.SalaryTypeName,
-                IsDeleted = request.IsDelete
+                SalaryTypeName = request.SalaryTypeName
             };
 
             var result = await _salaryTypeService.UpdateSalaryType(salaryType);
