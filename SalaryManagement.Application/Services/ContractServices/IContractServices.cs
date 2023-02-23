@@ -22,6 +22,5 @@ namespace SalaryManagement.Application.Services.ContractServices
 
 
         Task<Contract>GetContractByCompanyId(string companyId);
-
     }
 }

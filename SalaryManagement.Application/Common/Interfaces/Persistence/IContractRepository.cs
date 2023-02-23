@@ -7,7 +7,9 @@ namespace SalaryManagement.Application.Common.Interfaces.Persistence
     public interface IContractRepository
     {
         Task<ContractResponse?> GetContractByIdAsync(string id);
+
         Task<Contract?> GetContractsByEmployeeIdAsync(string employeeId);
+
         Task<IEnumerable<Contract>> GetAllContractsAsync();
         Task AddAsync(Contract contract);
         Task SaveChangesAsync();
@@ -21,6 +23,5 @@ namespace SalaryManagement.Application.Common.Interfaces.Persistence
 
 
         Task<Contract>GetContractByCompanyId(string id);
-
     }
 }

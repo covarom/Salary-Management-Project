@@ -11,7 +11,7 @@ using System.Net;
 
 namespace SalaryManagement.Api.Controllers
 {
-    [Route("api/v1/holidays")]
+    [Route("api/v1/")]
     [ApiController]
     [Authorize]
     public class HolidayController : ControllerBase
@@ -25,7 +25,7 @@ namespace SalaryManagement.Api.Controllers
             _mapper = mapper;
         }
 
-        [HttpGet("get-all")]
+        [HttpGet("holidays")]
         public async Task<IActionResult> GetAllHoliday()
         {
             var holidays = await _holidayService.GetAllHoliday();
@@ -33,7 +33,7 @@ namespace SalaryManagement.Api.Controllers
             return Ok(holidays);
         }
 
-        [HttpGet("{id}")]
+        [HttpGet("holidays/{holidayId}")]
         public async Task<IActionResult> FindById(string id)
         {
             var holiday = await _holidayService.GetHolidaysById(id);
@@ -52,7 +52,7 @@ namespace SalaryManagement.Api.Controllers
 
 
 
-        [HttpPost("")]
+        [HttpPost("holidays")]
         public async Task<IActionResult> AddHoliday(HolidayRequest request)
         {
             await Task.CompletedTask;
@@ -72,7 +72,7 @@ namespace SalaryManagement.Api.Controllers
             return Ok(result);
         }
 
-        [HttpDelete("delete")]
+        [HttpDelete("holidays/{holidayId}")]
         public async Task<IActionResult> DeleteHoliday(HolidayDelete request)
         {
             Holiday holiday = new Holiday
@@ -96,7 +96,7 @@ namespace SalaryManagement.Api.Controllers
             return Ok(msg);
         }
 
-        [HttpPut("update")]
+        [HttpPut("holidays/{holidayId}")]
         public async Task<IActionResult> UpdateHoliday(HolidayUpdate request)
         {
             var existHoliday = await _holidayService.GetHolidaysById(request.Id);

@@ -26,7 +26,7 @@ namespace SalaryManagement.Api.Controllers
             _employeeRepository = employeeRepository;
         }
 
-        [HttpGet("get-all")]
+        [HttpGet("payrolls")]
         public async Task<IActionResult> GetAllPayroll(int pageNumber, int pageSize, string? keyword, string? sortBy, bool isDesc)
         {
             if (pageSize == 0)
@@ -39,10 +39,10 @@ namespace SalaryManagement.Api.Controllers
             return Ok(payrolls);
         }
 
-        [HttpGet("{id}")]
-        public async Task<IActionResult> GetById(string id)
+        [HttpGet("payrolls/{payrollId}")]
+        public async Task<IActionResult> GetById(string payrollId)
         {
-            var payroll = await _payrollService.GetById(id);
+            var payroll = await _payrollService.GetById(payrollId);
             if (payroll == null)
             {
                 return NotFound("Holiday not found");
@@ -53,7 +53,7 @@ namespace SalaryManagement.Api.Controllers
             }
         }
 
-        [HttpPost("")]
+        [HttpPost("payrolls")]
         public async Task<IActionResult> AddPayroll(PayrollRequest request)
         {
             await Task.CompletedTask;
@@ -76,7 +76,7 @@ namespace SalaryManagement.Api.Controllers
 
         }
 
-        [HttpPut("update")]
+        [HttpPut("payrolls/{payrollId}")]
         public async Task<IActionResult> UpdatePayroll(PayrollUpdate request)
         {
             var existPayroll = await _payrollService.GetById(request.Id);
@@ -127,7 +127,7 @@ namespace SalaryManagement.Api.Controllers
 
         }
 
-        [HttpDelete("delete")]
+        [HttpDelete("payrolls/{payrollId}")]
         public async Task<IActionResult> DeletePayroll(PayrollDelete request)
         {
             Payroll payroll = new Payroll
