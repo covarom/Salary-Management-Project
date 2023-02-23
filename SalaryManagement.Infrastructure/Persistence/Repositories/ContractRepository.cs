@@ -270,7 +270,6 @@ namespace SalaryManagement.Infrastructure.Persistence.Repositories
 
             return contract;
         }
-     
     }
 
 }

@@ -4,7 +4,6 @@ using SalaryManagement.Contracts.Employee;
 using SalaryManagement.Contracts.Employees;
 
 namespace SalaryManagement.Contracts.Salary
-
 {
     public record SalaryResponse
     {
@@ -26,6 +25,7 @@ namespace SalaryManagement.Contracts.Salary
      //   public decimal OvertimeSalary { get; set; }
         public int LeaveHours { get; set; }
         public decimal FinalIncome { get; set; }
+
     }
 }
    
