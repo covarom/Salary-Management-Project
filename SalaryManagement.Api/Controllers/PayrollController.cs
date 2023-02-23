@@ -127,11 +127,12 @@ namespace SalaryManagement.Api.Controllers
         }
 
         [HttpDelete("payrolls/{payrollId}")]
-        public async Task<IActionResult> DeletePayroll(PayrollDelete request)
+        public async Task<IActionResult> DeletePayroll(string payrollId)
         {
+            string id = payrollId;
             Payroll payroll = new Payroll
             {
-                PayrollId = request.Id,
+                PayrollId = id,
                 IsDeleted = false
             };
             var result = await _payrollService.DeletePayroll(payroll);

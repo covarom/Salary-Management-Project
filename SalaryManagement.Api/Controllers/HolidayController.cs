@@ -73,11 +73,12 @@ namespace SalaryManagement.Api.Controllers
         }
 
         [HttpDelete("holidays/{holidayId}")]
-        public async Task<IActionResult> DeleteHoliday(HolidayDelete request)
+        public async Task<IActionResult> DeleteHoliday(string holidayId)
         {
+            string id = holidayId;
             Holiday holiday = new Holiday
             {
-                HolidayId = request.Id,
+                HolidayId = id,
                 IsDeleted = false
             };
 
