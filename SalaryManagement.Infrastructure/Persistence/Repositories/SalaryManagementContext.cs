@@ -178,10 +178,13 @@ public partial class SalaryManagementContext : DbContext
 
             entity.ToTable("employees");
 
+            entity.HasIndex(e => e.Code, "code").IsUnique();
+
             entity.Property(e => e.EmployeeId).HasColumnName("employee_id");
             entity.Property(e => e.Address)
                 .HasMaxLength(255)
                 .HasColumnName("address");
+            entity.Property(e => e.Code).HasColumnName("code");
             entity.Property(e => e.DateOfBirth)
                 .HasColumnType("date")
                 .HasColumnName("date_of_birth");
@@ -209,6 +212,7 @@ public partial class SalaryManagementContext : DbContext
                 .HasColumnType("date")
                 .HasColumnName("end_date");
             entity.Property(e => e.IsDeleted).HasColumnName("isDeleted");
+            entity.Property(e => e.IsPaid).HasColumnName("isPaid");
             entity.Property(e => e.StartDate)
                 .HasColumnType("date")
                 .HasColumnName("start_date");
@@ -286,6 +290,8 @@ public partial class SalaryManagementContext : DbContext
                 .HasColumnName("note");
             entity.Property(e => e.Tax).HasColumnName("tax");
             entity.Property(e => e.Total).HasColumnName("total");
+            entity.Property(e => e.TotalBonus).HasColumnName("total_bonus");
+            entity.Property(e => e.TotalDeduction).HasColumnName("total_deduction");
 
             entity.HasOne(d => d.Employee).WithMany(p => p.Payrolls)
                 .HasForeignKey(d => d.EmployeeId)

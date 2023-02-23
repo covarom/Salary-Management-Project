@@ -62,6 +62,12 @@ namespace SalaryManagement.Application.Services.ContractServices
             return await _contractRepository.GetContractByIdAsync(contractId);
         }
 
+         public async Task<Contract> GetContractByCompanyId(string companyId)
+
+        {
+            return await _contractRepository.GetContractByCompanyId(companyId);
+        }
+
       /*  public async Task<Contract?> UpdateContractAsync(string id, Contract contract)
         {
             var existingContract = await _contractRepository.GetContractByIdAsync(id);
@@ -99,7 +105,8 @@ namespace SalaryManagement.Application.Services.ContractServices
             return await _contractRepository.GetAllContracts(pageNumber, pageSize, sortBy, isDesc, searchKeyword);
         }
 
-        public async Task<Contract?> GetContractById(string contractId)
+
+        public async Task<Contract> GetContractById(string contractId)
         {
             return await _contractRepository.GetContractById(contractId);
         }

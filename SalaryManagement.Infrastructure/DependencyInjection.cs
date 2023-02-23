@@ -40,15 +40,15 @@ namespace SalaryManagement.Insfrastructure
             services.AddScoped<IContractRepository, ContractRepository>();
             services.AddScoped<ICompanyRepository,CompanyRepository>();
 
-            services.AddScoped<IAdminRepository, AdminRepository>();
             services.AddScoped<IEmployeeRepository,EmployeeRepository>();
 
 
             services.AddScoped<IHolidayRepository, HolidayRepository>();
             services.AddScoped<ILeaveLogRepository, LeaveLogRepository>();
+            services.AddScoped<IOvertimeLogRepository, OvertimeLogRepository>();
             services.AddScoped<ISalaryTypeRepository, SalaryTypeRepository>();
             services.AddScoped<IPayrollRepository, PayrollRepository>();
-            
+            services.AddScoped<IOvertimeRepository, OvertimeRepository>();
 
             return services;
         }
