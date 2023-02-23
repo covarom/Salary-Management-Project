@@ -64,7 +64,8 @@ namespace SalaryManagement.Api.Controllers
                 StartDate = request.StartDate,
                 EndDate = request.EndDate,
                 HolidayName = request.HolidayName,
-                IsDeleted = true
+                IsDeleted = true,
+                IsPaid = true
             };
             var result = await _holidayService.AddHoliday(holiday);
 
@@ -119,6 +120,11 @@ namespace SalaryManagement.Api.Controllers
             if (!string.IsNullOrEmpty(request.HolidayName))
             {
                 holiday.HolidayName = request.HolidayName;
+            }
+
+            if (!string.IsNullOrEmpty(request.IsPaid.ToString()))
+            {
+                holiday.IsPaid = request.IsPaid;
             }
 
             await _holidayService.UpdateHoliday(holiday);

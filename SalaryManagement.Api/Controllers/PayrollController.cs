@@ -66,7 +66,10 @@ namespace SalaryManagement.Api.Controllers
                 Date = request.Date,
                 IsDeleted = request.IsDelete,
                 EmployeeId = request.EmloyeeId,
-                Employee = await _employeeRepository.GetById(request.EmloyeeId)
+                Employee = await _employeeRepository.GetById(request.EmloyeeId),
+                TotalDeduction = request.TotalDeduction,
+                TotalBonus = request.TotalBonus
+
             };
             var result = _payrollService.AddPayroll(payroll);
             return Ok(result);
@@ -108,6 +111,16 @@ namespace SalaryManagement.Api.Controllers
             {
                 payroll.EmployeeId = request.EmployeeId;
                 //payroll.EmployeeId = await _employeeRepository.GetEmployeeIdByName(payroll.Employee.Name);
+            }
+
+            if (request.TotalDeduction.HasValue)
+            {
+                payroll.TotalDeduction = request.TotalDeduction.Value;
+            }
+
+            if (request.TotalBonus.HasValue)
+            {
+                payroll.TotalBonus = request.TotalBonus.Value;
             }
             await _payrollService.UpdatePayroll(payroll);
             return Ok(payroll);
