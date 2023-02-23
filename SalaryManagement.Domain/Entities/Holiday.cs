@@ -14,4 +14,6 @@ public partial class Holiday
     public bool? IsDeleted { get; set; }
 
     public string? HolidayName { get; set; }
+
+    public bool? IsPaid { get; set; }
 }

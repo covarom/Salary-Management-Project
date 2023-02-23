@@ -254,7 +254,9 @@ namespace SalaryManagement.Infrastructure.Persistence.Repositories
             return await _context.Contracts
                 .Where(c => c.EmployeeId == employeeId && c.DeletedAt == null
                 && c.ContractStatus.Equals(ContractStatusEnum.Active.ToString()))
-                .Include(c => c.Employee).SingleOrDefaultAsync();
+                .Include(c => c.Employee)
+                .Include(c => c.Partner)
+                .SingleOrDefaultAsync();
         }
 
           public async Task<Contract> GetContractByCompanyId(string id)

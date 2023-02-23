@@ -2,6 +2,6 @@
 {
     public interface IOvertimeService
     {
-        Task<decimal> GetOvertimeHoursAsync(string employeeId);
+        Task<int> GetOvertimeHoursAsync(string employeeId);
     }
 }

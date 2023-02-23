@@ -5,6 +5,6 @@ namespace SalaryManagement.Application.Services.SalaryServices
 {
     public interface ISalaryService
     {
-        Task<SalaryResponse> CalculateSalaryAsync(Employee employee, decimal? otTime, int? leaveTime);
+        Task<SalaryResponse> CalculateSalaryAsync(Employee employee, int? otTime, int? leaveTime);
     }
 }
