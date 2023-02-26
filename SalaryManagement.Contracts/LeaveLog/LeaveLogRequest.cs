@@ -8,7 +8,7 @@ namespace SalaryManagement.Contracts.LeaveLog
 {
     public record LeaveLogRequest
     (
-        string leaveTimeId,
+        string? leaveTimeId,
         DateTime startDate,
         DateTime endDate,
         string? reason,
