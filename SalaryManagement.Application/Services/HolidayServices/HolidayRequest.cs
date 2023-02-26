@@ -1,5 +1,6 @@
 ﻿namespace SalaryManagement.Application.Services.HolidayServices
 {
+
     public record HolidayRequest
     {
         public DateTime? StartDate { get; init; }
@@ -16,6 +17,7 @@
         public string? HolidayName { get; init; }
         public bool IsPaid { get; init; }
     }
+
 
     public record HolidayDelete(
         string Id

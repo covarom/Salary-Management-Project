@@ -1,7 +1,9 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using SalaryManagement.Application.Services.OvertimeLogServices;
+
 using SalaryManagement.Application.Services.EmployeeServices;
 using SalaryManagement.Application.Services.ContractServices;
+
 using SalaryManagement.Contracts.OvertimeLog;
 using SalaryManagement.Domain.Entities;
 
@@ -12,6 +14,7 @@ namespace SalaryManagement.Api.Controllers
     public class OvertimeLogController : ControllerBase
     {
         private readonly IOvertimeLogService _overtimeLogService;
+
         private readonly IEmployeeServices _employeeService;
         private readonly IContractServices _contractService;
         public OvertimeLogController(IOvertimeLogService overtimeLogService,
@@ -20,6 +23,7 @@ namespace SalaryManagement.Api.Controllers
             _overtimeLogService = overtimeLogService;
             _employeeService =  employeeService;
             _contractService = contractServices;
+
         }
 
         [HttpGet("all")]
@@ -35,7 +39,9 @@ namespace SalaryManagement.Api.Controllers
             var overtimeLog = await _overtimeLogService.GetOvertimeLogById(id);
             if(overtimeLog.Equals(null))
             {
+
                 return NotFound("Not found the Overtime log");
+
             }
             return Ok(overtimeLog);
         }
@@ -47,13 +53,16 @@ namespace SalaryManagement.Api.Controllers
             if (!IsValidRequest(overtimeLogRequest))
             {
                 return BadRequest();
+
             }         
             //Check có tồn tại OT log chưa
+
             var isExist = !_overtimeLogService.GetOvertimeLogById(overtimeLogRequest.EmployeeId).Equals(null);
             if (!isExist)
             {
                 return BadRequest();
             }
+
               //Check empl có hợp đồng và còn còn làm không
             var emp = await _employeeService.GetById(overtimeLogRequest.EmployeeId);
             if (emp == null)
@@ -64,6 +73,7 @@ namespace SalaryManagement.Api.Controllers
             if(listContract == null){
                 return BadRequest("Employee doesn't have contract!");
             }
+
             var log = new OvertimeLog
             {
                 OvertimeId = Guid.NewGuid().ToString(),
@@ -82,9 +92,11 @@ namespace SalaryManagement.Api.Controllers
         }
 
         [HttpPut]
+
         public async Task<IActionResult> UpdateOvertimeLog(OTUpdateRequest overtimeLogRequest)
         {
             if (!IsValidUpdateRequest(overtimeLogRequest))
+
             {
                 return BadRequest();
             }
@@ -134,6 +146,7 @@ namespace SalaryManagement.Api.Controllers
             return NotFound();
         }
 
+
         private static bool IsValidRequest(OvertimeLogRequest  overtimeLogRequest)
         {
             if (overtimeLogRequest.Equals(null))
@@ -160,6 +173,7 @@ namespace SalaryManagement.Api.Controllers
         }
 
         private static bool IsValidUpdateRequest(OTUpdateRequest  overtimeLogRequest)
+
         {
             if (overtimeLogRequest.Equals(null))
             {

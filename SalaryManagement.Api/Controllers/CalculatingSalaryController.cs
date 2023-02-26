@@ -1,11 +1,15 @@
+
 ﻿using Microsoft.AspNetCore.Mvc;
 using SalaryManagement.Application.Services.ContractServices;
+
 using SalaryManagement.Application.Services.EmployeeServices;
 using SalaryManagement.Application.Services.LeaveLogServices;
 using SalaryManagement.Application.Services.OverTimeServices;
 using SalaryManagement.Application.Services.SalaryServices;
 using SalaryManagement.Contracts.Salary;
+
 using System.Net;
+
 
 namespace SalaryManagement.Api.Controllers
 {
@@ -18,16 +22,20 @@ namespace SalaryManagement.Api.Controllers
         private readonly ILeaveLogService _leaveLogService;
         private readonly IOvertimeService _overtimeService;
         private readonly ISalaryService _salaryService;
+
         private readonly IContractServices _contractServices;
 
         public CalculatingSalaryController(IEmployeeServices employeeServices, ISalaryService salaryService,
             IOvertimeService overtimeService, ILeaveLogService leaveLogService, IContractServices contractServices)
+
         {
             _employeeService = employeeServices;
             _salaryService = salaryService;    
             _leaveLogService = leaveLogService;
             _overtimeService= overtimeService;
+
             _contractServices= contractServices;
+
         }
 
         [HttpGet("{id}/staff-salary")]
@@ -41,6 +49,7 @@ namespace SalaryManagement.Api.Controllers
                 {
                     return NotFound();
                 }
+
 
                 var contract = await _contractServices.GetContractByEmployeeId(employee.EmployeeId);
 
@@ -56,6 +65,7 @@ namespace SalaryManagement.Api.Controllers
                     return new BadRequestObjectResult(problemDetails);
                 }
 
+
                 var otTime = await _overtimeService.GetOvertimeHoursAsync(id);
 
                 var leaveDays = await _leaveLogService.GetTotalLeaveDateByEmployeeIdInMonthAcsyn(id);
@@ -70,6 +80,7 @@ namespace SalaryManagement.Api.Controllers
                 return StatusCode(StatusCodes.Status500InternalServerError, ex.Message);
             }
         }
+
 
         [HttpGet("{id}/partner-salary")]
         public async Task<ActionResult<SalaryResponse>> GetEmployeeSalaryForPartner(string id)
@@ -111,5 +122,6 @@ namespace SalaryManagement.Api.Controllers
                 return StatusCode(StatusCodes.Status500InternalServerError, ex.Message);
             }
         }
+
     }
 }

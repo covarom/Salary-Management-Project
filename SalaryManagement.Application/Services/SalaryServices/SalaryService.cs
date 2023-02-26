@@ -1,6 +1,8 @@
 ﻿using Mapster;
 using SalaryManagement.Application.Common.Interfaces.Persistence;
+
 using SalaryManagement.Contracts.Contracts;
+
 using SalaryManagement.Contracts.Salary;
 using SalaryManagement.Domain.Common.Enum;
 using SalaryManagement.Domain.Entities;
@@ -12,6 +14,7 @@ namespace SalaryManagement.Application.Services.SalaryServices
 
         private readonly IContractRepository _repository;
         private readonly ICompanyRepository _companyRepository;
+
         private readonly IHolidayRepository _holidayRepository;
 
         public SalaryService(IContractRepository repository, ICompanyRepository companyRepository, IHolidayRepository holidayRepository) 
@@ -19,12 +22,14 @@ namespace SalaryManagement.Application.Services.SalaryServices
             _repository = repository;
             _companyRepository = companyRepository;
             _holidayRepository = holidayRepository;
+
         }
 
         public async Task<SalaryResponse> CalculateSalaryAsync(Employee employee, int? otTime, int? leaveTime)
         {
 
             decimal salary = 0;
+
 
             var contract = await _repository.GetContractsByEmployeeIdAsync(employee.EmployeeId);
 
@@ -114,6 +119,7 @@ namespace SalaryManagement.Application.Services.SalaryServices
             int realityWorkHours;
             int relityWorkDays = await GetTotalWorkingDateUptoCurrentDay();
 
+
             if (contract.ContractType.Equals(ContractTypeEnum.PartTime.ToString()))
             {
                 standardWorkingHours = 22 * 4;
@@ -125,12 +131,16 @@ namespace SalaryManagement.Application.Services.SalaryServices
                 realityWorkHours = relityWorkDays * 8;
             }
 
+
             decimal basicSalary = (decimal)contract.PartnerPrice;
+
             decimal bhxh = (decimal)contract.Bhxh;
             decimal bhyt = (decimal)contract.Bhyt;
             decimal bhtn = (decimal)contract.Bhtn;
             decimal personalIncomeTax = (decimal)contract.Tax;
+
             decimal EarnedPerHour = basicSalary / standardWorkingHours;
+
             decimal tempSalary = EarnedPerHour * realityWorkHours;
 
             if (contract.SalaryType == SalaryTypeEnum.Gross.ToString())
@@ -167,6 +177,8 @@ namespace SalaryManagement.Application.Services.SalaryServices
 
             return new SalaryResponse
             {
+
+
                 Contract = contract.Adapt<ContractResponse>(),
                 StandardWorkHours = standardWorkingHours,
                 RealityWorkHours = realityWorkHours + (int)otTime - ((int)leaveTime * 8),
@@ -177,6 +189,7 @@ namespace SalaryManagement.Application.Services.SalaryServices
                 AccidentInsurance = bhtn,
                 HealthInsurance = bhyt,
                 OvertimeHours = (int)otTime,
+
                 OvetimeSalaryPerHour = Math.Round((double)EarnedPerHour * 1.5, 2),
                 TotalBonus = (double)overtimePay,
                 TotalDeductions = (double)leaveDeduction,
@@ -261,6 +274,7 @@ namespace SalaryManagement.Application.Services.SalaryServices
                 .Select(d => startDate.AddDays(d))
                 .Count(date => date.DayOfWeek != DayOfWeek.Saturday && date.DayOfWeek != DayOfWeek.Sunday && !listHoliday.Contains(date));
         }
+
 
     }
 }
