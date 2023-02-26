@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using SalaryManagement.Api.Common.Helper;
 using SalaryManagement.Application.Services.ContractServices;
 using SalaryManagement.Application.Services.HolidayServices;
 using SalaryManagement.Domain.Entities;
@@ -10,7 +11,7 @@ using System.Net;
 
 namespace SalaryManagement.Api.Controllers
 {
-    [Route("api/v1/holidays")]
+    [Route("api/v1/")]
     [ApiController]
     [Authorize]
     public class HolidayController : ControllerBase
@@ -24,7 +25,7 @@ namespace SalaryManagement.Api.Controllers
             _mapper = mapper;
         }
 
-        [HttpGet("get-all")]
+        [HttpGet("holidays")]
         public async Task<IActionResult> GetAllHoliday()
         {
             var holidays = await _holidayService.GetAllHoliday();
@@ -32,7 +33,7 @@ namespace SalaryManagement.Api.Controllers
             return Ok(holidays);
         }
 
-        [HttpGet("{id}")]
+        [HttpGet("holidays/{holidayId}")]
         public async Task<IActionResult> FindById(string id)
         {
             var holiday = await _holidayService.GetHolidaysById(id);
@@ -51,7 +52,7 @@ namespace SalaryManagement.Api.Controllers
 
 
 
-        [HttpPost("")]
+        [HttpPost("holidays")]
         public async Task<IActionResult> AddHoliday(HolidayRequest request)
         {
             await Task.CompletedTask;
@@ -62,75 +63,73 @@ namespace SalaryManagement.Api.Controllers
                 HolidayId = id,
                 StartDate = request.StartDate,
                 EndDate = request.EndDate,
-                HolidayName= request.HolidayName,
-                IsDeleted = true
+                HolidayName = request.HolidayName,
+                IsDeleted = true,
+                IsPaid = true
             };
             var result = await _holidayService.AddHoliday(holiday);
 
             return Ok(result);
         }
 
-        [HttpDelete("delete")]
+        [HttpDelete("holidays/{holidayId}")]
         public async Task<IActionResult> DeleteHoliday(HolidayDelete request)
-        {
-            string id = request.Id;
-            var msg = "";
-
-            Holiday holiday = await _holidayService.GetHolidaysById(id);
-
-            if (holiday != null)
-            {
-
-                var result = await _holidayService.DeleteHoliday(id);
-
-                if (result)
-                {
-                    msg = "Delete successfully";
-                }
-                else
-                {
-                    msg = "Delete failed";
-                }
-
-            }
-
-            else
-            {
-                msg = "Holiday not found";
-            }
-
-
-
-            return Ok(msg);
-        }
-
-        [HttpPut("update")]
-        public async Task<IActionResult> UpdateHoliday(HolidayUpdate request)
         {
             Holiday holiday = new Holiday
             {
                 HolidayId = request.Id,
-                StartDate = request.StartDate,
-                EndDate = request.EndDate,
-                HolidayName = request.HolidayName
+                IsDeleted = false
             };
 
-            var result = await _holidayService.UpdateHoliday(holiday);
+            var result = await _holidayService.DeleteHoliday(holiday);
             var msg = "";
 
             if (result)
 
             {
-
                 msg = "Update successfully";
             }
             else
             {
                 return NotFound("Holiday not found");
             }
-
-
             return Ok(msg);
+        }
+
+        [HttpPut("holidays/{holidayId}")]
+        public async Task<IActionResult> UpdateHoliday(string holidayId, HolidayUpdate request)
+        {
+            var existHoliday = await _holidayService.GetHolidaysById(holidayId);
+            if (existHoliday == null)
+            {
+                return NotFound();
+            }
+
+            var holiday = existHoliday;
+
+            if (request.StartDate.HasValue)
+            {
+                holiday.StartDate = request.StartDate.Value;
+            }
+
+            if (request.EndDate.HasValue)
+            {
+                holiday.EndDate = request.EndDate.Value;
+            }
+
+            if (!string.IsNullOrEmpty(request.HolidayName))
+            {
+                holiday.HolidayName = request.HolidayName;
+            }
+
+            if (!string.IsNullOrEmpty(request.IsPaid.ToString()))
+            {
+                holiday.IsPaid = request.IsPaid;
+            }
+
+            await _holidayService.UpdateHoliday(holiday);
+
+            return Ok(holiday);
         }
     }
 }

@@ -53,12 +53,14 @@ namespace SalaryManagement.Api.Controllers
         {
             await Task.CompletedTask;
             string id = Guid.NewGuid().ToString();
+            int codeEmp = await _EmployeeService.CountEmployee();
             Employee Employee = new Employee
             {
                 EmployeeId=id,
                 Name = rq.Employee_name ,
                 Image = rq.image,
                 DateOfBirth = rq.day_of_birth,
+                Code = "NV" + codeEmp.ToString(),
                 Address = rq.address,
                 IdentifyNumber = rq.identify_number,
                 IsActive= true,
