@@ -23,5 +23,6 @@ namespace SalaryManagement.Application.Common.Interfaces.Persistence
 
 
         Task<Contract>GetContractByCompanyId(string id);
+
     }
 }

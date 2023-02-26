@@ -110,5 +110,9 @@ namespace SalaryManagement.Application.Services.ContractServices
         {
             return await _contractRepository.GetContractById(contractId);
         }
+
+        public async Task<Contract?> GetContractsByEmployeeIdAsync(string employeeId){
+            return await _contractRepository.GetContractsByEmployeeIdAsync(employeeId);
+        }
     }
 }
