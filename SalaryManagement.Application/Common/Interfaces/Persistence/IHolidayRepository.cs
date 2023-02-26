@@ -12,6 +12,7 @@ namespace SalaryManagement.Application.Common.Interfaces.Persistence
         Task<bool> UpdateHoliday(Holiday holiday);
         Task<bool> DeleteHoliday(string id);
 
+        Task<IEnumerable<Holiday>> GetHolidaysByDateRangeAsync(DateTime startDate, DateTime endDate);
 
     }
 }
