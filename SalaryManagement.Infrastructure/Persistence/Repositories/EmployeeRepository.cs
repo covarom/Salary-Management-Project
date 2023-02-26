@@ -67,5 +67,10 @@ namespace SalaryManagement.Infrastructure.Persistence.Repositories
             employee = _context.Employees.SingleOrDefault(e => e.Name.Contains(EmployeeName.Trim()));
             return employee.EmployeeId;
         }
+         public async Task<int> CountEmployee()
+        {
+            var num = await _context.Employees.CountAsync();
+            return num;
+        }
     }
 }
