@@ -43,7 +43,6 @@ namespace SalaryManagement.Application.Services.SalaryTypeService
             if(existSalaryType != null)
             {
                 existSalaryType.SalaryTypeName = StringHelper.IsNullOrEmpty(salaryType.SalaryTypeName) ? existSalaryType.SalaryTypeName: salaryType.SalaryTypeName;
-                existSalaryType.IsDeleted = StringHelper.IsNullOrEmpty(salaryType.IsDeleted.ToString()) ? existSalaryType.IsDeleted : salaryType.IsDeleted;
 
                 return await _repository.UpdateSalaryType(existSalaryType);
             }

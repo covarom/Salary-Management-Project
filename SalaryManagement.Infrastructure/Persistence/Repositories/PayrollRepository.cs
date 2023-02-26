@@ -21,11 +21,10 @@ namespace SalaryManagement.Infrastructure.Persistence.Repositories
             return payroll;
         }
 
-        public async Task<bool> DeletePayroll(string id)
+        public async Task<bool> DeletePayroll(Payroll payroll)
         {
             bool check = false;
-            var payroll = await _context.Payrolls.FindAsync(id);
-            _context.Payrolls.Remove(payroll);
+            _context.Payrolls.Update(payroll);
             int change = await _context.SaveChangesAsync();
 
             if (change > 0)

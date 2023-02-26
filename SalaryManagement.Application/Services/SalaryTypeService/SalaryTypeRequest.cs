@@ -6,8 +6,7 @@
         );
     public record SalaryTypeUpdate(
         string Id,
-        string SalaryTypeName,
-        bool IsDelete
+        string SalaryTypeName
         );
     public record SalaryTypeDelete(
         string Id

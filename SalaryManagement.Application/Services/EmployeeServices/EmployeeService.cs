@@ -52,5 +52,10 @@ namespace SalaryManagement.Application.Services.EmployeeServices
 
             return false;
         }
+
+        public async Task<int> CountEmployee()
+        {
+            return await _EmployeeRepository.CountEmployee();
+        }
     }
 }

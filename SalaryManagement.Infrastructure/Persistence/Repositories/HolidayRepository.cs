@@ -18,11 +18,13 @@ namespace SalaryManagement.Infrastructure.Persistence.Repositories
 
         public async Task<Holiday> GetHolidayById(string id)
         {
-            return await _context.Holidays.SingleOrDefaultAsync(x => x.HolidayId.Equals(id));
+            return await _context.Holidays.SingleOrDefaultAsync(x => x.HolidayId.Equals(id) && x.IsDeleted == false);
         }
         public async Task<IEnumerable<Holiday>> GetAllHolliday()
         {
-           return await _context.Holidays.ToListAsync();
+           return await _context.Holidays
+                .Where(x => x.IsDeleted == false)
+                .ToListAsync();
         }
 
         public async Task<Holiday> AddHoliday(Holiday holiday)
@@ -47,11 +49,10 @@ namespace SalaryManagement.Infrastructure.Persistence.Repositories
 
             return check;
         }
-        public async Task<bool> DeleteHoliday(string id)
+        public async Task<bool> DeleteHoliday(Holiday holiday)
         {
             bool check = false;
-            var holiday = await _context.Holidays.FindAsync(id);
-            _context.Holidays.Remove(holiday);
+            _context.Holidays.Update(holiday);
 
             int change = await _context.SaveChangesAsync();
 
@@ -62,5 +63,13 @@ namespace SalaryManagement.Infrastructure.Persistence.Repositories
 
             return check;
         }
+
+        public async Task<IEnumerable<Holiday>> GetHolidaysByDateRangeAsync(DateTime startDate, DateTime endDate)
+        {
+            return await _context.Holidays
+                .Where(h => h.StartDate >= startDate && h.StartDate <= endDate && h.IsDeleted == false)
+                .ToListAsync();
+        }
+
     }
 }

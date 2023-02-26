@@ -1,5 +1,9 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using SalaryManagement.Application.Services.OvertimeLogServices;
+
+using SalaryManagement.Application.Services.EmployeeServices;
+using SalaryManagement.Application.Services.ContractServices;
+
 using SalaryManagement.Contracts.OvertimeLog;
 using SalaryManagement.Domain.Entities;
 
@@ -11,9 +15,15 @@ namespace SalaryManagement.Api.Controllers
     {
         private readonly IOvertimeLogService _overtimeLogService;
 
-        public OvertimeLogController(IOvertimeLogService overtimeLogService)
+        private readonly IEmployeeServices _employeeService;
+        private readonly IContractServices _contractService;
+        public OvertimeLogController(IOvertimeLogService overtimeLogService,
+         IEmployeeServices employeeService, IContractServices contractServices)
         {
             _overtimeLogService = overtimeLogService;
+            _employeeService =  employeeService;
+            _contractService = contractServices;
+
         }
 
         [HttpGet("all")]
@@ -29,7 +39,9 @@ namespace SalaryManagement.Api.Controllers
             var overtimeLog = await _overtimeLogService.GetOvertimeLogById(id);
             if(overtimeLog.Equals(null))
             {
-                return NotFound();
+
+                return NotFound("Not found the Overtime log");
+
             }
             return Ok(overtimeLog);
         }
@@ -41,13 +53,27 @@ namespace SalaryManagement.Api.Controllers
             if (!IsValidRequest(overtimeLogRequest))
             {
                 return BadRequest();
-            }
+
+            }         
+            //Check có tồn tại OT log chưa
 
             var isExist = !_overtimeLogService.GetOvertimeLogById(overtimeLogRequest.EmployeeId).Equals(null);
             if (!isExist)
             {
                 return BadRequest();
             }
+
+              //Check empl có hợp đồng và còn còn làm không
+            var emp = await _employeeService.GetById(overtimeLogRequest.EmployeeId);
+            if (emp == null)
+            {
+                return BadRequest("Employee doesn't exist!");
+            }
+            var listContract = await _contractService.GetContractsByEmployeeIdAsync(emp.EmployeeId);
+            if(listContract == null){
+                return BadRequest("Employee doesn't have contract!");
+            }
+
             var log = new OvertimeLog
             {
                 OvertimeId = Guid.NewGuid().ToString(),
@@ -66,9 +92,11 @@ namespace SalaryManagement.Api.Controllers
         }
 
         [HttpPut]
-        public async Task<IActionResult> UpdateOvertimeLog(OvertimeLogRequest overtimeLogRequest)
+
+        public async Task<IActionResult> UpdateOvertimeLog(OTUpdateRequest overtimeLogRequest)
         {
-            if (!IsValidRequest(overtimeLogRequest))
+            if (!IsValidUpdateRequest(overtimeLogRequest))
+
             {
                 return BadRequest();
             }
@@ -118,7 +146,34 @@ namespace SalaryManagement.Api.Controllers
             return NotFound();
         }
 
-        private static bool IsValidRequest(OvertimeLogRequest overtimeLogRequest)
+
+        private static bool IsValidRequest(OvertimeLogRequest  overtimeLogRequest)
+        {
+            if (overtimeLogRequest.Equals(null))
+            {
+                return false;
+            }
+
+            if (string.IsNullOrEmpty(overtimeLogRequest.Status)
+                || string.IsNullOrEmpty(overtimeLogRequest.EmployeeId))
+            {
+                return false;
+            }
+
+            if (overtimeLogRequest.OvertimeDate.Equals(null) || overtimeLogRequest.OvertimeDate > DateTime.Now)
+            {
+                return false;
+            }
+
+            if (overtimeLogRequest.Hours is < 0 or > 24)
+            {
+                return false;
+            }
+            return true;
+        }
+
+        private static bool IsValidUpdateRequest(OTUpdateRequest  overtimeLogRequest)
+
         {
             if (overtimeLogRequest.Equals(null))
             {

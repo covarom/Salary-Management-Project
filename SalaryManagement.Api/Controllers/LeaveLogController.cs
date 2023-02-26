@@ -3,6 +3,8 @@ using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.IdentityModel.Tokens;
 using SalaryManagement.Application.Services.LeaveLogServices;
+using SalaryManagement.Application.Services.EmployeeServices;
+using SalaryManagement.Application.Services.ContractServices;
 using SalaryManagement.Contracts.LeaveLog;
 using SalaryManagement.Domain.Entities;
 
@@ -13,12 +15,17 @@ namespace SalaryManagement.Api.Controllers
     public class LeaveLogController : ControllerBase
     {
         private readonly ILeaveLogService _leaveLogService;
+         private readonly IEmployeeServices _employeeService;
+        private readonly IContractServices _contractService;
         private readonly IMapper _mapper;
         
-        public LeaveLogController(ILeaveLogService leaveLogService, IMapper mapper)
+        public LeaveLogController(ILeaveLogService leaveLogService, IMapper mapper,
+         IEmployeeServices employeeService, IContractServices contractServices)
         {
             _leaveLogService = leaveLogService;
             _mapper = mapper;
+            _employeeService =  employeeService;
+            _contractService = contractServices;
         }
 
         [HttpGet("all")]
@@ -50,6 +57,16 @@ namespace SalaryManagement.Api.Controllers
             if(!IsValidRequest(leaveLog))
             {
                 return BadRequest();
+            }
+              //Check empl có hợp đồng và còn còn làm không
+            var emp = await _employeeService.GetById(leaveLog.employeeId);
+            if (emp == null)
+            {
+                return BadRequest("Employee doesn't exist!");
+            }
+            var listContract = await _contractService.GetContractsByEmployeeIdAsync(emp.EmployeeId);
+            if(listContract == null){
+                return BadRequest("Employee doesn't have contract!");
             }
             var log = new LeaveLog
             {
