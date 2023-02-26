@@ -24,6 +24,14 @@ namespace SalaryManagement.Application.Services.ContractServices
             contract.ContractId = Guid.NewGuid().ToString();
             contract.CreatedAt = DateTime.Now;
 
+            // Check if the employee already has a contract during the specified period
+            var existingContracts = await _contractRepository.GetContractsByEmployeeIdAsync(request.EmployeeId);
+            if (existingContracts != null && existingContracts.StartDate <= request.EndDate 
+                && existingContracts.EndDate >= request.StartDate)
+            {
+                throw new Exception("Employee already has a contract during the specified period.");
+            }
+
             await _contractRepository.AddAsync(contract);
             await _contractRepository.SaveChangesAsync();
 
@@ -111,7 +119,8 @@ namespace SalaryManagement.Application.Services.ContractServices
             return await _contractRepository.GetContractById(contractId);
         }
 
-        public async Task<Contract?> GetContractsByEmployeeIdAsync(string employeeId){
+        public async Task<Contract?> GetContractByEmployeeId(string employeeId)
+        {
             return await _contractRepository.GetContractsByEmployeeIdAsync(employeeId);
         }
     }
