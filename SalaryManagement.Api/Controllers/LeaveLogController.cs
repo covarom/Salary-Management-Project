@@ -101,11 +101,6 @@ namespace SalaryManagement.Api.Controllers
             {
                 return BadRequest();
             }
-            //khong the update object da bi xoa va update trang thai isDelete tu false thanh true (chi co the update khi xoa)
-            if (tempLeaveLog.IsDeleted == true || (tempLeaveLog.IsDeleted == false))
-            {
-                return BadRequest();
-            }
             var log = new LeaveLog
             {
                 LeaveTimeId = updateLeaveLog.leaveTimeId,

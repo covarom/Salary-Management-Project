@@ -37,12 +37,12 @@ namespace SalaryManagement.Infrastructure.Persistence.Repositories
 
         public async Task<IEnumerable<OvertimeLog>> GetAllOvertimeLogs()
         {
-            return await _context.OvertimeLogs.Include(x => x.Employee).ToListAsync();
+            return await _context.OvertimeLogs.Include(x => x.Employee).Where(x => x.IsDeleted != true).ToListAsync();
         }
 
         public async Task<OvertimeLog> GetOvertimeLogById(string id)
         {
-            return await _context.OvertimeLogs.Include(x => x.Employee).SingleOrDefaultAsync(x => x.OvertimeId.Equals(id));
+            return await _context.OvertimeLogs.Include(x => x.Employee).SingleOrDefaultAsync(x => x.OvertimeId.Equals(id) && x.IsDeleted != true);
         }
 
         public async Task<bool> UpdateOvertimeLog(OvertimeLog overtimeLog)

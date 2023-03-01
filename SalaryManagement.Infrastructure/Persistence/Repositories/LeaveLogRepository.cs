@@ -36,12 +36,12 @@ namespace SalaryManagement.Infrastructure.Persistence.Repositories
 
         public async Task<IEnumerable<LeaveLog>> GetAllLeaveLogs()
         {
-            return await _context.LeaveLogs.Include(x => x.Employee).ToListAsync();
+            return await _context.LeaveLogs.Include(x => x.Employee).Where(x => x.IsDeleted != true).ToListAsync();
         }
 
         public async Task<LeaveLog> GetLeaveLogById(string leaveTimeId)
         {
-            return await _context.LeaveLogs.Include(x => x.Employee).SingleOrDefaultAsync(x => x.LeaveTimeId.Equals(leaveTimeId));
+            return await _context.LeaveLogs.Include(x => x.Employee).SingleOrDefaultAsync(x => x.LeaveTimeId.Equals(leaveTimeId) && x.IsDeleted != true);
         }
 
         public async Task<bool> UpdateLeaveLog(LeaveLog leaveLog)
