@@ -51,7 +51,7 @@ namespace SalaryManagement.Api.Controllers
         }
 
         [HttpPost("")]
-        public async Task<IActionResult> AddNewLeaveLog(LeaveLogRequest leaveLog)
+        public async Task<IActionResult> AddNewLeaveLog(CreateLeaveLogRequest leaveLog)
         {
             await Task.CompletedTask;
             if(!IsValidRequest(leaveLog))
@@ -74,7 +74,6 @@ namespace SalaryManagement.Api.Controllers
                 StartDate= leaveLog.startDate,
                 EndDate = leaveLog.endDate,
                 Reason = leaveLog.reason,
-                Status = leaveLog.status,
                 IsDeleted = false,
                 EmployeeId= leaveLog.employeeId,
             };
@@ -87,35 +86,29 @@ namespace SalaryManagement.Api.Controllers
         }
 
         [HttpPut("")]
-        public async Task<IActionResult> UpdateLeaveLog(LeaveLogRequest leaveLog)
+        public async Task<IActionResult> UpdateLeaveLog(UpdateLeaveLogRequest updateLeaveLog)
         {
-            if (!IsValidRequest(leaveLog))
+            if (!IsValidRequest(updateLeaveLog))
             {
                 return BadRequest();
             }
-            if(leaveLog.employeeId.IsNullOrEmpty())
+            if(updateLeaveLog.employeeId.IsNullOrEmpty())
             {
                 return BadRequest();
             }
-            var tempLeaveLog = await _leaveLogService.GetLeaveLogById(leaveLog.leaveTimeId);
+            var tempLeaveLog = await _leaveLogService.GetLeaveLogById(updateLeaveLog.leaveTimeId);
             if(tempLeaveLog.Equals(null))
-            {
-                return BadRequest();
-            }
-            //khong the update object da bi xoa va update trang thai isDelete tu false thanh true (chi co the update khi xoa)
-            if (tempLeaveLog.IsDeleted == true || (tempLeaveLog.IsDeleted == false && leaveLog.isDeleted == true))
             {
                 return BadRequest();
             }
             var log = new LeaveLog
             {
-                LeaveTimeId = leaveLog.leaveTimeId,
-                StartDate = leaveLog.startDate,
-                EndDate = leaveLog.endDate,
-                Reason = leaveLog.reason,
-                Status = leaveLog.status,
-                IsDeleted = leaveLog.isDeleted,
-                EmployeeId = leaveLog.employeeId
+                LeaveTimeId = updateLeaveLog.leaveTimeId,
+                StartDate = updateLeaveLog.startDate,
+                EndDate = updateLeaveLog.endDate,
+                Reason = updateLeaveLog.reason,
+                Status = updateLeaveLog.status,
+                EmployeeId = updateLeaveLog.employeeId
             };
             var result = await _leaveLogService.UpdateLeaveLog(log);
             if (result)
@@ -137,7 +130,7 @@ namespace SalaryManagement.Api.Controllers
             return Ok();
         }
         
-        private static bool IsValidRequest(LeaveLogRequest request)
+        private static bool IsValidRequest(UpdateLeaveLogRequest request)
         {
             if (request.Equals(null))
             {
@@ -148,6 +141,19 @@ namespace SalaryManagement.Api.Controllers
                 return false;
             }
             return !request.status.IsNullOrEmpty();
+        }
+        
+        private static bool IsValidRequest(CreateLeaveLogRequest request)
+        {
+            if (request.Equals(null))
+            {
+                return false;
+            }
+            if (request.startDate < DateTime.Now || request.startDate > request.endDate)
+            {
+                return false;
+            }
+            return true;
         }
     }
 }

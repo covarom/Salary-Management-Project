@@ -96,7 +96,6 @@ namespace SalaryManagement.Api.Controllers
         public async Task<IActionResult> UpdateOvertimeLog(OTUpdateRequest overtimeLogRequest)
         {
             if (!IsValidUpdateRequest(overtimeLogRequest))
-
             {
                 return BadRequest();
             }
@@ -173,7 +172,6 @@ namespace SalaryManagement.Api.Controllers
         }
 
         private static bool IsValidUpdateRequest(OTUpdateRequest  overtimeLogRequest)
-
         {
             if (overtimeLogRequest.Equals(null))
             {
