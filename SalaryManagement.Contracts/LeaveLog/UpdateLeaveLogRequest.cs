@@ -12,7 +12,6 @@ namespace SalaryManagement.Contracts.LeaveLog
         DateTime startDate,
         DateTime endDate,
         string? reason,
-        string status,
         string employeeId
     );
 

@@ -78,7 +78,6 @@ namespace SalaryManagement.Api.Controllers
             {
                 OvertimeId = Guid.NewGuid().ToString(),
                 Hours = overtimeLogRequest.Hours,
-                Status = overtimeLogRequest.Status,
                 OvertimeDay = overtimeLogRequest.OvertimeDate,
                 EmployeeId = overtimeLogRequest.EmployeeId,
                 IsDeleted = false
@@ -88,7 +87,7 @@ namespace SalaryManagement.Api.Controllers
             {
                 return NotFound();
             }
-            return Ok();
+            return Ok("Add successfully");
         }
 
         [HttpPut]
@@ -102,13 +101,13 @@ namespace SalaryManagement.Api.Controllers
 
             if (string.IsNullOrEmpty(overtimeLogRequest.Id))
             {
-                return BadRequest();
+                return BadRequest("Invalid params");
             }
 
             var tempLog = await _overtimeLogService.GetOvertimeLogById(overtimeLogRequest.Id);
             if (tempLog.Equals(null))
             {
-                return BadRequest();
+                return BadRequest("Invalid params");
             }
 
             var log = new OvertimeLog
@@ -116,16 +115,15 @@ namespace SalaryManagement.Api.Controllers
                 OvertimeId = tempLog.OvertimeId,
                 Hours = overtimeLogRequest.Hours,
                 OvertimeDay = overtimeLogRequest.OvertimeDate,
-                Status = overtimeLogRequest.Status,
                 EmployeeId = tempLog.EmployeeId
             };
             var result = await _overtimeLogService.UpdateOvertimeLog(log);
             if (result)
             {
-                return Ok();
+                return Ok("Update successfully");
             }
 
-            return NotFound();
+            return BadRequest();
         }
 
         [HttpDelete("{id}")]
@@ -133,16 +131,16 @@ namespace SalaryManagement.Api.Controllers
         {
             if (string.IsNullOrEmpty(id))
             {
-                return BadRequest();
+                return BadRequest("Invalid params");
             }
 
             var result = await _overtimeLogService.DeleteOvertimeLog(id);
             if (result)
             {
-                return Ok();
+                return Ok("Delete successfully");
             }
 
-            return NotFound();
+            return BadRequest("Invalid params");
         }
 
 
@@ -153,8 +151,7 @@ namespace SalaryManagement.Api.Controllers
                 return false;
             }
 
-            if (string.IsNullOrEmpty(overtimeLogRequest.Status)
-                || string.IsNullOrEmpty(overtimeLogRequest.EmployeeId))
+            if (string.IsNullOrEmpty(overtimeLogRequest.EmployeeId))
             {
                 return false;
             }
@@ -178,8 +175,7 @@ namespace SalaryManagement.Api.Controllers
                 return false;
             }
 
-            if (string.IsNullOrEmpty(overtimeLogRequest.Status)
-                || string.IsNullOrEmpty(overtimeLogRequest.EmployeeId))
+            if (string.IsNullOrEmpty(overtimeLogRequest.EmployeeId))
             {
                 return false;
             }
