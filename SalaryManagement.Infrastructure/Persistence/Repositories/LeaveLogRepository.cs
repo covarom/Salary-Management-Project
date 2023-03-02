@@ -56,12 +56,23 @@ namespace SalaryManagement.Infrastructure.Persistence.Repositories
             var startOfMonth = new DateTime(DateTime.Now.Year, DateTime.Now.Month, 1);
             var today = DateTime.Now.Date;
 
-            var totalDays = await _context.LeaveLogs
+            var listLeaveLog = await _context.LeaveLogs
                 .Where(l => l.EmployeeId == employeeId && l.StartDate >= startOfMonth && l.StartDate <= today)
-                .CountAsync();
+                .ToListAsync();
+
+            var totalDays = 0;
+            foreach(var l in listLeaveLog )
+            {
+                totalDays += GetNumberOfDays((DateTime)l.StartDate, (DateTime)l.EndDate);
+            }
 
             return totalDays;
         }
 
+        private int GetNumberOfDays(DateTime startDate, DateTime endDate)
+        {
+            TimeSpan timeSpan = endDate - startDate;
+            return timeSpan.Days + 1;
+        }
     }
 }

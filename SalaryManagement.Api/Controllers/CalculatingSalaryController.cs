@@ -1,5 +1,6 @@
 
-﻿using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using SalaryManagement.Application.Services.ContractServices;
 
 using SalaryManagement.Application.Services.EmployeeServices;
@@ -15,6 +16,7 @@ namespace SalaryManagement.Api.Controllers
 {
     [Route("api/v1")]
     [ApiController]
+    [Authorize]
     public class CalculatingSalaryController : ControllerBase
     {
 
