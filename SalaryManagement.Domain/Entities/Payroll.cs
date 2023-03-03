@@ -19,5 +19,9 @@ public partial class Payroll
 
     public string? EmployeeId { get; set; }
 
+    public double? TotalDeduction { get; set; }
+
+    public double? TotalBonus { get; set; }
+
     public virtual Employee? Employee { get; set; }
 }

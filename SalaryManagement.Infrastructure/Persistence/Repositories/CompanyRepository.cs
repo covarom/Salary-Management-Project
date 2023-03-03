@@ -34,27 +34,41 @@ namespace SalaryManagement.Infrastructure.Persistence.Repositories
         public async Task<IEnumerable<Company>> GetAllCompanys()
         {
             return await _context.Companys.ToListAsync();
-        }
+        }  
 
         public async Task<bool> RemoveCompany(string id)
         {
             bool check=false;
             var company = await _context.Companys.FindAsync(id);
-            //  if(_context.Companys.Remove(company)){
-            //     check = true;
-            //  }
-            await _context.SaveChangesAsync();
+             _context.Companys.Remove(company);      
+            int changes = await _context.SaveChangesAsync();
+            if(changes>0){
+                check= true;
+            }
             return check;
         }
 
-         public async Task<bool> UpdateCompany(Company Company)
+         public async Task<bool> UpdateCompany(Company company)
         {
             bool check=false;
-            _context.Companys.Update(Company);
-            await _context.SaveChangesAsync();
-            // if(_context.Companys.Update(Company)){
-            //      check = true;
+
+            // var company = await _context.Companys.FindAsync(Company.CompanyId);
+            // company.CompanyName = Company.CompanyName;
+            //  company.Address = Company.Address;
+            // _context.Companys.Update(company);
+
+            //  int changes = await _context.SaveChangesAsync();
+            // if(changes>0){
+            //     check= true;
             // }
+            //  return check;
+            _context.Entry(company).State = EntityState.Modified;
+
+          
+                int changes = await _context.SaveChangesAsync();
+              if(changes>0){
+                check= true;
+            }
              return check;
         }   
 

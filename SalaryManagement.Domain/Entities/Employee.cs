@@ -21,6 +21,8 @@ public partial class Employee
 
     public string? PhoneNumber { get; set; }
 
+    public string? Code { get; set; }
+
     public virtual ICollection<Contract> Contracts { get; } = new List<Contract>();
 
     public virtual ICollection<LeaveLog> LeaveLogs { get; } = new List<LeaveLog>();
