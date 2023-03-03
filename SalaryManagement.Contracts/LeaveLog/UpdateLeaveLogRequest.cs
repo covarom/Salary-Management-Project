@@ -6,14 +6,19 @@ using System.Threading.Tasks;
 
 namespace SalaryManagement.Contracts.LeaveLog
 {
-    public record LeaveLogRequest
+    public record UpdateLeaveLogRequest
     (
         string? leaveTimeId,
         DateTime startDate,
         DateTime endDate,
         string? reason,
-        string status,
+        string employeeId
+    );
+
+    public record CreateLeaveLogRequest(
         string employeeId,
-        bool isDeleted
+        DateTime startDate,
+        DateTime endDate,
+        string? reason
     );
 }

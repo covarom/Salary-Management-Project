@@ -45,5 +45,7 @@ public partial class Contract
 
     public virtual Employee Employee { get; set; } = null!;
 
+    public virtual ICollection<PaidHistory> PaidHistories { get; } = new List<PaidHistory>();
+
     public virtual Company Partner { get; set; } = null!;
 }

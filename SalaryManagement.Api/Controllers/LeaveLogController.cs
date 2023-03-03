@@ -51,12 +51,12 @@ namespace SalaryManagement.Api.Controllers
         }
 
         [HttpPost("")]
-        public async Task<IActionResult> AddNewLeaveLog(LeaveLogRequest leaveLog)
+        public async Task<IActionResult> AddNewLeaveLog(CreateLeaveLogRequest leaveLog)
         {
             await Task.CompletedTask;
             if(!IsValidRequest(leaveLog))
             {
-                return BadRequest();
+                return BadRequest("Not valid request!");
             }
               //Check empl có hợp đồng và còn còn làm không
             var emp = await _employeeService.GetById(leaveLog.employeeId);
@@ -74,10 +74,10 @@ namespace SalaryManagement.Api.Controllers
                 StartDate= leaveLog.startDate,
                 EndDate = leaveLog.endDate,
                 Reason = leaveLog.reason,
-                Status = leaveLog.status,
                 IsDeleted = false,
                 EmployeeId= leaveLog.employeeId,
             };
+
             var result = _leaveLogService.CreateNewLeaveLog(log);
             if(!result.Equals(null))
             {
@@ -87,35 +87,28 @@ namespace SalaryManagement.Api.Controllers
         }
 
         [HttpPut("")]
-        public async Task<IActionResult> UpdateLeaveLog(LeaveLogRequest leaveLog)
+        public async Task<IActionResult> UpdateLeaveLog(UpdateLeaveLogRequest updateLeaveLog)
         {
-            if (!IsValidRequest(leaveLog))
+            if (!IsValidRequest(updateLeaveLog))
             {
-                return BadRequest();
+                return BadRequest("Wrong condition");
             }
-            if(leaveLog.employeeId.IsNullOrEmpty())
+            if(updateLeaveLog.employeeId.IsNullOrEmpty())
             {
-                return BadRequest();
+                return BadRequest("EmployeeId do not empty!");
             }
-            var tempLeaveLog = await _leaveLogService.GetLeaveLogById(leaveLog.leaveTimeId);
+            var tempLeaveLog = await _leaveLogService.GetLeaveLogById(updateLeaveLog.leaveTimeId);
             if(tempLeaveLog.Equals(null))
-            {
-                return BadRequest();
-            }
-            //khong the update object da bi xoa va update trang thai isDelete tu false thanh true (chi co the update khi xoa)
-            if (tempLeaveLog.IsDeleted == true || (tempLeaveLog.IsDeleted == false && leaveLog.isDeleted == true))
             {
                 return BadRequest();
             }
             var log = new LeaveLog
             {
-                LeaveTimeId = leaveLog.leaveTimeId,
-                StartDate = leaveLog.startDate,
-                EndDate = leaveLog.endDate,
-                Reason = leaveLog.reason,
-                Status = leaveLog.status,
-                IsDeleted = leaveLog.isDeleted,
-                EmployeeId = leaveLog.employeeId
+                LeaveTimeId = updateLeaveLog.leaveTimeId,
+                StartDate = updateLeaveLog.startDate,
+                EndDate = updateLeaveLog.endDate,
+                Reason = updateLeaveLog.reason,
+                EmployeeId = updateLeaveLog.employeeId
             };
             var result = await _leaveLogService.UpdateLeaveLog(log);
             if (result)
@@ -137,17 +130,30 @@ namespace SalaryManagement.Api.Controllers
             return Ok();
         }
         
-        private static bool IsValidRequest(LeaveLogRequest request)
+        private static bool IsValidRequest(UpdateLeaveLogRequest request)
         {
             if (request.Equals(null))
             {
                 return false;
             }
-            if (request.startDate < DateTime.Now || request.startDate > request.endDate)
+            if (request.startDate > DateTime.Now || request.startDate > request.endDate)
             {
                 return false;
             }
-            return !request.status.IsNullOrEmpty();
+            return true;
+        }
+        
+        private static bool IsValidRequest(CreateLeaveLogRequest request)
+        {
+            if (request.Equals(null))
+            {
+                return false;
+            }
+            if (request.startDate >= DateTime.Now || request.startDate >= request.endDate)
+            {
+                return false;
+            }
+            return true;
         }
     }
 }

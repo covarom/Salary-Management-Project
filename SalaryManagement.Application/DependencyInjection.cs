@@ -16,6 +16,7 @@ using SalaryManagement.Application.Services.OvertimeLogServices;
 
 using SalaryManagement.Application.Services.SalaryServices;
 using SalaryManagement.Application.Services.OverTimeServices;
+using SalaryManagement.Application.Services.PaidHistoryServices;
 
 namespace SalaryManagement.Application
 {
@@ -35,6 +36,7 @@ namespace SalaryManagement.Application
             services.AddScoped<IPayrollService, PayrollService>();
             services.AddScoped<IOvertimeService, OvertimeService>();
             services.AddScoped<ISalaryService, SalaryService>();
+            services.AddScoped<IPaidHistoryService, PaidHistoryService>();
             return services;
         }
     }

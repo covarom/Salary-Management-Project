@@ -29,5 +29,7 @@ public partial class Employee
 
     public virtual ICollection<OvertimeLog> OvertimeLogs { get; } = new List<OvertimeLog>();
 
+    public virtual ICollection<PaidHistory> PaidHistories { get; } = new List<PaidHistory>();
+
     public virtual ICollection<Payroll> Payrolls { get; } = new List<Payroll>();
 }

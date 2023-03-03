@@ -1,11 +1,8 @@
 namespace SalaryManagement.Contracts.OvertimeLog
 {
     public record OvertimeLogRequest(
-
-
         DateTime OvertimeDate,
         int Hours,
-        string Status,
         string EmployeeId
     );
 
@@ -14,7 +11,6 @@ namespace SalaryManagement.Contracts.OvertimeLog
         string Id,
         DateTime? OvertimeDate,
         int? Hours,
-        string? Status,
         string? EmployeeId
     );
 

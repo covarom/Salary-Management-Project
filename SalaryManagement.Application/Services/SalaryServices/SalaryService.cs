@@ -35,7 +35,7 @@ namespace SalaryManagement.Application.Services.SalaryServices
 
             int standardWorkingHours;
             int realityWorkHours;
-            int relityWorkDays = await GetTotalWorkingDateUptoCurrentDay();
+            int relityWorkDays = await GetTotalWorkingDaysInMonth();
 
             if (contract.ContractType.Equals(ContractTypeEnum.PartTime.ToString()))
             {
@@ -92,7 +92,7 @@ namespace SalaryManagement.Application.Services.SalaryServices
             {
                 Contract = contract.Adapt<ContractResponse>(),
                 StandardWorkHours = standardWorkingHours,
-                RealityWorkHours = realityWorkHours + (int)otTime - ((int)leaveTime * 8),
+                RealityWorkHours = realityWorkHours/* + (int)otTime - ((int)leaveTime * 8)*/,
                 BaseSalary = Math.Round((double)contract.BasicSalary, 2),
                 BaseSalaryPerHour = Math.Round((double)EarnedPerHour, 2),
                 Tax = personalIncomeTax,
@@ -113,12 +113,12 @@ namespace SalaryManagement.Application.Services.SalaryServices
 
             decimal salary = 0;
 
+
             var contract = await _repository.GetContractsByEmployeeIdAsync(employee.EmployeeId);
 
             int standardWorkingHours;
             int realityWorkHours;
-            int relityWorkDays = await GetTotalWorkingDateUptoCurrentDay();
-
+            int relityWorkDays = await GetTotalWorkingDaysInMonth();
 
             if (contract.ContractType.Equals(ContractTypeEnum.PartTime.ToString()))
             {
@@ -131,16 +131,12 @@ namespace SalaryManagement.Application.Services.SalaryServices
                 realityWorkHours = relityWorkDays * 8;
             }
 
-
             decimal basicSalary = (decimal)contract.PartnerPrice;
-
             decimal bhxh = (decimal)contract.Bhxh;
             decimal bhyt = (decimal)contract.Bhyt;
             decimal bhtn = (decimal)contract.Bhtn;
             decimal personalIncomeTax = (decimal)contract.Tax;
-
             decimal EarnedPerHour = basicSalary / standardWorkingHours;
-
             decimal tempSalary = EarnedPerHour * realityWorkHours;
 
             if (contract.SalaryType == SalaryTypeEnum.Gross.ToString())
@@ -177,11 +173,9 @@ namespace SalaryManagement.Application.Services.SalaryServices
 
             return new SalaryResponse
             {
-
-
                 Contract = contract.Adapt<ContractResponse>(),
                 StandardWorkHours = standardWorkingHours,
-                RealityWorkHours = realityWorkHours + (int)otTime - ((int)leaveTime * 8),
+                RealityWorkHours = realityWorkHours/* + (int)otTime - ((int)leaveTime * 8)*/,
                 BaseSalary = Math.Round((double)contract.BasicSalary, 2),
                 BaseSalaryPerHour = Math.Round((double)EarnedPerHour, 2),
                 Tax = personalIncomeTax,
@@ -189,7 +183,6 @@ namespace SalaryManagement.Application.Services.SalaryServices
                 AccidentInsurance = bhtn,
                 HealthInsurance = bhyt,
                 OvertimeHours = (int)otTime,
-
                 OvetimeSalaryPerHour = Math.Round((double)EarnedPerHour * 1.5, 2),
                 TotalBonus = (double)overtimePay,
                 TotalDeductions = (double)leaveDeduction,
