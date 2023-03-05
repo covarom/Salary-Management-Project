@@ -14,5 +14,7 @@ namespace SalaryManagement.Application.Common.Interfaces.Persistence
 
         Task UpdatePaidHistoryAsync(PaidHistory paidHistory);
 
+        Task<int> CountPaySlipsActive();
+
     }
 }

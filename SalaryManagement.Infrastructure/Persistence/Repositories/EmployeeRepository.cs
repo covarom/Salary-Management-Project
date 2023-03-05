@@ -72,5 +72,10 @@ namespace SalaryManagement.Infrastructure.Persistence.Repositories
             var num = await _context.Employees.CountAsync();
             return num;
         }
+         public async Task<int> CountEmployeeActive()
+        {
+            var num = await _context.Employees.Where(x => x.IsActive == true).CountAsync();
+            return num;
+        }
     }
 }

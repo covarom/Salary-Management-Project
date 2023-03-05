@@ -15,5 +15,6 @@ namespace SalaryManagement.Application.Services.PaidHistoryServices
         Task<PaidHistory> UpdatePaidHistoryAsync(string id, PaidHistoryRequest paidHistoryRequest);
 
         Task DeleteAsync(string id);
+        Task<int> CountPaySlipsActive();
     }
 }

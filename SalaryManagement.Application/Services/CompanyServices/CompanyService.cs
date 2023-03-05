@@ -37,5 +37,9 @@ namespace SalaryManagement.Application.Services.CompanyServices
         {
             return await _companyRepository.UpdateCompany(Company);
         }
+         public  async Task<int> CountCompanyPartner()
+        {
+            return await _companyRepository.CountCompanyPartner();
+        }
     }
 }

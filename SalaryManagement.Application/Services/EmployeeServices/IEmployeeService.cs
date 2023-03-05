@@ -14,5 +14,6 @@ namespace SalaryManagement.Application.Services.EmployeeServices
 
         Task<bool> UpdateEmployee(Employee Employee);
          Task<int> CountEmployee();
+         Task<int> CountEmployeeActive();
     }
 }

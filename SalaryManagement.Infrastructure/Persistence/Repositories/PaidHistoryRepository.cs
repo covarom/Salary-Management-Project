@@ -98,6 +98,11 @@ namespace SalaryManagement.Infrastructure.Persistence.Repositories
             _context.PaidHistories.Update(paidHistory);
             await _context.SaveChangesAsync();
         }
+         public async Task<int> CountPaySlipsActive()
+        {
+            var num = await _context.PaidHistories.Where(x => x.DeletedAt == null).CountAsync();
+            return num;
+        }
 
     }
 }

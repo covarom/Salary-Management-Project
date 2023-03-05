@@ -133,5 +133,13 @@ namespace SalaryManagement.Application.Services.ContractServices
         {
             return await _contractRepository.GetContractByEmployeeIdAndDate(employeeId, date);
         }
+        public async Task<int> CountContractActive()
+        {
+            return await _contractRepository.CountContractActive();
+        }
+        public async Task<int> CountContractExpired()
+        {
+            return await _contractRepository.CountContractExpired();
+        }
     }
 }
