@@ -305,6 +305,9 @@ public partial class SalaryManagementContext : DbContext
             entity.Property(e => e.PaidDate)
                 .HasColumnType("date")
                 .HasColumnName("paid_date");
+            entity.Property(e => e.PaidType)
+               .HasMaxLength(255)
+               .HasColumnName("paid_type");
             entity.Property(e => e.PayrollPeriodEnd)
                 .HasColumnType("date")
                 .HasColumnName("payroll_period_end");

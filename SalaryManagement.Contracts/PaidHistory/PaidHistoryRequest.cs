@@ -33,6 +33,8 @@
         public DateTime PayrollPeriodEnd { get; set; }
 
         public string? Note { get; set; }
+
+        public string? PaidType { get; set; }
     }
 
 }

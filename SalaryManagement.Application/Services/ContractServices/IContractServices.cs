@@ -26,5 +26,7 @@ namespace SalaryManagement.Application.Services.ContractServices
 
         Task<Contract?> GetContractByEmployeeId(string employeeId);
 
+        Task<Contract?> GetContractByEmployeeIdAndDate(string employeeId, DateTime date);
+
     }
 }

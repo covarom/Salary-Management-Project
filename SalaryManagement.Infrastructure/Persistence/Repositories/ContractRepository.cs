@@ -270,6 +270,21 @@ namespace SalaryManagement.Infrastructure.Persistence.Repositories
 
             return contract;
         }
+
+        public async Task<Contract> GetContractByEmployeeIdAndDate(string id, DateTime date)
+        {
+            return await _context.Contracts
+           .Where(c => c.EmployeeId == id
+                && c.DeletedAt == null
+                && c.ContractStatus.Equals(ContractStatusEnum.Active.ToString())
+                && ((DateTime)c.StartDate).Year <= date.Year
+                && ((DateTime)c.EndDate).Year >= date.Year
+                && ((DateTime)c.StartDate).Month <= date.Month
+                && ((DateTime)c.EndDate).Month >= date.Month)
+           .Include(c => c.Employee)
+           .Include(c => c.Partner)
+           .SingleOrDefaultAsync();
+        }
     }
 
 }
