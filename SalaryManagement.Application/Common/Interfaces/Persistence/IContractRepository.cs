@@ -24,7 +24,7 @@ namespace SalaryManagement.Application.Common.Interfaces.Persistence
 
         Task<Contract>GetContractByCompanyId(string id);
 
-
+        Task<Contract> GetContractByEmployeeIdAndDate(string id, DateTime date);
 
     }
 }

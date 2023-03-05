@@ -39,8 +39,11 @@ namespace SalaryManagement.Contracts.PaidHistory
 
         public string? Note { get; set; }
 
+        public string? PaidType { get; set; }
+
         // public EmployeeResponse Employee { get; set; }
 
         public ContractResponse Contract { get; set; }
+
     }
 }
