@@ -285,6 +285,18 @@ namespace SalaryManagement.Infrastructure.Persistence.Repositories
            .Include(c => c.Partner)
            .SingleOrDefaultAsync();
         }
+        public async Task<int> CountContractActive()
+        {    
+            var currentTime = DateTime.Now;
+            var num = await _context.Contracts.Where(x => x.DeletedAt == null && x.EndDate >currentTime ).CountAsync();
+            return num;
+        }
+         public async Task<int> CountContractExpired()
+        {   
+            var currentTime = DateTime.Now;
+            var num = await _context.Contracts.Where(x => x.EndDate <currentTime ).CountAsync();
+            return num;
+        }
     }
 
 }

@@ -26,5 +26,8 @@ namespace SalaryManagement.Application.Common.Interfaces.Persistence
 
         Task<Contract> GetContractByEmployeeIdAndDate(string id, DateTime date);
 
+        Task<int> CountContractActive();
+
+        Task<int> CountContractExpired();
     }
 }

@@ -28,5 +28,8 @@ namespace SalaryManagement.Application.Services.ContractServices
 
         Task<Contract?> GetContractByEmployeeIdAndDate(string employeeId, DateTime date);
 
+        Task<int> CountContractActive();
+        Task<int> CountContractExpired();
+
     }
 }
