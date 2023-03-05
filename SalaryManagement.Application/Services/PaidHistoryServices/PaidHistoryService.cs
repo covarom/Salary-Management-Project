@@ -3,6 +3,7 @@ using MapsterMapper;
 using SalaryManagement.Application.Common.Exception;
 using SalaryManagement.Application.Common.Interfaces.Persistence;
 using SalaryManagement.Contracts;
+using SalaryManagement.Contracts.Dashboards;
 using SalaryManagement.Contracts.PaidHistory;
 using SalaryManagement.Domain.Entities;
 
@@ -101,5 +102,26 @@ namespace SalaryManagement.Application.Services.PaidHistoryServices
             return await _paidHistoryRepository.CountPaySlipsActive();
         }
 
+        public async Task<KeyValue> CountPayslipByType(string type)
+        {
+            var count = await _paidHistoryRepository.CountPaySlipByType(type);
+            return new KeyValue(type, count);
+        }
+
+        public async Task<IEnumerable<RevenueCostChartResponse>> RevenueCostData()
+        {
+            List<DateTime> sevenMonths = Enumerable.Range(0, 7)
+             .Select(i => DateTime.Now.AddMonths(-i))
+             .ToList();
+
+            var response = new List<RevenueCostChartResponse>();
+
+            foreach (var date in sevenMonths)
+            {
+                response.Add(await _paidHistoryRepository.RevenueCostByDate(date));
+            }
+
+            return response;
+        }
     }
 }

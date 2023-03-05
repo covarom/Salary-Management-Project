@@ -1,4 +1,4 @@
-﻿namespace SalaryManagement.Api.Common.Enum
+﻿namespace SalaryManagement.Domain.Common.Enum
 {
     public enum SalaryCaculatingType
     {

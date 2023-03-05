@@ -1,7 +1,7 @@
 
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using SalaryManagement.Api.Common.Enum;
+using SalaryManagement.Domain.Common.Enum;
 using SalaryManagement.Application.Services.ContractServices;
 
 using SalaryManagement.Application.Services.EmployeeServices;
