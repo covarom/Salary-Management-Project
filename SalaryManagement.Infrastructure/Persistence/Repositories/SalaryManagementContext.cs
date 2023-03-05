@@ -283,6 +283,8 @@ public partial class SalaryManagementContext : DbContext
 
             entity.HasIndex(e => e.EmployeeId, "employee_id");
 
+            entity.HasIndex(e => new { e.PaidDate, e.PaidType, e.DeletedAt }, "optimize_query");
+
             entity.Property(e => e.PayHistoryId).HasColumnName("pay_history_id");
             entity.Property(e => e.AccidentInsurance).HasColumnName("accident_insurance");
             entity.Property(e => e.BaseSalary).HasColumnName("base_salary");

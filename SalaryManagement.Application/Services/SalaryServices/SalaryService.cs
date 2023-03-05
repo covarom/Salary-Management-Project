@@ -84,7 +84,7 @@ namespace SalaryManagement.Application.Services.SalaryServices
             {
                 decimal hourlyRate = basicSalary / standardWorkingHours;
                 leaveDeduction = (decimal)leaveTime * 8 * hourlyRate;
-                realityWorkHours -= (int)leaveTime;
+                realityWorkHours -= (int)leaveTime * 8;
             }
 
             salary += overtimePay - leaveDeduction;
@@ -172,7 +172,7 @@ namespace SalaryManagement.Application.Services.SalaryServices
             {
                 decimal hourlyRate = basicSalary / standardWorkingHours;
                 leaveDeduction = (decimal)leaveTime * 8 * hourlyRate;
-                realityWorkHours -= (int)leaveTime;
+                realityWorkHours -= (int)leaveTime * 8;
             }
 
             salary += overtimePay - leaveDeduction;

@@ -1,4 +1,5 @@
 ﻿using SalaryManagement.Contracts;
+using SalaryManagement.Contracts.Dashboards;
 using SalaryManagement.Contracts.PaidHistory;
 using SalaryManagement.Domain.Entities;
 
@@ -16,5 +17,9 @@ namespace SalaryManagement.Application.Services.PaidHistoryServices
 
         Task DeleteAsync(string id);
         Task<int> CountPaySlipsActive();
+
+        Task<KeyValue> CountPayslipByType(string type);
+
+        Task<IEnumerable<RevenueCostChartResponse>> RevenueCostData();
     }
 }

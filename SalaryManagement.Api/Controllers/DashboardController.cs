@@ -6,12 +6,14 @@ using SalaryManagement.Application.Services.ContractServices;
 using SalaryManagement.Application.Services.EmployeeServices;
 using SalaryManagement.Application.Services.PaidHistoryServices;
 using SalaryManagement.Contracts.Dashboards;
+using SalaryManagement.Domain.Common.Enum;
+using System.Net;
 
 namespace SalaryManagement.Api.Controllers
 {
     [Route("api/v1/dashboard")]
     [ApiController]
-    [Authorize]
+   /* [Authorize]*/
 
      public class DashboardController : ControllerBase
     {
@@ -50,7 +52,39 @@ namespace SalaryManagement.Api.Controllers
             var ExpiredObject = new KeyValue("Expired",totalContractExpired);
             var ArrayRes = new KeyValue [] {ActiveObject,ExpiredObject};
            return Ok(ArrayRes);
-        }  
+        }
+
+        [HttpGet("payslip-by-type")]
+        public async Task<IActionResult> getPayslipbyTypeInfor()
+        {
+            var dataResponse = new List<KeyValue>();
+            try
+            {
+                dataResponse.Add(await _paidHistoryService.CountPayslipByType(SalaryCaculatingType.Staff.ToString()));
+                dataResponse.Add(await _paidHistoryService.CountPayslipByType(SalaryCaculatingType.Partner.ToString()));
+
+                return Ok(dataResponse);
+            }
+            catch(Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+        }
+
+        [HttpGet("revenue-and-cost")]
+        public async Task<IActionResult> GetRevenueAndCost()
+        {
+            try
+            {
+               var response = await _paidHistoryService.RevenueCostData();
+
+                return Ok(response);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+        }
     }
         
 }

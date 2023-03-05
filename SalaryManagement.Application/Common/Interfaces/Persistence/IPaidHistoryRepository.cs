@@ -1,4 +1,5 @@
 ﻿using SalaryManagement.Contracts;
+using SalaryManagement.Contracts.Dashboards;
 using SalaryManagement.Contracts.PaidHistory;
 using SalaryManagement.Domain.Entities;
 
@@ -15,6 +16,10 @@ namespace SalaryManagement.Application.Common.Interfaces.Persistence
         Task UpdatePaidHistoryAsync(PaidHistory paidHistory);
 
         Task<int> CountPaySlipsActive();
+
+        Task<int> CountPaySlipByType(string type);
+
+        Task<RevenueCostChartResponse> RevenueCostByDate(DateTime date);
 
     }
 }
