@@ -17,7 +17,7 @@ namespace SalaryManagement.Api.Controllers
 {
     [Route("api/v1")]
     [ApiController]
-  /*  [Authorize]*/
+    [Authorize]
     public class CalculatingSalaryController : ControllerBase
     {
 

@@ -13,9 +13,9 @@ namespace SalaryManagement.Api.Controllers
 {
     [Route("api/v1/dashboard")]
     [ApiController]
-   /* [Authorize]*/
+    [Authorize]
 
-     public class DashboardController : ControllerBase
+    public class DashboardController : ControllerBase
     {
         private readonly ICompanyServices _companyService;
         private readonly IEmployeeServices _employeeService;
