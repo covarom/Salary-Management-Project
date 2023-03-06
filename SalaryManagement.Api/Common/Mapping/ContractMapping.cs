@@ -24,7 +24,7 @@ namespace SalaryManagement.Api.Common.Mapping
                 .Map(dest => dest.ContractStatus, src => src.ContractStatus)
                 .Map(dest => dest.ContractType, src => src.ContractType)
                 .Map(dest => dest.Employee, src => src.Employee)
-                .Map(dest => dest.Employee, src => src.Partner);
+                .Map(dest => dest.Partner, src => src.Partner);
         }
     }
 }

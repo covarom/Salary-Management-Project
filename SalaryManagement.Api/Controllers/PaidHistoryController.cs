@@ -76,9 +76,9 @@ namespace SalaryManagement.Api.Controllers
             {
                 return NotFound(ex.Message);
             }
-            catch (Exception)
+            catch (Exception a)
             {
-                return StatusCode(500, "An error occurred while updating the PaidHistory");
+                return StatusCode(500, a.Message);
             }
         }
 

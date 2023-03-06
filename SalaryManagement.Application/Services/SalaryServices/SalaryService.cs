@@ -90,7 +90,7 @@ namespace SalaryManagement.Application.Services.SalaryServices
             salary += overtimePay - leaveDeduction;
 
             var startDate = new DateTime(date.Year, date.Month, 1);
-
+                
             return new SalaryResponse
             {
                 Contract = contract.Adapt<ContractResponse>(),
