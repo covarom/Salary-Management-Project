@@ -51,6 +51,12 @@ namespace SalaryManagement.Infrastructure.Persistence.Repositories
             return changes > 0;
         }
 
+        public async Task UpdateAsync(LeaveLog leaveLog)
+        {
+            _context.Entry(leaveLog).State = EntityState.Modified;
+            await _context.SaveChangesAsync();
+        }
+
         public async Task<int> GetTotalLeaveDaysByEmployeeIdAndMonthAsync(string employeeId)
         {
             var startOfMonth = new DateTime(DateTime.Now.Year, DateTime.Now.Month, 1);

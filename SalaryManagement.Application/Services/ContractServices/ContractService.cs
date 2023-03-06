@@ -5,7 +5,8 @@ using SalaryManagement.Contracts;
 using SalaryManagement.Contracts.Contracts;
 using SalaryManagement.Domain.Contracts;
 using SalaryManagement.Domain.Entities;
-using Mapster; 
+using Mapster;
+using SalaryManagement.Domain.Common.Enum;
 
 namespace SalaryManagement.Application.Services.ContractServices
 {
@@ -22,6 +23,7 @@ namespace SalaryManagement.Application.Services.ContractServices
         {
             var contract = request.Adapt<Contract>();
             contract.ContractId = Guid.NewGuid().ToString();
+            contract.ContractStatus = ContractStatusEnum.Active.ToString();
             contract.CreatedAt = DateTime.Now;
 
             // Check if the employee already has a contract during the specified period
