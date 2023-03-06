@@ -9,5 +9,6 @@ namespace SalaryManagement.Application.Common.Interfaces.Persistence
         Task<Company> AddCompany(Company Company);
         Task<bool> RemoveCompany(string companyId);
         Task<bool> UpdateCompany(Company Company);
+        Task<int> CountCompanyPartner();
     }
 }

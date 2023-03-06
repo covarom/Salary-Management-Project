@@ -72,5 +72,11 @@ namespace SalaryManagement.Infrastructure.Persistence.Repositories
              return check;
         }   
 
+        public async Task<int> CountCompanyPartner()
+        {
+            var num = await _context.Companys.CountAsync();
+            return num;
+        }
+
     }
 }

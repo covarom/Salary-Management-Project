@@ -13,5 +13,6 @@ namespace SalaryManagement.Application.Services.CompanyServices
         Task<bool> RemoveCompany(string companyId);
 
         Task<bool> UpdateCompany(Company company);
+        Task<int> CountCompanyPartner();
     }
 }

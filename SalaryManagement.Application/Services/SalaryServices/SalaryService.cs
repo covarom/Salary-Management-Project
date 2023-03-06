@@ -25,7 +25,7 @@ namespace SalaryManagement.Application.Services.SalaryServices
 
         }
 
-        public async Task<SalaryResponse> CalculateSalaryAsync(Employee employee, int? otTime, int? leaveTime)
+        public async Task<SalaryResponse> CalculateSalaryAsync(Employee employee, int? otTime, int? leaveTime, DateTime date)
         {
 
             decimal salary = 0;
@@ -35,17 +35,17 @@ namespace SalaryManagement.Application.Services.SalaryServices
 
             int standardWorkingHours;
             int realityWorkHours;
-            int relityWorkDays = await GetTotalWorkingDateUptoCurrentDay();
+            int standardWorkingDays = await GetTotalWorkingDaysInMonth(date);
 
             if (contract.ContractType.Equals(ContractTypeEnum.PartTime.ToString()))
             {
-                standardWorkingHours = 22 * 4;
-                realityWorkHours = relityWorkDays * 4;
+                standardWorkingHours = standardWorkingDays * 4;
+                realityWorkHours = standardWorkingDays * 4;
             }
             else
             {
-                standardWorkingHours = 22 * 8;
-                realityWorkHours = relityWorkDays * 8;
+                standardWorkingHours = standardWorkingDays * 8;
+                realityWorkHours = standardWorkingDays * 8;
             }
 
             decimal basicSalary = (decimal)contract.BasicSalary;
@@ -74,6 +74,7 @@ namespace SalaryManagement.Application.Services.SalaryServices
             {
                 decimal hourlyRate = basicSalary / standardWorkingHours;
                 overtimePay = (decimal)(otTime * hourlyRate * (decimal)1.5);
+                realityWorkHours += (int)otTime;
             }
 
             // Calculate leave deduction
@@ -83,32 +84,36 @@ namespace SalaryManagement.Application.Services.SalaryServices
             {
                 decimal hourlyRate = basicSalary / standardWorkingHours;
                 leaveDeduction = (decimal)leaveTime * 8 * hourlyRate;
+                realityWorkHours -= (int)leaveTime * 8;
             }
 
             salary += overtimePay - leaveDeduction;
 
+            var startDate = new DateTime(date.Year, date.Month, 1);
 
             return new SalaryResponse
             {
                 Contract = contract.Adapt<ContractResponse>(),
                 StandardWorkHours = standardWorkingHours,
-                RealityWorkHours = realityWorkHours + (int)otTime - ((int)leaveTime * 8),
+                RealityWorkHours = realityWorkHours/* + (int)otTime - ((int)leaveTime * 8)*/,
                 BaseSalary = Math.Round((double)contract.BasicSalary, 2),
                 BaseSalaryPerHour = Math.Round((double)EarnedPerHour, 2),
-                Tax = personalIncomeTax,
-                SocialInsurance = bhxh,
-                AccidentInsurance = bhtn,
-                HealthInsurance = bhyt,
+                Tax = contract.SalaryType == SalaryTypeEnum.Gross.ToString() ? personalIncomeTax : 0,
+                SocialInsurance = contract.SalaryType == SalaryTypeEnum.Gross.ToString() ? bhxh : 0,
+                AccidentInsurance = contract.SalaryType == SalaryTypeEnum.Gross.ToString() ? bhtn : 0,
+                HealthInsurance = contract.SalaryType == SalaryTypeEnum.Gross.ToString() ? bhyt : 0,
                 OvertimeHours = (int)otTime,
                 OvetimeSalaryPerHour = Math.Round((double)EarnedPerHour * 1.5, 2 ) ,
                 TotalBonus = (double)overtimePay,
                 TotalDeductions = (double)leaveDeduction,
                 LeaveHours = (int)leaveTime*8,
+                PeriodStartDate = startDate,
+                PeriodEndDate = startDate.AddMonths(1).AddDays(-1),
                 FinalIncome =  Math.Round(salary, 2)
             };
         }
 
-        public async Task<SalaryResponse> CalculateSalaryForPartnerAsync(Employee employee, int? otTime, int? leaveTime)
+        public async Task<SalaryResponse> CalculateSalaryForPartnerAsync(Employee employee, int? otTime, int? leaveTime, DateTime date)
         {
 
             decimal salary = 0;
@@ -117,37 +122,33 @@ namespace SalaryManagement.Application.Services.SalaryServices
 
             int standardWorkingHours;
             int realityWorkHours;
-            int relityWorkDays = await GetTotalWorkingDateUptoCurrentDay();
-
+            int standardWorkingDays = await GetTotalWorkingDaysInMonth(date);
 
             if (contract.ContractType.Equals(ContractTypeEnum.PartTime.ToString()))
             {
-                standardWorkingHours = 22 * 4;
-                realityWorkHours = relityWorkDays * 4;
+                standardWorkingHours = standardWorkingDays * 4;
+                realityWorkHours = standardWorkingDays * 4;
             }
             else
             {
-                standardWorkingHours = 22 * 8;
-                realityWorkHours = relityWorkDays * 8;
+                standardWorkingHours = standardWorkingDays * 8;
+                realityWorkHours = standardWorkingDays * 8;
             }
 
-
             decimal basicSalary = (decimal)contract.PartnerPrice;
-
             decimal bhxh = (decimal)contract.Bhxh;
             decimal bhyt = (decimal)contract.Bhyt;
             decimal bhtn = (decimal)contract.Bhtn;
             decimal personalIncomeTax = (decimal)contract.Tax;
-
             decimal EarnedPerHour = basicSalary / standardWorkingHours;
-
             decimal tempSalary = EarnedPerHour * realityWorkHours;
 
             if (contract.SalaryType == SalaryTypeEnum.Gross.ToString())
             {
                 // Calculate gross salary
-                decimal totalDeductions = personalIncomeTax + bhxh + bhyt + bhtn;
-                salary = tempSalary - totalDeductions;
+                /* decimal totalDeductions = personalIncomeTax + bhxh + bhyt + bhtn;
+                 salary = tempSalary - totalDeductions;*/
+                salary = tempSalary;
             }
             else if (contract.SalaryType == SalaryTypeEnum.Net.ToString())
             {
@@ -161,6 +162,7 @@ namespace SalaryManagement.Application.Services.SalaryServices
             {
                 decimal hourlyRate = basicSalary / standardWorkingHours;
                 overtimePay = (decimal)(otTime * hourlyRate * (decimal)1.5);
+                realityWorkHours += (int)otTime;
             }
 
             // Calculate leave deduction
@@ -170,30 +172,31 @@ namespace SalaryManagement.Application.Services.SalaryServices
             {
                 decimal hourlyRate = basicSalary / standardWorkingHours;
                 leaveDeduction = (decimal)leaveTime * 8 * hourlyRate;
+                realityWorkHours -= (int)leaveTime * 8;
             }
 
             salary += overtimePay - leaveDeduction;
 
+            var startDate = new DateTime(date.Year, date.Month, 1);
 
             return new SalaryResponse
             {
-
-
                 Contract = contract.Adapt<ContractResponse>(),
                 StandardWorkHours = standardWorkingHours,
-                RealityWorkHours = realityWorkHours + (int)otTime - ((int)leaveTime * 8),
-                BaseSalary = Math.Round((double)contract.BasicSalary, 2),
+                RealityWorkHours = realityWorkHours/* + (int)otTime - ((int)leaveTime * 8)*/,
+                BaseSalary = Math.Round((double)contract.PartnerPrice, 2),
                 BaseSalaryPerHour = Math.Round((double)EarnedPerHour, 2),
-                Tax = personalIncomeTax,
-                SocialInsurance = bhxh,
-                AccidentInsurance = bhtn,
-                HealthInsurance = bhyt,
+                Tax = 0,
+                SocialInsurance = 0,
+                AccidentInsurance = 0,
+                HealthInsurance = 0,
                 OvertimeHours = (int)otTime,
-
                 OvetimeSalaryPerHour = Math.Round((double)EarnedPerHour * 1.5, 2),
                 TotalBonus = (double)overtimePay,
                 TotalDeductions = (double)leaveDeduction,
                 LeaveHours = (int)leaveTime * 8,
+                PeriodStartDate = startDate,
+                PeriodEndDate = startDate.AddMonths(1).AddDays(-1),
                 FinalIncome = Math.Round(salary, 2)
             };
         }
@@ -236,16 +239,14 @@ namespace SalaryManagement.Application.Services.SalaryServices
             
         }
 
-        private async Task<int> GetTotalWorkingDaysInMonth()
+        private async Task<int> GetTotalWorkingDaysInMonth(DateTime date)
         {
-            //Get today
-            DateTime today = DateTime.Today;
-
-            DateTime startDate = new DateTime(DateTime.Today.Year, DateTime.Today.Month, 1);
+            // Get the start and end date of the month for the given date
+            DateTime startDate = new DateTime(date.Year, date.Month, 1);
             DateTime endDate = startDate.AddMonths(1).AddDays(-1);
             int totalDays = (endDate - startDate).Days + 1; // add 1 to include the last day
 
-            var holidays = await _holidayRepository.GetHolidaysByDateRangeAsync(new DateTime(DateTime.Today.Year, DateTime.Today.Month, 1),
+            var holidays = await _holidayRepository.GetHolidaysByDateRangeAsync(new DateTime(date.Year, date.Month, 1),
               startDate.AddMonths(1).AddDays(-1));
 
             var listHoliday = new List<DateTime>();
@@ -257,9 +258,9 @@ namespace SalaryManagement.Application.Services.SalaryServices
 
                     try
                     {
-                        for (DateTime date = (DateTime)holiday.StartDate; date <= holiday.EndDate; date = date.AddDays(1))
+                        for (DateTime mDate = (DateTime)holiday.StartDate; date <= holiday.EndDate; date = date.AddDays(1))
                         {
-                            if (date.Month == today.Month)
+                            if (date.Month == mDate.Month)
                             {
                                 listHoliday.Add(date);
                             }

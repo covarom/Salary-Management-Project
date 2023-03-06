@@ -36,6 +36,8 @@ public partial class SalaryManagementContext : DbContext
 
     public virtual DbSet<OvertimeLog> OvertimeLogs { get; set; }
 
+    public virtual DbSet<PaidHistory> PaidHistories { get; set; }
+
     public virtual DbSet<Payroll> Payrolls { get; set; }
 
     public virtual DbSet<SalaryType> SalaryTypes { get; set; }
@@ -269,6 +271,65 @@ public partial class SalaryManagementContext : DbContext
             entity.HasOne(d => d.Employee).WithMany(p => p.OvertimeLogs)
                 .HasForeignKey(d => d.EmployeeId)
                 .HasConstraintName("overtime_logs_ibfk_1");
+        });
+
+        modelBuilder.Entity<PaidHistory>(entity =>
+        {
+            entity.HasKey(e => e.PayHistoryId).HasName("PRIMARY");
+
+            entity.ToTable("paid_history");
+
+            entity.HasIndex(e => e.ContractId, "contract_id");
+
+            entity.HasIndex(e => e.EmployeeId, "employee_id");
+
+            entity.HasIndex(e => new { e.PaidDate, e.PaidType, e.DeletedAt }, "optimize_query");
+
+            entity.Property(e => e.PayHistoryId).HasColumnName("pay_history_id");
+            entity.Property(e => e.AccidentInsurance).HasColumnName("accident_insurance");
+            entity.Property(e => e.BaseSalary).HasColumnName("base_salary");
+            entity.Property(e => e.Bonus).HasColumnName("bonus");
+            entity.Property(e => e.ContractId).HasColumnName("contract_id");
+            entity.Property(e => e.CreateAt)
+                .HasColumnType("date")
+                .HasColumnName("create_at");
+            entity.Property(e => e.Deductions).HasColumnName("deductions");
+            entity.Property(e => e.DeletedAt)
+                .HasColumnType("date")
+                .HasColumnName("deleted_at");
+            entity.Property(e => e.EmployeeId).HasColumnName("employee_id");
+            entity.Property(e => e.HealthInsurance).HasColumnName("health_insurance");
+            entity.Property(e => e.LeaveHours).HasColumnName("leave_hours");
+            entity.Property(e => e.Note)
+                .HasColumnType("text")
+                .HasColumnName("note");
+            entity.Property(e => e.OtHours).HasColumnName("ot_hours");
+            entity.Property(e => e.PaidDate)
+                .HasColumnType("date")
+                .HasColumnName("paid_date");
+            entity.Property(e => e.PaidType)
+               .HasMaxLength(255)
+               .HasColumnName("paid_type");
+            entity.Property(e => e.PayrollPeriodEnd)
+                .HasColumnType("date")
+                .HasColumnName("payroll_period_end");
+            entity.Property(e => e.PayrollPeriodStart)
+                .HasColumnType("date")
+                .HasColumnName("payroll_period_start");
+            entity.Property(e => e.SalaryAmount).HasColumnName("salary_amount");
+            entity.Property(e => e.SocialInsurance).HasColumnName("social_insurance");
+            entity.Property(e => e.UpdateAt)
+                .HasColumnType("date")
+                .HasColumnName("update_at");
+            entity.Property(e => e.WorkHours).HasColumnName("work_hours");
+
+            entity.HasOne(d => d.Contract).WithMany(p => p.PaidHistories)
+                .HasForeignKey(d => d.ContractId)
+                .HasConstraintName("paid_history_ibfk_2");
+
+            entity.HasOne(d => d.Employee).WithMany(p => p.PaidHistories)
+                .HasForeignKey(d => d.EmployeeId)
+                .HasConstraintName("paid_history_ibfk_1");
         });
 
         modelBuilder.Entity<Payroll>(entity =>

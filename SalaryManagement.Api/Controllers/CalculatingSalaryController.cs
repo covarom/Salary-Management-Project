@@ -1,5 +1,7 @@
 
-﻿using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
+using SalaryManagement.Domain.Common.Enum;
 using SalaryManagement.Application.Services.ContractServices;
 
 using SalaryManagement.Application.Services.EmployeeServices;
@@ -15,6 +17,7 @@ namespace SalaryManagement.Api.Controllers
 {
     [Route("api/v1")]
     [ApiController]
+    [Authorize]
     public class CalculatingSalaryController : ControllerBase
     {
 
@@ -38,8 +41,8 @@ namespace SalaryManagement.Api.Controllers
 
         }
 
-        [HttpGet("{id}/staff-salary")]
-        public async Task<ActionResult<SalaryResponse>> GetEmployeeSalary(string id)
+        [HttpPost("salary-calculating/{id}")]
+        public async Task<ActionResult<SalaryResponse>> GetEmployeeSalary(string id, CalculatingSalaryRequest request)
         {
             try
             {
@@ -51,7 +54,8 @@ namespace SalaryManagement.Api.Controllers
                 }
 
 
-                var contract = await _contractServices.GetContractByEmployeeId(employee.EmployeeId);
+                // var contract = await _contractServices.GetContractByEmployeeId(employee.EmployeeId
+                var contract = await _contractServices.GetContractByEmployeeIdAndDate(employee.EmployeeId, request.date);
 
                 if (contract == null)
                 {
@@ -70,7 +74,16 @@ namespace SalaryManagement.Api.Controllers
 
                 var leaveDays = await _leaveLogService.GetTotalLeaveDateByEmployeeIdInMonthAcsyn(id);
 
-                var salaryResponse = await _salaryService.CalculateSalaryAsync(employee, otTime, leaveDays);
+                dynamic salaryResponse;
+
+                if(request.type.Equals(SalaryCaculatingType.Partner.ToString()))
+                {
+                    salaryResponse = await _salaryService.CalculateSalaryForPartnerAsync(employee, otTime, leaveDays, request.date);
+                }
+                else
+                {
+                    salaryResponse = await _salaryService.CalculateSalaryAsync(employee, otTime, leaveDays, request.date);
+                }
 
                 return Ok(salaryResponse);
             }
@@ -82,7 +95,7 @@ namespace SalaryManagement.Api.Controllers
         }
 
 
-        [HttpGet("{id}/partner-salary")]
+       /* [HttpGet("{id}/partner-salary")]
         public async Task<ActionResult<SalaryResponse>> GetEmployeeSalaryForPartner(string id)
         {
             try
@@ -121,7 +134,7 @@ namespace SalaryManagement.Api.Controllers
                 // log the exception
                 return StatusCode(StatusCodes.Status500InternalServerError, ex.Message);
             }
-        }
+        }*/
 
     }
 }

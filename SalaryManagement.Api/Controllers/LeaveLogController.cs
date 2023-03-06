@@ -56,7 +56,7 @@ namespace SalaryManagement.Api.Controllers
             await Task.CompletedTask;
             if(!IsValidRequest(leaveLog))
             {
-                return BadRequest();
+                return BadRequest("Not valid request!");
             }
               //Check empl có hợp đồng và còn còn làm không
             var emp = await _employeeService.GetById(leaveLog.employeeId);
@@ -77,6 +77,7 @@ namespace SalaryManagement.Api.Controllers
                 IsDeleted = false,
                 EmployeeId= leaveLog.employeeId,
             };
+
             var result = _leaveLogService.CreateNewLeaveLog(log);
             if(!result.Equals(null))
             {
@@ -90,11 +91,11 @@ namespace SalaryManagement.Api.Controllers
         {
             if (!IsValidRequest(updateLeaveLog))
             {
-                return BadRequest();
+                return BadRequest("Wrong condition");
             }
             if(updateLeaveLog.employeeId.IsNullOrEmpty())
             {
-                return BadRequest();
+                return BadRequest("EmployeeId do not empty!");
             }
             var tempLeaveLog = await _leaveLogService.GetLeaveLogById(updateLeaveLog.leaveTimeId);
             if(tempLeaveLog.Equals(null))
@@ -107,7 +108,6 @@ namespace SalaryManagement.Api.Controllers
                 StartDate = updateLeaveLog.startDate,
                 EndDate = updateLeaveLog.endDate,
                 Reason = updateLeaveLog.reason,
-                Status = updateLeaveLog.status,
                 EmployeeId = updateLeaveLog.employeeId
             };
             var result = await _leaveLogService.UpdateLeaveLog(log);
@@ -136,11 +136,11 @@ namespace SalaryManagement.Api.Controllers
             {
                 return false;
             }
-            if (request.startDate < DateTime.Now || request.startDate > request.endDate)
+            if (request.startDate > DateTime.Now || request.startDate > request.endDate)
             {
                 return false;
             }
-            return !request.status.IsNullOrEmpty();
+            return true;
         }
         
         private static bool IsValidRequest(CreateLeaveLogRequest request)
@@ -149,7 +149,7 @@ namespace SalaryManagement.Api.Controllers
             {
                 return false;
             }
-            if (request.startDate < DateTime.Now || request.startDate > request.endDate)
+            if (request.startDate >= DateTime.Now || request.startDate >= request.endDate)
             {
                 return false;
             }

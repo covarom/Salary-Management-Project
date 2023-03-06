@@ -33,7 +33,7 @@ namespace SalaryManagement.Infrastructure.Persistence.Repositories
         // }
         public async Task<IEnumerable<Employee>> GetAllEmployee()
         {
-            return await _context.Employees.ToListAsync();
+            return await _context.Employees.Where(x => x.IsActive == true).ToListAsync();
         }  
 
         public async Task<bool> RemoveEmployee(string id)
@@ -70,6 +70,11 @@ namespace SalaryManagement.Infrastructure.Persistence.Repositories
          public async Task<int> CountEmployee()
         {
             var num = await _context.Employees.CountAsync();
+            return num;
+        }
+         public async Task<int> CountEmployeeActive()
+        {
+            var num = await _context.Employees.Where(x => x.IsActive == true).CountAsync();
             return num;
         }
     }
