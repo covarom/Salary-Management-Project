@@ -14,7 +14,7 @@ namespace SalaryManagement.Api.Controllers
         private readonly ISalaryTypeService _salaryTypeService;
         private readonly IMapper _mapper;
 
-        public SalaryTypeController(ISalaryTypeService salaryTypeService, IMapper mapper)
+       /* public SalaryTypeController(ISalaryTypeService salaryTypeService, IMapper mapper)
         {
             _salaryTypeService = salaryTypeService;
             _mapper = mapper;
@@ -106,6 +106,6 @@ namespace SalaryManagement.Api.Controllers
                 return NotFound("Salary type not found");
             }
             return Ok(msg);
-        }
+        }*/
     }
 }

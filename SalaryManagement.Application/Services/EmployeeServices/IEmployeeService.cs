@@ -13,5 +13,6 @@ namespace SalaryManagement.Application.Services.EmployeeServices
         Task<bool> RemoveEmployee(string EmployeeId);
 
         Task<bool> UpdateEmployee(Employee Employee);
+         Task<int> CountEmployee();
     }
 }

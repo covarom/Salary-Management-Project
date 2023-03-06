@@ -66,8 +66,10 @@ namespace SalaryManagement.Api.Controllers
                 Date = request.Date,
                 IsDeleted = request.IsDelete,
                 EmployeeId = request.EmloyeeId,
+
                 TotalDeduction = request.TotalDeduction,
                 TotalBonus = request.TotalBonus
+
 
             };
             var result = _payrollService.AddPayroll(payroll);
@@ -76,17 +78,21 @@ namespace SalaryManagement.Api.Controllers
         }
 
         [HttpPut("payrolls/{payrollId}")]
+
         public async Task<IActionResult> UpdatePayroll(string payrollId, PayrollUpdate request)
+
         {
             var existPayroll = await _payrollService.GetById(payrollId);
 
             if (existPayroll == null)
             {
+
                 return NotFound();
             }
 
             var payroll = existPayroll;
             if (request.Total.HasValue)
+
             {
                 payroll.Total = request.Total.Value;
             }
@@ -127,15 +133,16 @@ namespace SalaryManagement.Api.Controllers
         }
 
         [HttpDelete("payrolls/{payrollId}")]
-        public async Task<IActionResult> DeletePayroll(string payrollId)
+
+        public async Task<IActionResult> DeletePayroll(PayrollDelete request)
         {
-            string id = payrollId;
             Payroll payroll = new Payroll
             {
-                PayrollId = id,
+                PayrollId = request.Id,
                 IsDeleted = false
             };
             var result = await _payrollService.DeletePayroll(payroll);
+
             var msg = "";
             if (result)
             {

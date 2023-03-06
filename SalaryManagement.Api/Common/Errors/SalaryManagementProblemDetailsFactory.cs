@@ -36,7 +36,21 @@ public class SalaryManagementProblemDetailsFactory : ProblemDetailsFactory
 
     public override ValidationProblemDetails CreateValidationProblemDetails(HttpContext httpContext, ModelStateDictionary modelStateDictionary, int? statusCode = null, string? title = null, string? type = null, string? detail = null, string? instance = null)
     {
-        throw new NotImplementedException();
+        var problemDetails = new ValidationProblemDetails(modelStateDictionary)
+        {
+            Status = statusCode,
+            Title = title,
+            Type = type,
+            Detail = detail,
+            Instance = instance
+        };
+
+        if (problemDetails.Title.IsNullOrEmpty())
+        {
+            problemDetails.Title = GetTitleForStatusCode(statusCode);
+        }
+
+        return problemDetails;
     }
 
     private string GetTitleForStatusCode(int? statusCode)

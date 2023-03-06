@@ -20,7 +20,7 @@ namespace SalaryManagement.Infrastructure.Persistence.Repositories
 
         public async Task<OvertimeLog> AddNewOvertimeLog(OvertimeLog overtimeLog)
         {
-            _context.Add(overtimeLog);
+            _context.OvertimeLogs.Add(overtimeLog);
             var changes = await _context.SaveChangesAsync();
             return changes > 0 ? overtimeLog : null;
         }
@@ -37,17 +37,28 @@ namespace SalaryManagement.Infrastructure.Persistence.Repositories
 
         public async Task<IEnumerable<OvertimeLog>> GetAllOvertimeLogs()
         {
-            return await _context.OvertimeLogs.ToListAsync();
+            return await _context.OvertimeLogs.Include(x => x.Employee).Where(x => x.IsDeleted != true).ToListAsync();
         }
 
         public async Task<OvertimeLog> GetOvertimeLogById(string id)
         {
-            return await _context.OvertimeLogs.SingleOrDefaultAsync(x => x.OvertimeId.Equals(id));
+            return await _context.OvertimeLogs.Include(x => x.Employee).SingleOrDefaultAsync(x => x.OvertimeId.Equals(id) && x.IsDeleted != true);
         }
 
         public async Task<bool> UpdateOvertimeLog(OvertimeLog overtimeLog)
         {
-            _context.Update(overtimeLog);
+            var existingOvertimeLog = await _context.OvertimeLogs.FindAsync(overtimeLog.OvertimeId);
+
+            if (existingOvertimeLog != null)
+            {
+                _context.Entry(existingOvertimeLog).CurrentValues.SetValues(overtimeLog);
+            }
+            else
+            {
+                _context.OvertimeLogs.Attach(overtimeLog);
+                _context.Entry(overtimeLog).State = EntityState.Modified;
+            }
+
             var changes = await _context.SaveChangesAsync();
             return changes > 0;
         }

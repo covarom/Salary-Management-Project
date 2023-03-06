@@ -3,6 +3,8 @@ using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.IdentityModel.Tokens;
 using SalaryManagement.Application.Services.LeaveLogServices;
+using SalaryManagement.Application.Services.EmployeeServices;
+using SalaryManagement.Application.Services.ContractServices;
 using SalaryManagement.Contracts.LeaveLog;
 using SalaryManagement.Domain.Entities;
 
@@ -13,12 +15,17 @@ namespace SalaryManagement.Api.Controllers
     public class LeaveLogController : ControllerBase
     {
         private readonly ILeaveLogService _leaveLogService;
+         private readonly IEmployeeServices _employeeService;
+        private readonly IContractServices _contractService;
         private readonly IMapper _mapper;
         
-        public LeaveLogController(ILeaveLogService leaveLogService, IMapper mapper)
+        public LeaveLogController(ILeaveLogService leaveLogService, IMapper mapper,
+         IEmployeeServices employeeService, IContractServices contractServices)
         {
             _leaveLogService = leaveLogService;
             _mapper = mapper;
+            _employeeService =  employeeService;
+            _contractService = contractServices;
         }
 
         [HttpGet("all")]
@@ -44,12 +51,22 @@ namespace SalaryManagement.Api.Controllers
         }
 
         [HttpPost("")]
-        public async Task<IActionResult> AddNewLeaveLog(LeaveLogRequest leaveLog)
+        public async Task<IActionResult> AddNewLeaveLog(CreateLeaveLogRequest leaveLog)
         {
             await Task.CompletedTask;
             if(!IsValidRequest(leaveLog))
             {
                 return BadRequest();
+            }
+              //Check empl có hợp đồng và còn còn làm không
+            var emp = await _employeeService.GetById(leaveLog.employeeId);
+            if (emp == null)
+            {
+                return BadRequest("Employee doesn't exist!");
+            }
+            var listContract = await _contractService.GetContractsByEmployeeIdAsync(emp.EmployeeId);
+            if(listContract == null){
+                return BadRequest("Employee doesn't have contract!");
             }
             var log = new LeaveLog
             {
@@ -57,7 +74,6 @@ namespace SalaryManagement.Api.Controllers
                 StartDate= leaveLog.startDate,
                 EndDate = leaveLog.endDate,
                 Reason = leaveLog.reason,
-                Status = leaveLog.status,
                 IsDeleted = false,
                 EmployeeId= leaveLog.employeeId,
             };
@@ -70,35 +86,29 @@ namespace SalaryManagement.Api.Controllers
         }
 
         [HttpPut("")]
-        public async Task<IActionResult> UpdateLeaveLog(LeaveLogRequest leaveLog)
+        public async Task<IActionResult> UpdateLeaveLog(UpdateLeaveLogRequest updateLeaveLog)
         {
-            if (!IsValidRequest(leaveLog))
+            if (!IsValidRequest(updateLeaveLog))
             {
                 return BadRequest();
             }
-            if(leaveLog.employeeId.IsNullOrEmpty())
+            if(updateLeaveLog.employeeId.IsNullOrEmpty())
             {
                 return BadRequest();
             }
-            var tempLeaveLog = await _leaveLogService.GetLeaveLogById(leaveLog.leaveTimeId);
+            var tempLeaveLog = await _leaveLogService.GetLeaveLogById(updateLeaveLog.leaveTimeId);
             if(tempLeaveLog.Equals(null))
-            {
-                return BadRequest();
-            }
-            //khong the update object da bi xoa va update trang thai isDelete tu false thanh true (chi co the update khi xoa)
-            if (tempLeaveLog.IsDeleted == true || (tempLeaveLog.IsDeleted == false && leaveLog.isDeleted == true))
             {
                 return BadRequest();
             }
             var log = new LeaveLog
             {
-                LeaveTimeId = leaveLog.leaveTimeId,
-                StartDate = leaveLog.startDate,
-                EndDate = leaveLog.endDate,
-                Reason = leaveLog.reason,
-                Status = leaveLog.status,
-                IsDeleted = leaveLog.isDeleted,
-                EmployeeId = leaveLog.employeeId
+                LeaveTimeId = updateLeaveLog.leaveTimeId,
+                StartDate = updateLeaveLog.startDate,
+                EndDate = updateLeaveLog.endDate,
+                Reason = updateLeaveLog.reason,
+                Status = updateLeaveLog.status,
+                EmployeeId = updateLeaveLog.employeeId
             };
             var result = await _leaveLogService.UpdateLeaveLog(log);
             if (result)
@@ -120,7 +130,7 @@ namespace SalaryManagement.Api.Controllers
             return Ok();
         }
         
-        private static bool IsValidRequest(LeaveLogRequest request)
+        private static bool IsValidRequest(UpdateLeaveLogRequest request)
         {
             if (request.Equals(null))
             {
@@ -131,6 +141,19 @@ namespace SalaryManagement.Api.Controllers
                 return false;
             }
             return !request.status.IsNullOrEmpty();
+        }
+        
+        private static bool IsValidRequest(CreateLeaveLogRequest request)
+        {
+            if (request.Equals(null))
+            {
+                return false;
+            }
+            if (request.startDate < DateTime.Now || request.startDate > request.endDate)
+            {
+                return false;
+            }
+            return true;
         }
     }
 }
