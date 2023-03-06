@@ -118,6 +118,7 @@ namespace SalaryManagement.Application.Services.SalaryServices
 
             decimal salary = 0;
 
+
             var contract = await _repository.GetContractsByEmployeeIdAsync(employee.EmployeeId);
 
             int standardWorkingHours;

@@ -1,6 +1,7 @@
 ﻿using SalaryManagement.Contracts.Contracts;
 
 namespace SalaryManagement.Contracts.PaidHistory
+
 {
     public class PaidHistoryRequest
     {

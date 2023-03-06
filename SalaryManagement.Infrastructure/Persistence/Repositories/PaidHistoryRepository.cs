@@ -136,5 +136,6 @@ namespace SalaryManagement.Infrastructure.Persistence.Repositories
                 Date = dateResponse
             };
         }
+
     }
 }

@@ -97,6 +97,7 @@ namespace SalaryManagement.Api.Controllers
             {
                 return BadRequest("EmployeeId do not empty!");
             }
+
             /*       var tempLeaveLog = await _leaveLogService.GetLeaveLogById(updateLeaveLog.leaveTimeId);
                    if(tempLeaveLog.Equals(null))
                    {

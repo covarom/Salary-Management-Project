@@ -100,6 +100,7 @@ namespace SalaryManagement.Application.Services.PaidHistoryServices
 
             await _paidHistoryRepository.UpdatePaidHistoryAsync(paidHistory);
         }
+
         public async Task<int> CountPaySlipsActive()
         {
             return await _paidHistoryRepository.CountPaySlipsActive();
