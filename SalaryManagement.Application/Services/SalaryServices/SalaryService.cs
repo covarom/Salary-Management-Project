@@ -90,7 +90,7 @@ namespace SalaryManagement.Application.Services.SalaryServices
             salary += overtimePay - leaveDeduction;
 
             var startDate = new DateTime(date.Year, date.Month, 1);
-
+                
             return new SalaryResponse
             {
                 Contract = contract.Adapt<ContractResponse>(),
@@ -104,8 +104,8 @@ namespace SalaryManagement.Application.Services.SalaryServices
                 HealthInsurance = contract.SalaryType == SalaryTypeEnum.Gross.ToString() ? bhyt : 0,
                 OvertimeHours = (int)otTime,
                 OvetimeSalaryPerHour = Math.Round((double)EarnedPerHour * 1.5, 2 ) ,
-                TotalBonus = (double)overtimePay,
-                TotalDeductions = (double)leaveDeduction,
+                TotalBonus = Math.Round((double)overtimePay,2),
+                TotalDeductions = Math.Round((double)leaveDeduction,2),
                 LeaveHours = (int)leaveTime*8,
                 PeriodStartDate = startDate,
                 PeriodEndDate = startDate.AddMonths(1).AddDays(-1),
@@ -117,6 +117,7 @@ namespace SalaryManagement.Application.Services.SalaryServices
         {
 
             decimal salary = 0;
+
 
             var contract = await _repository.GetContractsByEmployeeIdAsync(employee.EmployeeId);
 
@@ -192,8 +193,8 @@ namespace SalaryManagement.Application.Services.SalaryServices
                 HealthInsurance = 0,
                 OvertimeHours = (int)otTime,
                 OvetimeSalaryPerHour = Math.Round((double)EarnedPerHour * 1.5, 2),
-                TotalBonus = (double)overtimePay,
-                TotalDeductions = (double)leaveDeduction,
+                TotalBonus = Math.Round((double)overtimePay, 2),
+                TotalDeductions = Math.Round((double)leaveDeduction, 2),
                 LeaveHours = (int)leaveTime * 8,
                 PeriodStartDate = startDate,
                 PeriodEndDate = startDate.AddMonths(1).AddDays(-1),
@@ -258,11 +259,11 @@ namespace SalaryManagement.Application.Services.SalaryServices
 
                     try
                     {
-                        for (DateTime mDate = (DateTime)holiday.StartDate; date <= holiday.EndDate; date = date.AddDays(1))
+                        for (DateTime mDate = (DateTime)holiday.StartDate; mDate <= holiday.EndDate; mDate = mDate.AddDays(1))
                         {
                             if (date.Month == mDate.Month)
                             {
-                                listHoliday.Add(date);
+                                listHoliday.Add(mDate);
                             }
                         }
                     }

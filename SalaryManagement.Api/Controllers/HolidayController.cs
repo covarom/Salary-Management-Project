@@ -64,8 +64,9 @@ namespace SalaryManagement.Api.Controllers
                 StartDate = request.StartDate,
                 EndDate = request.EndDate,
                 HolidayName = request.HolidayName,
-                IsDeleted = true,
-                IsPaid = true
+                IsDeleted = false,
+                IsPaid = request.IsPaid
+
             };
             var result = await _holidayService.AddHoliday(holiday);
 
@@ -73,13 +74,12 @@ namespace SalaryManagement.Api.Controllers
         }
 
         [HttpDelete("holidays/{holidayId}")]
-        public async Task<IActionResult> DeleteHoliday(string holidayId)
+        public async Task<IActionResult> DeleteHoliday(HolidayDelete request)
         {
-            string id = holidayId;
             Holiday holiday = new Holiday
             {
-                HolidayId = id,
-                IsDeleted = false
+                HolidayId = request.Id,
+                IsDeleted = true
             };
 
             var result = await _holidayService.DeleteHoliday(holiday);

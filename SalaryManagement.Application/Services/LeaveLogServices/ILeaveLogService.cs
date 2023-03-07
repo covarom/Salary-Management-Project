@@ -15,6 +15,8 @@ namespace SalaryManagement.Application.Services.LeaveLogServices
         Task<bool> UpdateLeaveLog(LeaveLog leaveLog);
         Task<bool> DeleteLeaveLogById(string leaveTimeId);
 
+        Task UpdateAsync(LeaveLog leaveLog);
+
         Task<int> GetTotalLeaveDateByEmployeeIdInMonthAcsyn(string employeeId);
     }
 }

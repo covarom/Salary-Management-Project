@@ -1,5 +1,7 @@
 ﻿using Mapster;
 using Microsoft.EntityFrameworkCore;
+using Org.BouncyCastle.Asn1.Ocsp;
+using SalaryManagement.Application.Common.Exception;
 using SalaryManagement.Application.Common.Interfaces.Persistence;
 using SalaryManagement.Contracts;
 using SalaryManagement.Contracts.Dashboards;
@@ -97,10 +99,11 @@ namespace SalaryManagement.Infrastructure.Persistence.Repositories
 
         public async Task UpdatePaidHistoryAsync(PaidHistory paidHistory)
         {
-            _context.PaidHistories.Update(paidHistory);
+            _context.Entry(paidHistory).State = EntityState.Detached;
+            _context.Update(paidHistory);
             await _context.SaveChangesAsync();
         }
-         public async Task<int> CountPaySlipsActive()
+        public async Task<int> CountPaySlipsActive()
         {
             var num = await _context.PaidHistories.Where(x => x.DeletedAt == null).CountAsync();
             return num;
@@ -133,5 +136,6 @@ namespace SalaryManagement.Infrastructure.Persistence.Repositories
                 Date = dateResponse
             };
         }
+
     }
 }

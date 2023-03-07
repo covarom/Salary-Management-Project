@@ -21,5 +21,6 @@ namespace SalaryManagement.Application.Services.PaidHistoryServices
         Task<KeyValue> CountPayslipByType(string type);
 
         Task<IEnumerable<RevenueCostChartResponse>> RevenueCostData();
+
     }
 }
