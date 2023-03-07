@@ -1,8 +1,12 @@
 ﻿using Mapster;
 using Microsoft.EntityFrameworkCore;
+using Org.BouncyCastle.Asn1.Ocsp;
+using SalaryManagement.Application.Common.Exception;
 using SalaryManagement.Application.Common.Interfaces.Persistence;
 using SalaryManagement.Contracts;
+using SalaryManagement.Contracts.Dashboards;
 using SalaryManagement.Contracts.PaidHistory;
+using SalaryManagement.Domain.Common.Enum;
 using SalaryManagement.Domain.Entities;
 using System.Linq.Dynamic.Core;
 
@@ -95,8 +99,42 @@ namespace SalaryManagement.Infrastructure.Persistence.Repositories
 
         public async Task UpdatePaidHistoryAsync(PaidHistory paidHistory)
         {
-            _context.PaidHistories.Update(paidHistory);
+            _context.Entry(paidHistory).State = EntityState.Detached;
+            _context.Update(paidHistory);
             await _context.SaveChangesAsync();
+        }
+        public async Task<int> CountPaySlipsActive()
+        {
+            var num = await _context.PaidHistories.Where(x => x.DeletedAt == null).CountAsync();
+            return num;
+        }
+
+        public async Task<int> CountPaySlipByType(string type)
+        {
+            return await _context.PaidHistories.Where(x => x.DeletedAt == null && x.PaidType.Equals(type)).CountAsync();
+        }
+
+        public async Task<RevenueCostChartResponse> RevenueCostByDate(DateTime date)
+        {
+            double revenue = (double)_context.PaidHistories.Where(x => x.DeletedAt == null
+                && ((DateTime)x.PaidDate).Month == date.Month
+                && ((DateTime)x.PaidDate).Year== date.Year
+                && x.PaidType.Equals(SalaryCaculatingType.Staff.ToString()))
+                .Sum(x => x.SalaryAmount);
+
+            double cost = (double)_context.PaidHistories.Where(x => x.DeletedAt == null
+               && ((DateTime)x.PaidDate).Month == date.Month
+               && ((DateTime)x.PaidDate).Year == date.Year
+               && x.PaidType.Equals(SalaryCaculatingType.Partner.ToString()))
+               .Sum(x => x.SalaryAmount);
+
+            var dateResponse = date.Month + "/" + date.Year;
+            return new RevenueCostChartResponse
+            {
+                Cost = Math.Round(cost,2),
+                Revenue = Math.Round(revenue,2),
+                Date = dateResponse
+            };
         }
 
     }

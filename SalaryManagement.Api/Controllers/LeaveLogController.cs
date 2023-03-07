@@ -97,25 +97,51 @@ namespace SalaryManagement.Api.Controllers
             {
                 return BadRequest("EmployeeId do not empty!");
             }
-            var tempLeaveLog = await _leaveLogService.GetLeaveLogById(updateLeaveLog.leaveTimeId);
-            if(tempLeaveLog.Equals(null))
+
+            /*       var tempLeaveLog = await _leaveLogService.GetLeaveLogById(updateLeaveLog.leaveTimeId);
+                   if(tempLeaveLog.Equals(null))
+                   {
+                       return BadRequest();
+                   }
+                   var log = new LeaveLog
+                   {
+                       LeaveTimeId = updateLeaveLog.leaveTimeId,
+                       StartDate = updateLeaveLog.startDate,
+                       EndDate = updateLeaveLog.endDate,
+                       Reason = updateLeaveLog.reason,
+                       EmployeeId = updateLeaveLog.employeeId
+                   };
+                   var result = await _leaveLogService.UpdateLeaveLog(log);
+                   if (result)
+                   {
+                       return Ok();
+                   }
+                   return NotFound();*/
+
+            try
             {
-                return BadRequest();
+                var leaveLog = await _leaveLogService.GetLeaveLogById(updateLeaveLog.leaveTimeId);
+
+                if (leaveLog == null)
+                {
+                    return NotFound();
+                }
+
+                // Update leave log with values from the request model
+                leaveLog.StartDate = updateLeaveLog.startDate;
+                leaveLog.EndDate = updateLeaveLog.endDate;
+                leaveLog.Reason = updateLeaveLog.reason;
+                leaveLog.EmployeeId = updateLeaveLog.employeeId;
+
+                await _leaveLogService.UpdateAsync(leaveLog);
+
+                //   return Ok(_mapper.Map<LeaveLogResponse>(leaveLog));
+                return Ok("Update Successfully");
             }
-            var log = new LeaveLog
+            catch (Exception ex)
             {
-                LeaveTimeId = updateLeaveLog.leaveTimeId,
-                StartDate = updateLeaveLog.startDate,
-                EndDate = updateLeaveLog.endDate,
-                Reason = updateLeaveLog.reason,
-                EmployeeId = updateLeaveLog.employeeId
-            };
-            var result = await _leaveLogService.UpdateLeaveLog(log);
-            if (result)
-            {
-                return Ok();
+                return StatusCode(StatusCodes.Status500InternalServerError, ex.Message);
             }
-            return NotFound();
         }
 
         [HttpDelete("{id}")]

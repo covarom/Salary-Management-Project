@@ -13,5 +13,6 @@ namespace SalaryManagement.Application.Common.Interfaces.Persistence
         Task<string> GetEmployeeIdByName(string EmployeeName);
 
          Task<int> CountEmployee();
+        Task<int> CountEmployeeActive();
     }
 }

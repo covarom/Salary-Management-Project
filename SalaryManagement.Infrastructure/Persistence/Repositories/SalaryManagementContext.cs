@@ -283,6 +283,8 @@ public partial class SalaryManagementContext : DbContext
 
             entity.HasIndex(e => e.EmployeeId, "employee_id");
 
+            entity.HasIndex(e => new { e.PaidDate, e.PaidType, e.DeletedAt }, "optimize_query");
+
             entity.Property(e => e.PayHistoryId).HasColumnName("pay_history_id");
             entity.Property(e => e.AccidentInsurance).HasColumnName("accident_insurance");
             entity.Property(e => e.BaseSalary).HasColumnName("base_salary");
@@ -305,6 +307,7 @@ public partial class SalaryManagementContext : DbContext
             entity.Property(e => e.PaidDate)
                 .HasColumnType("date")
                 .HasColumnName("paid_date");
+            entity.Property(e => e.PaidType).HasColumnName("paid_type");
             entity.Property(e => e.PayrollPeriodEnd)
                 .HasColumnType("date")
                 .HasColumnName("payroll_period_end");
@@ -313,6 +316,8 @@ public partial class SalaryManagementContext : DbContext
                 .HasColumnName("payroll_period_start");
             entity.Property(e => e.SalaryAmount).HasColumnName("salary_amount");
             entity.Property(e => e.SocialInsurance).HasColumnName("social_insurance");
+            entity.Property(e => e.StandardWorkHours).HasColumnName("standard_work_hours");
+            entity.Property(e => e.Tax).HasColumnName("tax");
             entity.Property(e => e.UpdateAt)
                 .HasColumnType("date")
                 .HasColumnName("update_at");

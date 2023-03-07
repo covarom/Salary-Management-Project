@@ -45,6 +45,12 @@ public partial class PaidHistory
 
     public string? Note { get; set; }
 
+    public string? PaidType { get; set; }
+
+    public double? Tax { get; set; }
+
+    public int? StandardWorkHours { get; set; }
+
     public virtual Contract? Contract { get; set; }
 
     public virtual Employee? Employee { get; set; }

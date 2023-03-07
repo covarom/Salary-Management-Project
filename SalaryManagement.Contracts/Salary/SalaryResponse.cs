@@ -24,7 +24,10 @@ namespace SalaryManagement.Contracts.Salary
         public double TotalDeductions { get; set; }
      //   public decimal OvertimeSalary { get; set; }
         public int LeaveHours { get; set; }
+        public string? PaidType { get; set; }
         public decimal FinalIncome { get; set; }
+        public DateTime PeriodStartDate { get; set; }
+        public DateTime PeriodEndDate { get; set; }
 
     }
 }
