@@ -12,9 +12,9 @@ namespace SalaryManagement.Application.Services.AdminServices
             _adminRepository = adminRepository;
         }
 
-        public Admin? GetAdminById(string id)
+        public async Task<Admin>  GetAdminById(string id)
         {
-           var admin = _adminRepository.GetAdmin(id);
+           var admin = await _adminRepository.GetAdmin(id);
 
             if(admin == null)
             {
@@ -24,19 +24,9 @@ namespace SalaryManagement.Application.Services.AdminServices
             return admin;
         }
 
-        public Admin? UpdateAdmin(string id, Admin admin)
+        public async Task<bool>  UpdateAdmin(Admin admin)
         {
-            var existingAdmin = _adminRepository.GetAdmin(id);
-            if (existingAdmin == null)
-            {
-                return null;
-            }
-
-            existingAdmin.PhoneNumber = admin.PhoneNumber;
-            existingAdmin.Name = admin.Name;
-            existingAdmin.IsActive = admin.IsActive;
-
-            return _adminRepository.UpdateAdmin(existingAdmin);
+            return await _adminRepository.UpdateAdmin(admin);
         }
     }
 }
