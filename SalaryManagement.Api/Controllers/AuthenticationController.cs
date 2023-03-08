@@ -16,7 +16,7 @@ namespace SalaryManagement.Api.Controllers
         private readonly IMapper _mapper;
 
         public AuthenticationController(IAuthenticationServices authenticationServices, IMapper mapper) {
-            _authenticationServices = authenticationServices;
+            _authenticationServices = authenticationServices;          
             _mapper = mapper;
         }
 

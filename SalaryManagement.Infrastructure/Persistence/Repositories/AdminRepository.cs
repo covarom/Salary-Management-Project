@@ -1,5 +1,6 @@
 ﻿using SalaryManagement.Application.Common.Interfaces.Persistence;
 using SalaryManagement.Domain.Entities;
+using Microsoft.EntityFrameworkCore;
 
 namespace SalaryManagement.Infrastructure.Persistence.Repositories
 {
@@ -27,9 +28,9 @@ namespace SalaryManagement.Infrastructure.Persistence.Repositories
             return true;
         }
 
-        public Admin? GetAdmin(string id)
+        public async Task<Admin> GetAdmin(string id)
         {
-            return _context.Admins.SingleOrDefault(x => x.AdminId.Equals(id));
+            return await _context.Admins.SingleOrDefaultAsync((x => x.AdminId.Equals(id)));
         }
 
         public Admin? GetAdminByUsername(string username)
@@ -47,13 +48,15 @@ namespace SalaryManagement.Infrastructure.Persistence.Repositories
             return _context.Admins.ToList();
         }
 
-        public Admin? UpdateAdmin(Admin admin)
+        public async Task<bool> UpdateAdmin(Admin admin)
         {
-
-            _context.Admins.Update(admin);
-            _context.SaveChanges();
-
-            return admin;
+            bool check=false;
+             _context.Entry(admin).State = EntityState.Modified;
+            int changes = await _context.SaveChangesAsync();
+            if(changes>0){
+                check= true;
+            }
+             return check;
         }
     }
 }

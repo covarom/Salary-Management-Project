@@ -1,6 +1,7 @@
 ﻿using SalaryManagement.Application.Common.Errors;
 using SalaryManagement.Application.Common.Interfaces.Authentication;
 using SalaryManagement.Application.Common.Interfaces.Persistence;
+using SalaryManagement.Application.Services.AdminServices;
 using SalaryManagement.Domain.Entities;
 using System.Net;
 
@@ -10,17 +11,21 @@ namespace SalaryManagement.Application.Services.Authentication
     {
         private readonly IJwtTokenGenerator _jwtTokenGenerator;
         private readonly IAdminRepository _adminRepository;
+        private readonly IAdminServices _adminServices;
 
-        public AuthenticationServices(IJwtTokenGenerator jwtTokenGenerator, IAdminRepository adminRepository)
+        public AuthenticationServices(IJwtTokenGenerator jwtTokenGenerator, IAdminRepository adminRepository,
+          IAdminServices adminServices)
         {
             _jwtTokenGenerator = jwtTokenGenerator;
             _adminRepository = adminRepository;
+            _adminServices= adminServices;
         }
 
         public AuthenticationResult Login(string username, string password)
         {
+            var passwordHash = _adminServices.HashPassword(password);
             // Validate if the user exists
-            if (_adminRepository.GetAdminByUsernameAndPassword(username,password) is not Admin admin)
+            if (_adminRepository.GetAdminByUsernameAndPassword(username,passwordHash) is not Admin admin)
             {               
                 throw new Exception("An error has occur, please contact your admin!");            
             }
