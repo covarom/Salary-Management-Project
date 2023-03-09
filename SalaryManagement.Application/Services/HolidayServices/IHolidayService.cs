@@ -21,7 +21,7 @@ namespace SalaryManagement.Application.Services.HolidayServices
 
         Task<bool> UpdateHoliday(Holiday holiday);
 
-        Task<IEnumerable<Holiday>> SaveHoliday(List<Holiday> holidays);
+        Task<IEnumerable<Holiday>> SaveHoliday(IEnumerable<Holiday> holidays);
 
     }
 }

@@ -23,13 +23,11 @@ namespace SalaryManagement.Api.Controllers
     {
         private readonly IHolidayService _holidayService;
         private readonly IMapper _mapper;
-        private readonly SalaryManagementContext _context;
 
-        public HolidayController(IHolidayService holidayService, IMapper mapper, SalaryManagementContext context)
+        public HolidayController(IHolidayService holidayService, IMapper mapper)
         {
             _holidayService = holidayService;
             _mapper = mapper;
-            _context = context;
         }
 
         [HttpGet("holidays")]
@@ -167,52 +165,46 @@ namespace SalaryManagement.Api.Controllers
         [HttpPost("holidays/import")]
         public async Task<IActionResult> ImportHolidayFromExcel(IFormFile file)
         {
-            //var httpRequest = HttpContext.Request;
-            //var file = httpRequest.Files["file"];
-            
-            using (var stream = new MemoryStream())
+            try
             {
-                await file.CopyToAsync(stream);
-                using (var package = new ExcelPackage(stream))
+                
+                using (var stream = new MemoryStream())
                 {
-                    // Get the first worksheet
-                    var worksheet = package.Workbook.Worksheets[0];
-
-                    string id = Guid.NewGuid().ToString();
-                    var countRow = worksheet.Dimension.End.Row;
-                    var holidays = new List<Holiday>();
-                    // Loop through each row
-                    for (int row = 2; row <= countRow; row++)
+                    await file.CopyToAsync(stream);
+                    using (var package = new ExcelPackage(stream))
                     {
-                        // Read the values from the row
-                        //int id = worksheet.Cells[row, 1].GetValue<int>();
-                        string holidayName = worksheet.Cells[row, 1].GetValue<string>();
-                        DateTime startDate = worksheet.Cells[row, 2].GetValue<DateTime>();
-                        DateTime endDate = worksheet.Cells[row, 3].GetValue<DateTime>();
+                        // Get the first worksheet
+                        var worksheet = package.Workbook.Worksheets[0];
+                        var countRow = worksheet.Dimension.End.Row;
+                        var holidays = new List<Holiday>();
+                        // Loop through each row
+                        for (int row = 2; row <= countRow; row++)
+                        {
+                            // Read the values from the row
+                            string id = Guid.NewGuid().ToString();
+                            string holidayName = worksheet.Cells[row, 1].GetValue<string>();
+                            DateTime startDate = worksheet.Cells[row, 2].GetValue<DateTime>();
+                            DateTime endDate = worksheet.Cells[row, 3].GetValue<DateTime>();
 
-                        // Add a new Holiday object to the list
-                        holidays.Add(new Holiday { 
-                            HolidayId = id, 
-                            HolidayName = holidayName, 
-                            StartDate = startDate, 
-                            EndDate = endDate,
-                            IsDeleted = false,
-                            IsPaid = false
-                        });
+                            // Add a new Holiday object to the list
+                            holidays.Add(new Holiday
+                            {
+                                HolidayId = id,
+                                HolidayName = holidayName,
+                                StartDate = startDate,
+                                EndDate = endDate,
+                                IsDeleted = false,
+                                IsPaid = false
+                            });
+                        }
+                        //Save the holidays to the database
+                        var result = await _holidayService.SaveHoliday(holidays);
+                        return Ok(result);
                     }
-                    //var holiday = new Holiday();
-                    //foreach(var holiday in holidays)
-                    //{
-                    //    if(holiday != null)
-                    //    {
-                    //        var result = await _holidayService.SaveHoliday(holidays);
-                    //    }
-                    //}
-                    // Save the holidays to the database
-                    //var result = await _holidayService.SaveHoliday(holidays);
-                    return Ok(holidays);
                 }
-
+            }catch(Exception ex)
+            {
+                return BadRequest(ex);
             }
             
         }
