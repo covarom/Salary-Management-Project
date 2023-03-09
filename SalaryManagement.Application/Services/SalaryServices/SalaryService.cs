@@ -136,10 +136,10 @@ namespace SalaryManagement.Application.Services.SalaryServices
             }
 
             decimal basicSalary = (decimal)contract.PartnerPrice;
-            decimal bhxh = (decimal)contract.Bhxh;
+            /*decimal bhxh = (decimal)contract.Bhxh;
             decimal bhyt = (decimal)contract.Bhyt;
             decimal bhtn = (decimal)contract.Bhtn;
-            decimal personalIncomeTax = (decimal)contract.Tax;
+            decimal personalIncomeTax = (decimal)contract.Tax;*/
             decimal EarnedPerHour = basicSalary / standardWorkingHours;
             decimal tempSalary = EarnedPerHour * realityWorkHours;
 

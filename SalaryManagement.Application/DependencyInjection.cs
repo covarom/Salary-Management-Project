@@ -37,6 +37,8 @@ namespace SalaryManagement.Application
             services.AddScoped<IOvertimeService, OvertimeService>();
             services.AddScoped<ISalaryService, SalaryService>();
             services.AddScoped<IPaidHistoryService, PaidHistoryService>();
+            services.AddScoped<ILeaveLogServiceV2, LeaveLogServiceV2>();
+
             return services;
         }
     }

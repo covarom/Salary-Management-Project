@@ -50,6 +50,7 @@ namespace SalaryManagement.Insfrastructure
             services.AddScoped<IPayrollRepository, PayrollRepository>();
             services.AddScoped<IOvertimeRepository, OvertimeRepository>();
             services.AddScoped<IPaidHistoryRepository, PaidHistoryRepository>();
+            services.AddScoped<ILeaveLogRepositoryV2, LeaveLogRepositoryV2>();
 
             return services;
         }
