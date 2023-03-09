@@ -166,7 +166,7 @@ namespace SalaryManagement.Api.Controllers
                 var msg = "";
                 try
                 {
-                    
+
                     using (var stream = new MemoryStream())
                     {
                         await file.CopyToAsync(stream);
@@ -175,30 +175,58 @@ namespace SalaryManagement.Api.Controllers
 
                             var worksheet = package.Workbook.Worksheets[0];
                             var countRow = worksheet.Dimension.End.Row;
-                            var holidays = new List<Holiday>();
+                            //var holidays = new List<Holiday>();
 
+                            //DateTime? previousStartDate = null;
                             for (int row = 2; row <= countRow; row++)
                             {
                                 string id = Guid.NewGuid().ToString();
                                 string holidayName = worksheet.Cells[row, 1].GetValue<string>();
                                 DateTime startDate = worksheet.Cells[row, 2].GetValue<DateTime>();
                                 DateTime endDate = worksheet.Cells[row, 3].GetValue<DateTime>();
-
-                                Holiday holiday = new Holiday
+                                string? input = worksheet.Cells[row, 4].Value.ToString();
+                                bool isPaid = false;
+                                if (input == "y")
                                 {
-                                    HolidayId = id,
-                                    HolidayName = holidayName,
-                                    StartDate = startDate,
-                                    EndDate = endDate,
-                                    IsDeleted = false,
-                                    IsPaid = false
-                                };
-
-                                if (holiday != null)
-                                {
-                                    var result = await _holidayService.AddHoliday(holiday);
-                                    msg = "Wrong format at row " + row;
+                                    isPaid = true;
                                 }
+                                else if (input == "n")
+                                {
+                                    isPaid = false;
+                                }
+
+                                if (endDate < startDate)
+                                {
+                                    msg += "endDate have to later then startDate ";
+                                    msg += "\nWrong format at row " + row;
+                                    await transaction.RollbackAsync();
+                                    return BadRequest("Import failed!!! " + msg);
+                                }
+                                //else if (previousStartDate.HasValue && startDate == previousStartDate.Value)
+                                //{
+                                //    msg += "This date have been exist! ";
+                                //    msg += "\nWrong format at row " + row;
+                                //    await transaction.RollbackAsync();
+                                //    return BadRequest("Import failed!!! " + msg);
+                                //}
+                                else
+                                {
+                                    Holiday holiday = new Holiday
+                                    {
+                                        HolidayId = id,
+                                        HolidayName = holidayName,
+                                        StartDate = startDate,
+                                        EndDate = endDate,
+                                        IsDeleted = false,
+                                        IsPaid = isPaid
+                                    };
+
+                                    if (holiday != null)
+                                    {
+                                        var result = await _holidayService.AddHoliday(holiday);
+                                    }
+                                }
+                                //previousStartDate = startDate;
                             }
                             await transaction.CommitAsync();
                             return Ok("Import successfully");
