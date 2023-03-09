@@ -19,5 +19,9 @@ public partial class LeaveLog
 
     public string? EmployeeId { get; set; }
 
+    public DateTime? LeaveDate { get; set; }
+
+    public int? LeaveHours { get; set; }
+
     public virtual Employee? Employee { get; set; }
 }

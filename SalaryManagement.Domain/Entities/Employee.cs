@@ -23,6 +23,8 @@ public partial class Employee
 
     public string? Code { get; set; }
 
+    public string? Email { get; set; }
+
     public virtual ICollection<Contract> Contracts { get; } = new List<Contract>();
 
     public virtual ICollection<LeaveLog> LeaveLogs { get; } = new List<LeaveLog>();
