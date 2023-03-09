@@ -1,7 +1,3 @@
-
-using SalaryManagement.Api.Common.Helper;
-
-
 using SalaryManagement.Application.Common.Interfaces.Persistence;
 using SalaryManagement.Domain.Entities;
 
@@ -10,6 +6,7 @@ namespace SalaryManagement.Application.Services.HolidayServices
     public class HolidayServices : IHolidayService
     {
         private readonly IHolidayRepository _repository;
+
 
         public HolidayServices(IHolidayRepository holidayRepository)
         {
@@ -26,9 +23,6 @@ namespace SalaryManagement.Application.Services.HolidayServices
             return await _repository.GetHolidayById(id);
         }
 
-
-
-
         public async Task<bool> DeleteHoliday(Holiday holiday)
         {
             var existHoliday = await _repository.GetHolidayById(holiday.HolidayId);
@@ -41,9 +35,6 @@ namespace SalaryManagement.Application.Services.HolidayServices
             return false;
         }
 
-
-
-
         public async Task<bool> UpdateHoliday(Holiday holiday)
         {
             return await _repository.UpdateHoliday(holiday);
@@ -52,6 +43,11 @@ namespace SalaryManagement.Application.Services.HolidayServices
         public async Task<Holiday> AddHoliday(Holiday holiday)
         {
             return await _repository.AddHoliday(holiday);
+        }
+
+        public async Task<IEnumerable<Holiday>> SaveHoliday(IEnumerable<Holiday> holidays)
+        {
+            return await _repository.SaveHoliday(holidays);
         }
     }
 }

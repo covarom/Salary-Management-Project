@@ -1,4 +1,3 @@
-
 using SalaryManagement.Domain.Entities;
 
 
@@ -13,6 +12,8 @@ namespace SalaryManagement.Application.Common.Interfaces.Persistence
         Task<bool> DeleteHoliday(Holiday holiday);
 
         Task<IEnumerable<Holiday>> GetHolidaysByDateRangeAsync(DateTime startDate, DateTime endDate);
+
+        Task<IEnumerable<Holiday>> SaveHoliday(IEnumerable<Holiday> holidays);
 
     }
 }
