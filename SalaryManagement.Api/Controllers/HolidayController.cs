@@ -1,12 +1,17 @@
-﻿using MapsterMapper;
+﻿using ClosedXML.Excel;
+using MapsterMapper;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using MySqlX.XDevAPI.Common;
+using OfficeOpenXml;
+using Org.BouncyCastle.Asn1.Ocsp;
 using SalaryManagement.Api.Common.Helper;
 using SalaryManagement.Application.Services.ContractServices;
 using SalaryManagement.Application.Services.HolidayServices;
 using SalaryManagement.Domain.Entities;
 using SalaryManagement.Infrastructure.Persistence;
+using SalaryManagement.Infrastructure.Persistence.Repositories;
 using System.Net;
 
 namespace SalaryManagement.Api.Controllers
@@ -18,11 +23,13 @@ namespace SalaryManagement.Api.Controllers
     {
         private readonly IHolidayService _holidayService;
         private readonly IMapper _mapper;
+        private readonly SalaryManagementContext _context;
 
-        public HolidayController(IHolidayService holidayService, IMapper mapper)
+        public HolidayController(IHolidayService holidayService, IMapper mapper, SalaryManagementContext context)
         {
             _holidayService = holidayService;
             _mapper = mapper;
+            _context = context;
         }
 
         [HttpGet("holidays")]
@@ -49,8 +56,6 @@ namespace SalaryManagement.Api.Controllers
                 return Ok(holiday);
             }
         }
-
-
 
         [HttpPost("holidays")]
         public async Task<IActionResult> AddHoliday(HolidayRequest request)
@@ -131,6 +136,85 @@ namespace SalaryManagement.Api.Controllers
             await _holidayService.UpdateHoliday(holiday);
 
             return Ok(holiday);
+        }
+
+        [HttpGet("holidays/template")]
+        public async Task<IActionResult> GetHolidayExcelTemplate()
+        {
+            using (var workbook = new XLWorkbook())
+            {
+                var worksheet = workbook.Worksheets.Add("HolidayTemplate");
+                var currentRow = 1;
+
+                worksheet.Cell(currentRow, 1).Value = "";
+                worksheet.Cell(currentRow, 2).Value = "HolidayName";
+                worksheet.Cell(currentRow, 3).Value = "StartDate";
+                worksheet.Cell(currentRow, 4).Value = "EndDate";
+
+                using (var stream = new MemoryStream())
+                {
+                    workbook.SaveAs(stream);
+                    var content = stream.ToArray();
+
+                    return File(content,
+                                "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+                                "HolidayTemplate.xlsx");
+                }
+            }
+            
+        }
+
+        [HttpPost("holidays/import")]
+        public async Task<IActionResult> ImportHolidayFromExcel(IFormFile file)
+        {
+            //var httpRequest = HttpContext.Request;
+            //var file = httpRequest.Files["file"];
+            
+            using (var stream = new MemoryStream())
+            {
+                await file.CopyToAsync(stream);
+                using (var package = new ExcelPackage(stream))
+                {
+                    // Get the first worksheet
+                    var worksheet = package.Workbook.Worksheets[0];
+
+                    string id = Guid.NewGuid().ToString();
+                    var countRow = worksheet.Dimension.End.Row;
+                    var holidays = new List<Holiday>();
+                    // Loop through each row
+                    for (int row = 2; row <= countRow; row++)
+                    {
+                        // Read the values from the row
+                        //int id = worksheet.Cells[row, 1].GetValue<int>();
+                        string holidayName = worksheet.Cells[row, 1].GetValue<string>();
+                        DateTime startDate = worksheet.Cells[row, 2].GetValue<DateTime>();
+                        DateTime endDate = worksheet.Cells[row, 3].GetValue<DateTime>();
+
+                        // Add a new Holiday object to the list
+                        holidays.Add(new Holiday { 
+                            HolidayId = id, 
+                            HolidayName = holidayName, 
+                            StartDate = startDate, 
+                            EndDate = endDate,
+                            IsDeleted = false,
+                            IsPaid = false
+                        });
+                    }
+                    //var holiday = new Holiday();
+                    //foreach(var holiday in holidays)
+                    //{
+                    //    if(holiday != null)
+                    //    {
+                    //        var result = await _holidayService.SaveHoliday(holidays);
+                    //    }
+                    //}
+                    // Save the holidays to the database
+                    //var result = await _holidayService.SaveHoliday(holidays);
+                    return Ok(holidays);
+                }
+
+            }
+            
         }
     }
 }

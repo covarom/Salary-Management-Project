@@ -71,5 +71,11 @@ namespace SalaryManagement.Infrastructure.Persistence.Repositories
                 .ToListAsync();
         }
 
+        public async Task<IEnumerable<Holiday>> SaveHoliday(List<Holiday> holidays)
+        {
+            _context.Holidays.AddRange(holidays);
+            await _context.SaveChangesAsync();
+            return holidays;
+        }
     }
 }

@@ -53,5 +53,10 @@ namespace SalaryManagement.Application.Services.HolidayServices
         {
             return await _repository.AddHoliday(holiday);
         }
+
+        public async Task<IEnumerable<Holiday>> SaveHoliday(List<Holiday> holidays)
+        {
+            return await _repository.SaveHoliday(holidays);
+        }
     }
 }

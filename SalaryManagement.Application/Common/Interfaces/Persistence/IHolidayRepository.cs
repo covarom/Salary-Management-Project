@@ -14,5 +14,7 @@ namespace SalaryManagement.Application.Common.Interfaces.Persistence
 
         Task<IEnumerable<Holiday>> GetHolidaysByDateRangeAsync(DateTime startDate, DateTime endDate);
 
+        Task<IEnumerable<Holiday>> SaveHoliday(List<Holiday> holidays);
+
     }
 }
