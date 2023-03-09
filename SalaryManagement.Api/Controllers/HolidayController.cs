@@ -163,8 +163,10 @@ namespace SalaryManagement.Api.Controllers
         {
             using (var transaction = await _dbContext.Database.BeginTransactionAsync())
             {
+                var msg = "";
                 try
                 {
+                    
                     using (var stream = new MemoryStream())
                     {
                         await file.CopyToAsync(stream);
@@ -177,7 +179,6 @@ namespace SalaryManagement.Api.Controllers
 
                             for (int row = 2; row <= countRow; row++)
                             {
-                                bool check = true;
                                 string id = Guid.NewGuid().ToString();
                                 string holidayName = worksheet.Cells[row, 1].GetValue<string>();
                                 DateTime startDate = worksheet.Cells[row, 2].GetValue<DateTime>();
@@ -196,12 +197,7 @@ namespace SalaryManagement.Api.Controllers
                                 if (holiday != null)
                                 {
                                     var result = await _holidayService.AddHoliday(holiday);
-                                    check = true;
-                                    if (!check)
-                                    {
-                                        await transaction.RollbackAsync();
-                                        return BadRequest(result);
-                                    }
+                                    msg = "Wrong format at row " + row;
                                 }
                             }
                             await transaction.CommitAsync();
@@ -212,7 +208,7 @@ namespace SalaryManagement.Api.Controllers
                 catch (Exception ex)
                 {
                     await transaction.RollbackAsync();
-                    return BadRequest(ex);
+                    return BadRequest("Import failed!!! " + msg);
                 }
             }
         }
