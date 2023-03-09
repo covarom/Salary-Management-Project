@@ -66,6 +66,7 @@ public partial class SalaryManagementContext : DbContext
                 .HasMaxLength(255)
                 .HasColumnName("image");
             entity.Property(e => e.IsActive).HasColumnName("isActive");
+            entity.Property(e => e.IsFirstLogin).HasColumnName("is_first_login");
             entity.Property(e => e.Name)
                 .HasMaxLength(255)
                 .HasColumnName("name");
@@ -190,6 +191,9 @@ public partial class SalaryManagementContext : DbContext
             entity.Property(e => e.DateOfBirth)
                 .HasColumnType("date")
                 .HasColumnName("date_of_birth");
+            entity.Property(e => e.Email)
+                .HasMaxLength(255)
+                .HasColumnName("email");
             entity.Property(e => e.IdentifyNumber).HasColumnName("identify_number");
             entity.Property(e => e.Image)
                 .HasMaxLength(255)
@@ -234,6 +238,10 @@ public partial class SalaryManagementContext : DbContext
                 .HasColumnType("date")
                 .HasColumnName("end_date");
             entity.Property(e => e.IsDeleted).HasColumnName("isDeleted");
+            entity.Property(e => e.LeaveDate)
+                .HasColumnType("date")
+                .HasColumnName("leave_date");
+            entity.Property(e => e.LeaveHours).HasColumnName("leave_hours");
             entity.Property(e => e.Reason)
                 .HasColumnType("text")
                 .HasColumnName("reason");

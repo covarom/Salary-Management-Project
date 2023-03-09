@@ -83,8 +83,8 @@ namespace SalaryManagement.Application.Services.SalaryServices
             if (leaveTime != null && leaveTime > 0)
             {
                 decimal hourlyRate = basicSalary / standardWorkingHours;
-                leaveDeduction = (decimal)leaveTime * 8 * hourlyRate;
-                realityWorkHours -= (int)leaveTime * 8;
+                leaveDeduction = (decimal)leaveTime * hourlyRate;
+                realityWorkHours -= (int)leaveTime;
             }
 
             salary += overtimePay - leaveDeduction;
@@ -106,7 +106,7 @@ namespace SalaryManagement.Application.Services.SalaryServices
                 OvetimeSalaryPerHour = Math.Round((double)EarnedPerHour * 1.5, 2 ) ,
                 TotalBonus = Math.Round((double)overtimePay,2),
                 TotalDeductions = Math.Round((double)leaveDeduction,2),
-                LeaveHours = (int)leaveTime*8,
+                LeaveHours = (int)leaveTime,
                 PeriodStartDate = startDate,
                 PeriodEndDate = startDate.AddMonths(1).AddDays(-1),
                 FinalIncome =  Math.Round(salary, 2)
@@ -137,10 +137,10 @@ namespace SalaryManagement.Application.Services.SalaryServices
             }
 
             decimal basicSalary = (decimal)contract.PartnerPrice;
-            decimal bhxh = (decimal)contract.Bhxh;
+            /*decimal bhxh = (decimal)contract.Bhxh;
             decimal bhyt = (decimal)contract.Bhyt;
             decimal bhtn = (decimal)contract.Bhtn;
-            decimal personalIncomeTax = (decimal)contract.Tax;
+            decimal personalIncomeTax = (decimal)contract.Tax;*/
             decimal EarnedPerHour = basicSalary / standardWorkingHours;
             decimal tempSalary = EarnedPerHour * realityWorkHours;
 
@@ -172,8 +172,8 @@ namespace SalaryManagement.Application.Services.SalaryServices
             if (leaveTime != null && leaveTime > 0)
             {
                 decimal hourlyRate = basicSalary / standardWorkingHours;
-                leaveDeduction = (decimal)leaveTime * 8 * hourlyRate;
-                realityWorkHours -= (int)leaveTime * 8;
+                leaveDeduction = (decimal)leaveTime * hourlyRate;
+                realityWorkHours -= (int)leaveTime;
             }
 
             salary += overtimePay - leaveDeduction;
@@ -195,7 +195,7 @@ namespace SalaryManagement.Application.Services.SalaryServices
                 OvetimeSalaryPerHour = Math.Round((double)EarnedPerHour * 1.5, 2),
                 TotalBonus = Math.Round((double)overtimePay, 2),
                 TotalDeductions = Math.Round((double)leaveDeduction, 2),
-                LeaveHours = (int)leaveTime * 8,
+                LeaveHours = (int)leaveTime,
                 PeriodStartDate = startDate,
                 PeriodEndDate = startDate.AddMonths(1).AddDays(-1),
                 FinalIncome = Math.Round(salary, 2)
