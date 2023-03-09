@@ -1,4 +1,3 @@
-
 using SalaryManagement.Domain.Entities;
 
 

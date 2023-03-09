@@ -1,18 +1,12 @@
 ﻿using ClosedXML.Excel;
 using MapsterMapper;
 using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
-using MySqlX.XDevAPI.Common;
+using Microsoft.EntityFrameworkCore;
 using OfficeOpenXml;
-using Org.BouncyCastle.Asn1.Ocsp;
-using SalaryManagement.Api.Common.Helper;
-using SalaryManagement.Application.Services.ContractServices;
 using SalaryManagement.Application.Services.HolidayServices;
 using SalaryManagement.Domain.Entities;
-using SalaryManagement.Infrastructure.Persistence;
 using SalaryManagement.Infrastructure.Persistence.Repositories;
-using System.Net;
 
 namespace SalaryManagement.Api.Controllers
 {
@@ -23,11 +17,13 @@ namespace SalaryManagement.Api.Controllers
     {
         private readonly IHolidayService _holidayService;
         private readonly IMapper _mapper;
+        private readonly SalaryManagementContext _dbContext;
 
-        public HolidayController(IHolidayService holidayService, IMapper mapper)
+        public HolidayController(IHolidayService holidayService, IMapper mapper, SalaryManagementContext dbContext)
         {
             _holidayService = holidayService;
             _mapper = mapper;
+            _dbContext = dbContext;
         }
 
         [HttpGet("holidays")]
@@ -159,54 +155,70 @@ namespace SalaryManagement.Api.Controllers
                                 "HolidayTemplate.xlsx");
                 }
             }
-            
+
         }
 
         [HttpPost("holidays/import")]
         public async Task<IActionResult> ImportHolidayFromExcel(IFormFile file)
         {
-            try
+            using (var transaction = await _dbContext.Database.BeginTransactionAsync())
             {
-                
-                using (var stream = new MemoryStream())
+                try
                 {
-                    await file.CopyToAsync(stream);
-                    using (var package = new ExcelPackage(stream))
+                    using (var stream = new MemoryStream())
                     {
-                        // Get the first worksheet
-                        var worksheet = package.Workbook.Worksheets[0];
-                        var countRow = worksheet.Dimension.End.Row;
-                        var holidays = new List<Holiday>();
-                        // Loop through each row
-                        for (int row = 2; row <= countRow; row++)
+                        await file.CopyToAsync(stream);
+                        using (var package = new ExcelPackage(stream))
                         {
-                            // Read the values from the row
-                            string id = Guid.NewGuid().ToString();
-                            string holidayName = worksheet.Cells[row, 1].GetValue<string>();
-                            DateTime startDate = worksheet.Cells[row, 2].GetValue<DateTime>();
-                            DateTime endDate = worksheet.Cells[row, 3].GetValue<DateTime>();
 
-                            // Add a new Holiday object to the list
-                            holidays.Add(new Holiday
+                            var worksheet = package.Workbook.Worksheets[0];
+                            var countRow = worksheet.Dimension.End.Row;
+                            var holidays = new List<Holiday>();
+
+                            for (int row = 2; row <= countRow; row++)
                             {
-                                HolidayId = id,
-                                HolidayName = holidayName,
-                                StartDate = startDate,
-                                EndDate = endDate,
-                                IsDeleted = false,
-                                IsPaid = false
-                            });
+                                string id = Guid.NewGuid().ToString();
+                                string holidayName = worksheet.Cells[row, 1].GetValue<string>();
+                                DateTime startDate = worksheet.Cells[row, 2].GetValue<DateTime>();
+                                DateTime endDate = worksheet.Cells[row, 3].GetValue<DateTime>();
+
+                                holidays.Add(new Holiday
+                                {
+                                    HolidayId = id,
+                                    HolidayName = holidayName,
+                                    StartDate = startDate,
+                                    EndDate = endDate,
+                                    IsDeleted = false,
+                                    IsPaid = false
+                                });
+                            }
+                            bool check = true;
+                            foreach (Holiday holiday in holidays)
+                            {
+                                if (holiday != null)
+                                {
+                                    var result = await _holidayService.AddHoliday(holiday);
+                                    check = true;
+                                        if (!check)
+                                        {
+                                            await transaction.RollbackAsync();
+                                            return BadRequest(result);
+                                        }
+                                }
+                            }
+                            await transaction.CommitAsync();
+                            //Save the holidays to the database
+                            //var result = await _holidayService.SaveHoliday(holidays);
+                            return Ok("Import successfully");
                         }
-                        //Save the holidays to the database
-                        var result = await _holidayService.SaveHoliday(holidays);
-                        return Ok(result);
                     }
                 }
-            }catch(Exception ex)
-            {
-                return BadRequest(ex);
+                catch (Exception ex)
+                {
+                    await transaction.RollbackAsync();
+                    return BadRequest(ex);
+                }
             }
-            
         }
     }
 }

@@ -1,6 +1,3 @@
-
-using Microsoft.AspNetCore.Http.HttpResults;
-
 using Microsoft.EntityFrameworkCore;
 using SalaryManagement.Application.Common.Interfaces.Persistence;
 using SalaryManagement.Domain.Entities;

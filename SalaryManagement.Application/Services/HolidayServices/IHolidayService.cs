@@ -1,4 +1,5 @@
 
+using Microsoft.EntityFrameworkCore.Storage;
 using SalaryManagement.Domain.Entities;
 
 using System;
