@@ -177,12 +177,13 @@ namespace SalaryManagement.Api.Controllers
 
                             for (int row = 2; row <= countRow; row++)
                             {
+                                bool check = true;
                                 string id = Guid.NewGuid().ToString();
                                 string holidayName = worksheet.Cells[row, 1].GetValue<string>();
                                 DateTime startDate = worksheet.Cells[row, 2].GetValue<DateTime>();
                                 DateTime endDate = worksheet.Cells[row, 3].GetValue<DateTime>();
 
-                                holidays.Add(new Holiday
+                                Holiday holiday = new Holiday
                                 {
                                     HolidayId = id,
                                     HolidayName = holidayName,
@@ -190,25 +191,20 @@ namespace SalaryManagement.Api.Controllers
                                     EndDate = endDate,
                                     IsDeleted = false,
                                     IsPaid = false
-                                });
-                            }
-                            bool check = true;
-                            foreach (Holiday holiday in holidays)
-                            {
+                                };
+
                                 if (holiday != null)
                                 {
                                     var result = await _holidayService.AddHoliday(holiday);
                                     check = true;
-                                        if (!check)
-                                        {
-                                            await transaction.RollbackAsync();
-                                            return BadRequest(result);
-                                        }
+                                    if (!check)
+                                    {
+                                        await transaction.RollbackAsync();
+                                        return BadRequest(result);
+                                    }
                                 }
                             }
                             await transaction.CommitAsync();
-                            //Save the holidays to the database
-                            //var result = await _holidayService.SaveHoliday(holidays);
                             return Ok("Import successfully");
                         }
                     }
