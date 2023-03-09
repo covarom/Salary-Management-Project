@@ -11,7 +11,7 @@ using System.Net;
 
 namespace SalaryManagement.Api.Controllers
 {
-    [Route("api/v1/auth")]
+    [Route("api/v1/admin")]
     [ApiController]
     [Authorize]
     public class AdminController : ControllerBase
@@ -32,17 +32,48 @@ namespace SalaryManagement.Api.Controllers
             string token = Request.Headers["Authorization"].ToString().Replace("Bearer ", "");
 
             // Use the token for further processing.
-            var admin = _adminServices.GetAdminById(JwtTokenHelper.GetClaimValue(token, JwtRegisteredClaimNames.Sub));
+            var admin = await _adminServices.GetAdminById(JwtTokenHelper.GetClaimValue(token, JwtRegisteredClaimNames.Sub));
 
             if (admin == null)
             {
                 return NotFound();
-            }
-
-            AdminResponse response = _mapper.Map<AdminResponse>(admin);
-
+            }     
             return Ok(admin);
         }
+
+        [HttpPut("update")]
+        public async Task<IActionResult> Update(AdminUpdateRequest rq)
+        {
+            string id = rq.adminId;
+            string updateName = rq.name;
+            string image = rq.image;
+            string phoneNumber = rq.phoneNumber;
+            string email = rq.email;
+            string password = rq.password;
+            if(rq.adminId == ""){
+                return BadRequest();
+            }
+            var adminExistInfo = await _adminServices.GetAdminById(id);
+            if(adminExistInfo == null){
+                return NotFound();
+            }
+            adminExistInfo.Name =  updateName.IsNullOrEmpty() ? adminExistInfo.Name : updateName.Trim();
+            adminExistInfo.Image = updateName.IsNullOrEmpty() ?  adminExistInfo.Image : updateName.Trim();  
+            adminExistInfo.PhoneNumber = phoneNumber.IsNullOrEmpty() ?  adminExistInfo.PhoneNumber : phoneNumber.Trim();  
+            adminExistInfo.Email = email.IsNullOrEmpty() ?  adminExistInfo.Email : email.Trim();  
+            if(adminExistInfo.Password == _adminServices.HashPassword(password)){
+                return BadRequest("Password have been used!");
+            }
+            adminExistInfo.Password = password.IsNullOrEmpty() ?  adminExistInfo.Password : password.Trim();  
+            var HashPW = _adminServices.HashPassword(adminExistInfo.Password);
+            adminExistInfo.Password = HashPW;
+            var rs = await _adminServices.UpdateAdmin(adminExistInfo);
+            if(!rs){
+                  return BadRequest("Update failed!");            
+            };
+              return Ok("Update successfully") ;
+        }
+
     }
 
 }

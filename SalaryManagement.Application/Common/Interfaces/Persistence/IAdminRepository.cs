@@ -9,7 +9,7 @@ namespace SalaryManagement.Application.Common.Interfaces.Persistence
 {
     public interface IAdminRepository
     {
-        Admin? GetAdmin(string id);
+         Task<Admin> GetAdmin(string id);
 
         IEnumerable<Admin> GetAll();
 
@@ -19,6 +19,6 @@ namespace SalaryManagement.Application.Common.Interfaces.Persistence
 
         bool AddAdmin(Admin admin);
 
-        Admin? UpdateAdmin(Admin admin);
+        Task<bool> UpdateAdmin(Admin admin);
     }
 }

@@ -1,6 +1,3 @@
-
-using Microsoft.AspNetCore.Http.HttpResults;
-
 using Microsoft.EntityFrameworkCore;
 using SalaryManagement.Application.Common.Interfaces.Persistence;
 using SalaryManagement.Domain.Entities;
@@ -71,5 +68,11 @@ namespace SalaryManagement.Infrastructure.Persistence.Repositories
                 .ToListAsync();
         }
 
+        public async Task<IEnumerable<Holiday>> SaveHoliday(IEnumerable<Holiday> holidays)
+        {
+            await _context.Holidays.AddRangeAsync(holidays);
+            await _context.SaveChangesAsync();
+            return holidays;
+        }
     }
 }

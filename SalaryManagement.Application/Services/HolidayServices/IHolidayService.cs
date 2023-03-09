@@ -1,4 +1,5 @@
 
+using Microsoft.EntityFrameworkCore.Storage;
 using SalaryManagement.Domain.Entities;
 
 using System;
@@ -20,6 +21,8 @@ namespace SalaryManagement.Application.Services.HolidayServices
         Task<bool> DeleteHoliday(Holiday holiday);
 
         Task<bool> UpdateHoliday(Holiday holiday);
+
+        Task<IEnumerable<Holiday>> SaveHoliday(IEnumerable<Holiday> holidays);
 
     }
 }

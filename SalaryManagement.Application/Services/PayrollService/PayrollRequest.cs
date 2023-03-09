@@ -10,7 +10,6 @@ namespace SalaryManagement.Application.Services.PayrollService
         DateTime Date,
         bool IsDelete,
         string EmloyeeId,
-
         double TotalDeduction,
         double TotalBonus
 
@@ -25,7 +24,6 @@ namespace SalaryManagement.Application.Services.PayrollService
         public double? TotalDeduction { get; init; }
         public double? TotalBonus { get; init; }
     }
-
 
     public record PayrollDelete
     (

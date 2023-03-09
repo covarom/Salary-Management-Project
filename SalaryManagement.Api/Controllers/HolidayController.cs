@@ -1,13 +1,12 @@
-﻿using MapsterMapper;
+﻿using ClosedXML.Excel;
+using MapsterMapper;
 using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
-using SalaryManagement.Api.Common.Helper;
-using SalaryManagement.Application.Services.ContractServices;
+using Microsoft.EntityFrameworkCore;
+using OfficeOpenXml;
 using SalaryManagement.Application.Services.HolidayServices;
 using SalaryManagement.Domain.Entities;
-using SalaryManagement.Infrastructure.Persistence;
-using System.Net;
+using SalaryManagement.Infrastructure.Persistence.Repositories;
 
 namespace SalaryManagement.Api.Controllers
 {
@@ -18,11 +17,13 @@ namespace SalaryManagement.Api.Controllers
     {
         private readonly IHolidayService _holidayService;
         private readonly IMapper _mapper;
+        private readonly SalaryManagementContext _dbContext;
 
-        public HolidayController(IHolidayService holidayService, IMapper mapper)
+        public HolidayController(IHolidayService holidayService, IMapper mapper, SalaryManagementContext dbContext)
         {
             _holidayService = holidayService;
             _mapper = mapper;
+            _dbContext = dbContext;
         }
 
         [HttpGet("holidays")]
@@ -50,8 +51,6 @@ namespace SalaryManagement.Api.Controllers
             }
         }
 
-
-
         [HttpPost("holidays")]
         public async Task<IActionResult> AddHoliday(HolidayRequest request)
         {
@@ -63,7 +62,6 @@ namespace SalaryManagement.Api.Controllers
                 HolidayId = id,
                 StartDate = request.StartDate,
                 EndDate = request.EndDate,
-
                 HolidayName = request.HolidayName,
                 IsDeleted = false,
                 IsPaid = request.IsPaid
@@ -104,10 +102,8 @@ namespace SalaryManagement.Api.Controllers
             var existHoliday = await _holidayService.GetHolidaysById(holidayId);
             if (existHoliday == null)
             {
-
                 return NotFound();
             }
-
 
             var holiday = existHoliday;
 
@@ -134,6 +130,115 @@ namespace SalaryManagement.Api.Controllers
             await _holidayService.UpdateHoliday(holiday);
 
             return Ok(holiday);
+        }
+
+        [HttpGet("holidays/template")]
+        public async Task<IActionResult> GetHolidayExcelTemplate()
+        {
+            using (var workbook = new XLWorkbook())
+            {
+                var worksheet = workbook.Worksheets.Add("HolidayTemplate");
+                var currentRow = 1;
+
+                worksheet.Cell(currentRow, 1).Value = "";
+                worksheet.Cell(currentRow, 2).Value = "HolidayName";
+                worksheet.Cell(currentRow, 3).Value = "StartDate";
+                worksheet.Cell(currentRow, 4).Value = "EndDate";
+
+                using (var stream = new MemoryStream())
+                {
+                    workbook.SaveAs(stream);
+                    var content = stream.ToArray();
+
+                    return File(content,
+                                "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+                                "HolidayTemplate.xlsx");
+                }
+            }
+
+        }
+
+        [HttpPost("holidays/import")]
+        public async Task<IActionResult> ImportHolidayFromExcel(IFormFile file)
+        {
+            using (var transaction = await _dbContext.Database.BeginTransactionAsync())
+            {
+                var msg = "";
+                try
+                {
+
+                    using (var stream = new MemoryStream())
+                    {
+                        await file.CopyToAsync(stream);
+                        using (var package = new ExcelPackage(stream))
+                        {
+
+                            var worksheet = package.Workbook.Worksheets[0];
+                            var countRow = worksheet.Dimension.End.Row;
+                            //var holidays = new List<Holiday>();
+
+                            //DateTime? previousStartDate = null;
+                            for (int row = 2; row <= countRow; row++)
+                            {
+                                string id = Guid.NewGuid().ToString();
+                                string holidayName = worksheet.Cells[row, 1].GetValue<string>();
+                                DateTime startDate = worksheet.Cells[row, 2].GetValue<DateTime>();
+                                DateTime endDate = worksheet.Cells[row, 3].GetValue<DateTime>();
+                                string? input = worksheet.Cells[row, 4].Value.ToString();
+                                bool isPaid = false;
+                                if (input == "y")
+                                {
+                                    isPaid = true;
+                                }
+                                else if (input == "n")
+                                {
+                                    isPaid = false;
+                                }
+
+                                if (endDate < startDate)
+                                {
+                                    msg += "endDate have to later then startDate ";
+                                    msg += "\nWrong format at row " + row;
+                                    await transaction.RollbackAsync();
+                                    return BadRequest("Import failed!!! " + msg);
+                                }
+                                //else if (previousStartDate.HasValue && startDate == previousStartDate.Value)
+                                //{
+                                //    msg += "This date have been exist! ";
+                                //    msg += "\nWrong format at row " + row;
+                                //    await transaction.RollbackAsync();
+                                //    return BadRequest("Import failed!!! " + msg);
+                                //}
+                                else
+                                {
+                                    Holiday holiday = new Holiday
+                                    {
+                                        HolidayId = id,
+                                        HolidayName = holidayName,
+                                        StartDate = startDate,
+                                        EndDate = endDate,
+                                        IsDeleted = false,
+                                        IsPaid = isPaid
+                                    };
+
+                                    if (holiday != null)
+                                    {
+                                        var result = await _holidayService.AddHoliday(holiday);
+                                    }
+                                }
+                                //previousStartDate = startDate;
+                            }
+                            await transaction.CommitAsync();
+                            return Ok("Import successfully");
+                        }
+                    }
+                }
+                catch (Exception ex)
+                {
+                    await transaction.RollbackAsync();
+                    return BadRequest("Import failed!!! " + msg);
+                }
+            }
         }
     }
 }
