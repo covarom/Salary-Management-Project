@@ -6,6 +6,7 @@ using SalaryManagement.Contracts.Contracts;
 using SalaryManagement.Contracts.Salary;
 using SalaryManagement.Domain.Common.Enum;
 using SalaryManagement.Domain.Entities;
+using static System.Runtime.InteropServices.JavaScript.JSType;
 
 namespace SalaryManagement.Application.Services.SalaryServices
 {
@@ -35,17 +36,18 @@ namespace SalaryManagement.Application.Services.SalaryServices
 
             int standardWorkingHours;
             int realityWorkHours;
-            int standardWorkingDays = await GetTotalWorkingDaysInMonth(date);
+            int realityWorkingDays= await GetTotalWorkingDaysInMonth(date, (DateTime)contract.StartDate);
+            int standardWorkingDays = await GetTotalWorkingDateOfAMonth(date); 
 
             if (contract.ContractType.Equals(ContractTypeEnum.PartTime.ToString()))
             {
                 standardWorkingHours = standardWorkingDays * 4;
-                realityWorkHours = standardWorkingDays * 4;
+                realityWorkHours = realityWorkingDays * 4;
             }
             else
             {
                 standardWorkingHours = standardWorkingDays * 8;
-                realityWorkHours = standardWorkingDays * 8;
+                realityWorkHours = realityWorkingDays * 8;
             }
 
             decimal basicSalary = (decimal)contract.BasicSalary;
@@ -90,7 +92,11 @@ namespace SalaryManagement.Application.Services.SalaryServices
             salary += overtimePay - leaveDeduction;
 
             var startDate = new DateTime(date.Year, date.Month, 1);
-                
+            if (((DateTime)contract.StartDate).Month == date.Month && ((DateTime)contract.StartDate).Year == date.Year)
+            {
+                startDate = (DateTime)contract.StartDate;
+            }
+
             return new SalaryResponse
             {
                 Contract = contract.Adapt<ContractResponse>(),
@@ -108,7 +114,7 @@ namespace SalaryManagement.Application.Services.SalaryServices
                 TotalDeductions = Math.Round((double)leaveDeduction,2),
                 LeaveHours = (int)leaveTime,
                 PeriodStartDate = startDate,
-                PeriodEndDate = startDate.AddMonths(1).AddDays(-1),
+                PeriodEndDate = startDate.AddMonths(1).AddDays(-startDate.Day),
                 FinalIncome =  Math.Round(salary, 2)
             };
         }
@@ -122,17 +128,18 @@ namespace SalaryManagement.Application.Services.SalaryServices
 
             int standardWorkingHours;
             int realityWorkHours;
-            int standardWorkingDays = await GetTotalWorkingDaysInMonth(date);
+            int realityWorkingDays = await GetTotalWorkingDaysInMonth(date, (DateTime)contract.StartDate);
+            int standardWorkingDays = await GetTotalWorkingDateOfAMonth(date);
 
             if (contract.ContractType.Equals(ContractTypeEnum.PartTime.ToString()))
             {
                 standardWorkingHours = standardWorkingDays * 4;
-                realityWorkHours = standardWorkingDays * 4;
+                realityWorkHours = realityWorkingDays * 4;
             }
             else
             {
                 standardWorkingHours = standardWorkingDays * 8;
-                realityWorkHours = standardWorkingDays * 8;
+                realityWorkHours = realityWorkingDays * 8;
             }
 
             decimal basicSalary = (decimal)contract.PartnerPrice;
@@ -179,6 +186,11 @@ namespace SalaryManagement.Application.Services.SalaryServices
 
             var startDate = new DateTime(date.Year, date.Month, 1);
 
+            if (((DateTime)contract.StartDate).Month == date.Month && ((DateTime)contract.StartDate).Year == date.Year)
+            {
+                startDate = (DateTime)contract.StartDate;
+            }
+
             return new SalaryResponse
             {
                 Contract = contract.Adapt<ContractResponse>(),
@@ -196,58 +208,65 @@ namespace SalaryManagement.Application.Services.SalaryServices
                 TotalDeductions = Math.Round((double)leaveDeduction, 2),
                 LeaveHours = (int)leaveTime,
                 PeriodStartDate = startDate,
-                PeriodEndDate = startDate.AddMonths(1).AddDays(-1),
+                PeriodEndDate = startDate.AddMonths(1).AddDays(-startDate.Day + 1),
                 FinalIncome = Math.Round(salary, 2)
             };
         }
 
-        private async Task<int> GetTotalWorkingDateUptoCurrentDay()
+        private async Task<int> GetTotalWorkingDateOfAMonth(DateTime date)
         {
-            //Get today
-            DateTime today = DateTime.Today;
+            // Get the start and end date of the month for the given date
+            DateTime startDate = new DateTime(date.Year, date.Month, 1);
 
-            DateTime startDate = new DateTime(DateTime.Today.Year, DateTime.Today.Month, 1);
-            int totalDays = (DateTime.Today - startDate).Days + 1;  // add 1 to include today
 
-            var holidays = await _holidayRepository.GetHolidaysByDateRangeAsync(new DateTime(DateTime.Today.Year, DateTime.Today.Month, 1),
-                startDate.AddMonths(1).AddDays(-1));
+            DateTime endDate = startDate.AddMonths(1).AddDays(-startDate.Day);
+            int totalDays = (endDate - startDate).Days + 1; // add 1 to include the last day
 
-            var listHoliday = new List<DateTime>(); 
+            var holidays = await _holidayRepository.GetHolidaysByDateRangeAsync(new DateTime(date.Year, date.Month, 1),
+            endDate);
 
-            foreach( var holiday in holidays)
+            var listHoliday = new List<DateTime>();
+
+            foreach (var holiday in holidays)
             {
-                if(holiday.IsPaid == false)
+                if (holiday.IsPaid == false)
                 {
-                   
+
                     try
                     {
-                        for (DateTime date = (DateTime)holiday.StartDate; date <= holiday.EndDate; date = date.AddDays(1))
+                        for (DateTime mDate = (DateTime)holiday.StartDate; mDate <= holiday.EndDate; mDate = mDate.AddDays(1))
                         {
-                            if(date.Month == today.Month)
+                            if (date.Month == mDate.Month)
                             {
-                                listHoliday.Add(date);
+                                listHoliday.Add(mDate);
                             }
                         }
-                    } catch { }
+                    }
+                    catch { }
                 }
-               
+
             }
 
             return Enumerable.Range(0, totalDays)
                 .Select(d => startDate.AddDays(d))
                 .Count(date => date.DayOfWeek != DayOfWeek.Saturday && date.DayOfWeek != DayOfWeek.Sunday && !listHoliday.Contains(date));
-            
         }
 
-        private async Task<int> GetTotalWorkingDaysInMonth(DateTime date)
+    private async Task<int> GetTotalWorkingDaysInMonth(DateTime date, DateTime contractStartDate)
         {
             // Get the start and end date of the month for the given date
             DateTime startDate = new DateTime(date.Year, date.Month, 1);
-            DateTime endDate = startDate.AddMonths(1).AddDays(-1);
+
+            if(contractStartDate.Month == date.Month && contractStartDate.Year == date.Year)
+            {
+                startDate = contractStartDate;
+            }
+
+            DateTime endDate = startDate.AddMonths(1).AddDays(-startDate.Day);
             int totalDays = (endDate - startDate).Days + 1; // add 1 to include the last day
 
             var holidays = await _holidayRepository.GetHolidaysByDateRangeAsync(new DateTime(date.Year, date.Month, 1),
-              startDate.AddMonths(1).AddDays(-1));
+              endDate);
 
             var listHoliday = new List<DateTime>();
 

@@ -11,6 +11,7 @@ using SalaryManagement.Application.Services.SalaryServices;
 using SalaryManagement.Contracts.Salary;
 
 using System.Net;
+using static System.Runtime.InteropServices.JavaScript.JSType;
 
 
 namespace SalaryManagement.Api.Controllers
@@ -44,55 +45,54 @@ namespace SalaryManagement.Api.Controllers
         [HttpPost("salary-calculating/{id}")]
         public async Task<ActionResult<SalaryResponse>> GetEmployeeSalary(string id, CalculatingSalaryRequest request)
         {
-            try
+            var employee = await _employeeService.GetById(id);
+
+            if (employee == null)
             {
-                var employee = await _employeeService.GetById(id);
-
-                if (employee == null)
-                {
-                    return NotFound();
-                }
-
-
-                // var contract = await _contractServices.GetContractByEmployeeId(employee.EmployeeId
-                var contract = await _contractServices.GetContractByEmployeeIdAndDate(employee.EmployeeId, request.date);
-
-                if (contract == null)
-                {
-                    var problemDetails = new ProblemDetails
-                    {
-                        Status = (int)HttpStatusCode.BadRequest,
-                        Title = "Bad Request",
-                        Detail = "Employee do not applied any contract in the current!"
-                    };
-
-                    return new BadRequestObjectResult(problemDetails);
-                }
-
-
-                var otTime = await _overtimeService.GetOvertimeHoursAsync(id, request.date);
-
-                var leaveDays = await _leaveLogService.GetTotalLeaveDateByEmployeeIdInMonthAcsyn(id, request.date);
-
-                dynamic salaryResponse;
-
-                if(request.type.Equals(SalaryCaculatingType.Partner.ToString()))
-                {
-                    salaryResponse = await _salaryService.CalculateSalaryForPartnerAsync(employee, otTime, leaveDays, request.date);
-                }
-                else
-                {
-                    salaryResponse = await _salaryService.CalculateSalaryAsync(employee, otTime, leaveDays, request.date);
-                }
-
-                return Ok(salaryResponse);
+                return NotFound();
             }
-            catch (Exception ex)
+
+
+            // var contract = await _contractServices.GetContractByEmployeeId(employee.EmployeeId
+            var contract = await _contractServices.GetContractByEmployeeIdAndDate(employee.EmployeeId, request.date);
+
+            if (contract == null)
             {
-                // log the exception
-                return StatusCode(StatusCodes.Status500InternalServerError, ex.Message);
+                var problemDetails = new ProblemDetails
+                {
+                    Status = (int)HttpStatusCode.BadRequest,
+                    Title = "Bad Request",
+                    Detail = "Employee do not applied any contract at that moment!"
+                };
+
+                return new BadRequestObjectResult(problemDetails);
             }
+
+            var startDate = new DateTime(request.date.Year, request.date.Month, 1);
+
+            if (((DateTime)contract.StartDate).Month == request.date.Month && ((DateTime)contract.StartDate).Year == request.date.Year)
+            {
+                startDate = ((DateTime)contract.StartDate);
+            }
+            
+            var otTime = await _overtimeService.GetOvertimeHoursAsync(id, startDate);
+
+            var leaveDays = await _leaveLogService.GetTotalLeaveDateByEmployeeIdInMonthAcsyn(id, startDate);
+
+            dynamic salaryResponse;
+
+            if(request.type.Equals(SalaryCaculatingType.Partner.ToString()))
+            {
+                salaryResponse = await _salaryService.CalculateSalaryForPartnerAsync(employee, otTime, leaveDays, request.date);
+            }
+            else
+            {
+                salaryResponse = await _salaryService.CalculateSalaryAsync(employee, otTime, leaveDays, request.date);
+            }
+
+            return Ok(salaryResponse);
         }
+    }
 
 
        /* [HttpGet("{id}/partner-salary")]
@@ -135,6 +135,4 @@ namespace SalaryManagement.Api.Controllers
                 return StatusCode(StatusCodes.Status500InternalServerError, ex.Message);
             }
         }*/
-
-    }
 }
