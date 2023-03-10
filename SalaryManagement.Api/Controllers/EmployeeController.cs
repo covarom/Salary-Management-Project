@@ -64,7 +64,8 @@ namespace SalaryManagement.Api.Controllers
                 Address = rq.address,
                 IdentifyNumber = rq.identify_number,
                 IsActive= true,
-                PhoneNumber= rq.PhoneNumber
+                PhoneNumber= rq.PhoneNumber,
+                Email = rq.Email
             };
 
 
@@ -88,7 +89,8 @@ namespace SalaryManagement.Api.Controllers
              employeesExist.DateOfBirth =  rq.Day_of_birth.HasValue ? rq.Day_of_birth: employeesExist.DateOfBirth ; 
              employeesExist.IsActive =  rq.IsActive.HasValue ?  rq.IsActive : employeesExist.IsActive ; 
              employeesExist.IdentifyNumber = StringHelper.IsNullOrEmpty(rq.Identify_number.ToString()) ? employeesExist.IdentifyNumber : rq.Identify_number; 
-             employeesExist.PhoneNumber =  rq.PhoneNumber.IsNullOrEmpty() ? employeesExist.PhoneNumber : rq.PhoneNumber.Trim(); 
+             employeesExist.PhoneNumber =  rq.PhoneNumber.IsNullOrEmpty() ? employeesExist.PhoneNumber : rq.PhoneNumber.Trim();
+             employeesExist.Email = rq.Email.IsNullOrEmpty() ? employeesExist.Email : rq.Email.Trim();
             var rs = await _EmployeeService.UpdateEmployee(employeesExist);
             var msg ="";
             if(rs){
