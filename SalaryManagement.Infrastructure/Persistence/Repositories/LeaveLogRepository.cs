@@ -57,9 +57,9 @@ namespace SalaryManagement.Infrastructure.Persistence.Repositories
             await _context.SaveChangesAsync();
         }
 
-        public async Task<int> GetTotalLeaveDaysByEmployeeIdAndMonthAsync(string employeeId)
+        public async Task<int> GetTotalLeaveDaysByEmployeeIdAndMonthAsync(string employeeId, DateTime date)
         {
-            var startOfMonth = new DateTime(DateTime.Now.Year, DateTime.Now.Month, 1);
+            var startOfMonth = new DateTime(date.Year, date.Month, 1);
             //var today = DateTime.Now.Date;
             var endOfMonth = startOfMonth.AddMonths(1).AddDays(-1);
 

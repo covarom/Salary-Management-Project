@@ -70,9 +70,9 @@ namespace SalaryManagement.Api.Controllers
                 }
 
 
-                var otTime = await _overtimeService.GetOvertimeHoursAsync(id);
+                var otTime = await _overtimeService.GetOvertimeHoursAsync(id, request.date);
 
-                var leaveDays = await _leaveLogService.GetTotalLeaveDateByEmployeeIdInMonthAcsyn(id);
+                var leaveDays = await _leaveLogService.GetTotalLeaveDateByEmployeeIdInMonthAcsyn(id, request.date);
 
                 dynamic salaryResponse;
 

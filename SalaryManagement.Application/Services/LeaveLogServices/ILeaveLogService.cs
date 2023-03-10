@@ -17,6 +17,6 @@ namespace SalaryManagement.Application.Services.LeaveLogServices
 
         Task UpdateAsync(LeaveLog leaveLog);
 
-        Task<int> GetTotalLeaveDateByEmployeeIdInMonthAcsyn(string employeeId);
+        Task<int> GetTotalLeaveDateByEmployeeIdInMonthAcsyn(string employeeId, DateTime date);
     }
 }
