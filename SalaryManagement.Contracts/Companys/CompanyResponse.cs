@@ -3,6 +3,9 @@
     public record CompanyResponse(
         string CompanyId, 
         string? CompanyName, 
-        string? Address);
+        string? Address,
+        string? Email,
+        string? Phone
+        );
 
 }

@@ -8,7 +8,7 @@ namespace SalaryManagement.Api.Controllers
 {
     [Route("api/v1")]
     [ApiController]
-    [Authorize(AuthenticationSchemes = "Bearer")]
+    /*[Authorize(AuthenticationSchemes = "Bearer")]*/
     public class TestController : ControllerBase
     {
         private readonly IAdminRepository _adminRepository;

@@ -65,6 +65,8 @@ namespace SalaryManagement.Api.Controllers
             {
                 CompanyId= id,
                 CompanyName = company_name,
+                Email = cr.email,
+                Phone = cr.phone,
                 Address = cr.address
             };
 
@@ -78,7 +80,9 @@ namespace SalaryManagement.Api.Controllers
             string id = cr.id;
             string updateName = cr.company_name;
             string updateAddress = cr.company_address;
-            if(cr.id == ""){
+            string email = cr.email;
+            string phone = cr.phone;
+            if (cr.id == ""){
                 return BadRequest();
             }
             var companyExist = await _companyService.GetById(id);
@@ -86,7 +90,9 @@ namespace SalaryManagement.Api.Controllers
                 return NotFound();
             }
             companyExist.CompanyName =  updateName.IsNullOrEmpty() ?companyExist.CompanyName : updateName.Trim();
-             companyExist.Address = updateAddress.IsNullOrEmpty() ? companyExist.Address : updateAddress.Trim();   
+             companyExist.Address = updateAddress.IsNullOrEmpty() ? companyExist.Address : updateAddress.Trim();
+            companyExist.Email = email.IsNullOrEmpty() ? companyExist.Email : email.Trim();
+            companyExist.Phone = phone.IsNullOrEmpty() ? companyExist.Phone : phone.Trim();
             var rs = await _companyService.UpdateCompany(companyExist);
             if(!rs){
                   return BadRequest();            
