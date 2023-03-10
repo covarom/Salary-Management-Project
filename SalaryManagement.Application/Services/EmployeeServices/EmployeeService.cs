@@ -46,6 +46,7 @@ namespace SalaryManagement.Application.Services.EmployeeServices
                 existEmloyee.Address = StringHelper.IsNullOrEmpty(Employee.Address) ? existEmloyee.Address : Employee.Address;
                 existEmloyee.IdentifyNumber = Employee.IdentifyNumber==null ? existEmloyee.IdentifyNumber: Employee.IdentifyNumber;
                 existEmloyee.PhoneNumber = StringHelper.IsNullOrEmpty(Employee.PhoneNumber) ? existEmloyee.PhoneNumber : Employee.PhoneNumber;
+                existEmloyee.Email = StringHelper.IsNullOrEmpty(Employee.Email) ? existEmloyee.Email : Employee.Email;
 
                 return await _EmployeeRepository.UpdateEmployee(existEmloyee);
             }

@@ -15,9 +15,10 @@ namespace SalaryManagement.Contracts.Employees
         public int? IdentifyNumber { get; init; }
         public bool? IsActive { get; init; }
         public string? PhoneNumber { get; init; }
-       /* public ICollection<ContractResponse> Contracts { get; init; } = new List<ContractResponse>();
-        public ICollection<LeaveLogResponse> LeaveLogs { get; init; } = new List<LeaveLogResponse>();
-        public ICollection<OvertimeLogResponse> OvertimeLogs { get; init; } = new List<OvertimeLogResponse>();
-        public ICollection<PayrollResponse> Payrolls { get; init; } = new List<PayrollResponse>();*/
+        public string? Email { get; init; }
+        /* public ICollection<ContractResponse> Contracts { get; init; } = new List<ContractResponse>();
+         public ICollection<LeaveLogResponse> LeaveLogs { get; init; } = new List<LeaveLogResponse>();
+         public ICollection<OvertimeLogResponse> OvertimeLogs { get; init; } = new List<OvertimeLogResponse>();
+         public ICollection<PayrollResponse> Payrolls { get; init; } = new List<PayrollResponse>();*/
     }
 }

@@ -6,7 +6,8 @@ namespace SalaryManagement.Contracts.Employee
         DateTime day_of_birth,
         string address,
         int identify_number,
-        string PhoneNumber
+        string PhoneNumber,
+        string Email
         );
     public record EmployeeUpdate(
         string Id,
@@ -16,7 +17,8 @@ namespace SalaryManagement.Contracts.Employee
         string? Address,
         bool? IsActive,
         int? Identify_number,
-        string? PhoneNumber
+        string? PhoneNumber,
+        string? Email
         );    
     public record EmployeeDelete(
         string id
