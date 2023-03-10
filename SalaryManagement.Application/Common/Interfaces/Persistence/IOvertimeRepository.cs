@@ -2,6 +2,6 @@
 {
     public interface IOvertimeRepository
     {
-        Task<int> GetTotalOvertimeHoursByEmployeeIdAsync(string employeeId);
+        Task<int> GetTotalOvertimeHoursByEmployeeIdAsync(string employeeId, DateTime date);
     }
 }

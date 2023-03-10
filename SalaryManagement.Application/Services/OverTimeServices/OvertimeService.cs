@@ -11,9 +11,9 @@ namespace SalaryManagement.Application.Services.OverTimeServices
             _repository = repository;
         }
 
-        public async Task<int> GetOvertimeHoursAsync(string employeeId)
+        public async Task<int> GetOvertimeHoursAsync(string employeeId, DateTime date)
         {
-            return await _repository.GetTotalOvertimeHoursByEmployeeIdAsync(employeeId);
+            return await _repository.GetTotalOvertimeHoursByEmployeeIdAsync(employeeId, date);
         }
     }
 }

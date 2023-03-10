@@ -13,9 +13,9 @@ namespace SalaryManagement.Infrastructure.Persistence.Repositories
             _context = context;
         }
 
-        public async Task<int> GetTotalOvertimeHoursByEmployeeIdAsync(string employeeId)
+        public async Task<int> GetTotalOvertimeHoursByEmployeeIdAsync(string employeeId, DateTime date)
         {
-            var startDate = new DateTime(DateTime.Today.Year, DateTime.Today.Month, 1);
+            var startDate = new DateTime(date.Year, date.Month, 1);
             var endDAte = startDate.AddMonths(1).AddDays(-1);
             var overtimeEntries = await _context.OvertimeLogs
                 .Where(o => o.EmployeeId == employeeId && o.OvertimeDay >= startDate && o.OvertimeDay <= endDAte)

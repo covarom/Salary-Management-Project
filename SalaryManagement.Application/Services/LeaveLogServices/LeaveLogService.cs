@@ -42,9 +42,9 @@ namespace SalaryManagement.Application.Services.LeaveLogServices
             await _leaveLogRepository.UpdateAsync(leaveLog);
         }
 
-        public async Task<int> GetTotalLeaveDateByEmployeeIdInMonthAcsyn(string employeeId)
+        public async Task<int> GetTotalLeaveDateByEmployeeIdInMonthAcsyn(string employeeId, DateTime date)
         {
-            return await _leaveLogRepository.GetTotalLeaveDaysByEmployeeIdAndMonthAsync(employeeId);
+            return await _leaveLogRepository.GetTotalLeaveDaysByEmployeeIdAndMonthAsync(employeeId, date);
         } 
     }
 }

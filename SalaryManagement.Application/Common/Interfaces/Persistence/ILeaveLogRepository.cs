@@ -16,6 +16,6 @@ namespace SalaryManagement.Application.Common.Interfaces.Persistence
         Task<bool> DeleteLeaveLogById(string leaveTimeId);
         Task UpdateAsync(LeaveLog leaveLog);
 
-        Task<int> GetTotalLeaveDaysByEmployeeIdAndMonthAsync(string employeeId);
+        Task<int> GetTotalLeaveDaysByEmployeeIdAndMonthAsync(string employeeId, DateTime date);
     }
 }
