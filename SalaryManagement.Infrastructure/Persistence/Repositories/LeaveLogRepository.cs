@@ -59,9 +59,9 @@ namespace SalaryManagement.Infrastructure.Persistence.Repositories
 
         public async Task<int> GetTotalLeaveDaysByEmployeeIdAndMonthAsync(string employeeId, DateTime date)
         {
-            var startOfMonth = new DateTime(date.Year, date.Month, 1);
+            var startOfMonth = date;//new DateTime(date.Year, date.Month, 1);
             //var today = DateTime.Now.Date;
-            var endOfMonth = startOfMonth.AddMonths(1).AddDays(-1);
+            var endOfMonth = startOfMonth.AddMonths(1).AddDays(-startOfMonth.Day);
 
             var listLeaveLog = await _context.LeaveLogs
                 .Where(l => l.EmployeeId == employeeId && l.LeaveDate >= startOfMonth && l.LeaveDate <= endOfMonth)

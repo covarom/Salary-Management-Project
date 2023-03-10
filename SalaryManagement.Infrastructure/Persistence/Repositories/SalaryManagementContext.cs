@@ -26,7 +26,7 @@ public partial class SalaryManagementContext : DbContext
 
     public virtual DbSet<ContractType> ContractTypes { get; set; }
 
-    public virtual DbSet<EfmigrationsHistory> EfmigrationsHistories { get; set; }
+  //  public virtual DbSet<EfmigrationsHistory> EfmigrationsHistories { get; set; }
 
     public virtual DbSet<Employee> Employees { get; set; }
 
@@ -91,6 +91,12 @@ public partial class SalaryManagementContext : DbContext
             entity.Property(e => e.CompanyName)
                 .HasMaxLength(255)
                 .HasColumnName("company_name");
+            entity.Property(e => e.Email)
+               .HasMaxLength(255)
+               .HasColumnName("email");
+            entity.Property(e => e.Phone)
+               .HasMaxLength(50)
+               .HasColumnName("phone");
         });
 
         modelBuilder.Entity<Contract>(entity =>
@@ -165,7 +171,7 @@ public partial class SalaryManagementContext : DbContext
                 .HasColumnName("type_name");
         });
 
-        modelBuilder.Entity<EfmigrationsHistory>(entity =>
+    /*    modelBuilder.Entity<EfmigrationsHistory>(entity =>
         {
             entity.HasKey(e => e.MigrationId).HasName("PRIMARY");
 
@@ -173,7 +179,7 @@ public partial class SalaryManagementContext : DbContext
 
             entity.Property(e => e.MigrationId).HasMaxLength(150);
             entity.Property(e => e.ProductVersion).HasMaxLength(32);
-        });
+        });*/
 
         modelBuilder.Entity<Employee>(entity =>
         {
