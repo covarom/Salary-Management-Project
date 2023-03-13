@@ -2,11 +2,12 @@
 using MapsterMapper;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
 using OfficeOpenXml;
 using SalaryManagement.Application.Services.HolidayServices;
 using SalaryManagement.Domain.Entities;
 using SalaryManagement.Infrastructure.Persistence.Repositories;
+using System.Net.Mail;
+using System.Net;
 
 namespace SalaryManagement.Api.Controllers
 {
@@ -161,6 +162,8 @@ namespace SalaryManagement.Api.Controllers
         [HttpPost("holidays/import")]
         public async Task<IActionResult> ImportHolidayFromExcel(IFormFile file)
         {
+            var existHoliday = await _holidayService.GetAllHoliday();
+
             using (var transaction = await _dbContext.Database.BeginTransactionAsync())
             {
                 var msg = "";
@@ -175,7 +178,8 @@ namespace SalaryManagement.Api.Controllers
 
                             var worksheet = package.Workbook.Worksheets[0];
                             var countRow = worksheet.Dimension.End.Row;
-                            //var holidays = new List<Holiday>();
+
+                            
 
                             //DateTime? previousStartDate = null;
                             for (int row = 2; row <= countRow; row++)
@@ -194,6 +198,16 @@ namespace SalaryManagement.Api.Controllers
                                 {
                                     isPaid = false;
                                 }
+                                foreach(var holiday in existHoliday)
+                                {
+                                    if(holiday.StartDate == startDate || holiday.EndDate == endDate)
+                                    {
+                                        msg += "Import date does exist ";
+                                        msg += "\nWrong format at row " + row;
+                                        await transaction.RollbackAsync();
+                                        return BadRequest("Import failed!!! " + msg);
+                                    }
+                                }
 
                                 if (endDate < startDate)
                                 {
@@ -202,13 +216,6 @@ namespace SalaryManagement.Api.Controllers
                                     await transaction.RollbackAsync();
                                     return BadRequest("Import failed!!! " + msg);
                                 }
-                                //else if (previousStartDate.HasValue && startDate == previousStartDate.Value)
-                                //{
-                                //    msg += "This date have been exist! ";
-                                //    msg += "\nWrong format at row " + row;
-                                //    await transaction.RollbackAsync();
-                                //    return BadRequest("Import failed!!! " + msg);
-                                //}
                                 else
                                 {
                                     Holiday holiday = new Holiday
@@ -225,7 +232,9 @@ namespace SalaryManagement.Api.Controllers
                                     {
                                         var result = await _holidayService.AddHoliday(holiday);
                                     }
+                                    
                                 }
+                                
                                 //previousStartDate = startDate;
                             }
                             await transaction.CommitAsync();
@@ -238,6 +247,36 @@ namespace SalaryManagement.Api.Controllers
                     await transaction.RollbackAsync();
                     return BadRequest("Import failed!!! " + msg);
                 }
+            }
+        }
+
+        [HttpPost("sendMail")]
+        public async Task<IActionResult> sendMail(string toEmail, IFormFile file)
+        {
+            try
+            {
+                var email = new MailMessage();
+                email.From = new MailAddress("trieudhse151129@fpt.edu.vn");
+                email.To.Add(new MailAddress(toEmail));
+                email.Subject = "test send mail again";
+                email.Body = "Hello world";
+                Attachment attachment = new Attachment(file.OpenReadStream(), file.FileName);
+                email.Attachments.Add(attachment);
+
+                using var smtp = new SmtpClient();
+                smtp.Port = 587;
+                smtp.Host = "smtp.gmail.com";
+                smtp.Credentials = new NetworkCredential("trieudhse151129@fpt.edu.vn", "01298235295t");
+                smtp.EnableSsl = true;
+                smtp.UseDefaultCredentials = false;
+
+            
+                await smtp.SendMailAsync(email);
+                return Ok("Send mail succesfull");
+            }
+            catch (Exception ex)
+            {
+                return BadRequest("Something went wrong: " + ex.ToString());
             }
         }
     }
