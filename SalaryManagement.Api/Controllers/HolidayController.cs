@@ -200,7 +200,7 @@ namespace SalaryManagement.Api.Controllers
                                 }
                                 foreach(var holiday in existHoliday)
                                 {
-                                    if(holiday.StartDate == startDate || holiday.EndDate == endDate)
+                                    if(holiday.StartDate == startDate || holiday.EndDate == endDate || (startDate < holiday.StartDate && endDate > holiday.EndDate))
                                     {
                                         msg += "Import date does exist ";
                                         msg += "\nWrong format at row " + row;
