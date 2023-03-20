@@ -52,7 +52,7 @@ namespace SalaryManagement.Api.Controllers
         }
 
         [HttpPost("")]
-        public async Task<IActionResult> AddContract(CompanyRequest cr)
+        public async Task<IActionResult> AddCompany(CompanyRequest cr)
         {
             await Task.CompletedTask;
             var existCompany = await _companyService.GetAllCompanys();
