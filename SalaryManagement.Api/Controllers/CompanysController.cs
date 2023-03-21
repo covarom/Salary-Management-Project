@@ -39,6 +39,9 @@ namespace SalaryManagement.Api.Controllers
         [HttpGet("{id}")]
         public async Task<IActionResult> Find(string id)
         {
+            if(id == ""){
+                return BadRequest("Invalid input");
+            }
             var company = await _companyService.GetById(id);
             //  if(!company){
             //      var testResponse = "Không có công ty nào !!!";
@@ -46,7 +49,7 @@ namespace SalaryManagement.Api.Controllers
             // }
             if (company == null)
             {
-                return NotFound();
+                return NotFound("Company is not found");
             }
             return Ok(company);
         }
@@ -61,7 +64,7 @@ namespace SalaryManagement.Api.Controllers
             var company_name = cr.company_name;
             if (company_name == "" || cr.address == "")
             {
-                return BadRequest();
+                return BadRequest("Invalid input");
             }
             string id = Guid.NewGuid().ToString();
             Company company = new Company
@@ -77,7 +80,7 @@ namespace SalaryManagement.Api.Controllers
             {
                 if (company.CompanyName.Equals(com.CompanyName) && company.Address.Equals(com.Address))
                 {
-                    msg = "The company at that address already exists";
+                    return BadRequest("The company at that address already exists");
                 }
                 else
                 {
@@ -98,12 +101,12 @@ namespace SalaryManagement.Api.Controllers
             string phone = cr.phone;
             if (cr.id == "")
             {
-                return BadRequest();
+                return BadRequest("Invalid input");
             }
             var companyExist = await _companyService.GetById(id);
             if (companyExist == null)
             {
-                return NotFound();
+                return NotFound("Company is not found");
             }
             companyExist.CompanyName = updateName.IsNullOrEmpty() ? companyExist.CompanyName : updateName.Trim();
             companyExist.Address = updateAddress.IsNullOrEmpty() ? companyExist.Address : updateAddress.Trim();
@@ -134,7 +137,7 @@ namespace SalaryManagement.Api.Controllers
             }
             else
             {
-                msg = "Delete failed";
+                return BadRequest("Delete failed");
             };
             return Ok(msg);
         }

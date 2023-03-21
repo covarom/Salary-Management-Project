@@ -42,7 +42,7 @@ namespace SalaryManagement.Api.Controllers
 
              if (Employee == null)
             {
-                return NotFound();
+                return NotFound("Employee is not found");
             }
 
             return Ok(Employee);    
@@ -73,7 +73,7 @@ namespace SalaryManagement.Api.Controllers
             {
                 if(employee.Email.Equals(Employee.Email) || employee.PhoneNumber.Equals(Employee.PhoneNumber))
                 {
-                    msg = "An employee with this email or phone number already exists ";
+                    return BadRequest("An employee with this email or phone number already exists ");
                 }
                 else
                 {
@@ -84,7 +84,7 @@ namespace SalaryManagement.Api.Controllers
                     }
                     else
                     {
-                        msg = "Add employee failed";
+                        return BadRequest("Add employee failed");
                     }
                     
                 }
@@ -97,11 +97,11 @@ namespace SalaryManagement.Api.Controllers
             {
             string id = rq.Id;
             if(id == ""){
-                return BadRequest();
+                return BadRequest("Invalid input");
             }
             var employeesExist = await _EmployeeService.GetById(id);
             if(employeesExist == null){
-                return NotFound();
+                return NotFound("Employee is not found");
             }
              employeesExist.Name =  rq.Employee_name.IsNullOrEmpty() ?employeesExist.Name : rq.Employee_name.Trim();
              employeesExist.Address =  rq.Address.IsNullOrEmpty() ? employeesExist.Address : rq.Address.Trim(); 
@@ -116,7 +116,7 @@ namespace SalaryManagement.Api.Controllers
             if(rs){
                     msg = "Update successfully";       
             }else{  
-                return NotFound();
+                return NotFound("Update failed");
             };
             return Ok(msg);    
         }
@@ -130,7 +130,7 @@ namespace SalaryManagement.Api.Controllers
             if(rs){
                     msg = "Delete successfully";       
             }else{  
-                    msg = "Delete failed";            
+                    return BadRequest("Delete failed");            
             };
             return Ok(msg);      
         }
