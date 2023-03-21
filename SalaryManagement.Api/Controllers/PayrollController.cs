@@ -133,7 +133,6 @@ namespace SalaryManagement.Api.Controllers
         }
 
         [HttpDelete("payrolls/{payrollId}")]
-
         public async Task<IActionResult> DeletePayroll(PayrollDelete request)
         {
             Payroll payroll = new Payroll
