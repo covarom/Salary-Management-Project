@@ -31,10 +31,23 @@ namespace SalaryManagement.Insfrastructure
 
         public static IServiceCollection AddDBContext(this IServiceCollection services, ConfigurationManager configuration)
         {
+            string connectionString = configuration.GetConnectionString("SalaryManagementDBContext");
 
-           services.AddDbContext<SalaryManagementContext>(options =>
+            //Open comment in the production enviroment
+           /* string dbServer = Environment.GetEnvironmentVariable("DB_SERVER");
+            string dbUser = Environment.GetEnvironmentVariable("DB_USER");
+            string dbPassword = Environment.GetEnvironmentVariable("DB_PASSWORD");
+            string dbPort = Environment.GetEnvironmentVariable("DB_PORT");
+            connectionString = connectionString
+              .Replace("{DB_SERVER}", dbServer)
+              .Replace("{DB_USER}", dbUser)
+              .Replace("{DB_PASSWORD}", dbPassword)
+              .Replace("{DB_PORT}", dbPort);*/
+
+            services.AddDbContext<SalaryManagementContext>(options =>
         options.UseMySQL(configuration.GetConnectionString("SalaryManagementDBContext")).EnableSensitiveDataLogging());
-           // services.AddScoped<IUserRepository, UserRepository>();
+
+
 
             services.AddScoped<IAdminRepository, AdminRepository>(); 
             services.AddScoped<IContractRepository, ContractRepository>();

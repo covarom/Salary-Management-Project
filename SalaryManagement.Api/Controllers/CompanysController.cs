@@ -82,12 +82,9 @@ namespace SalaryManagement.Api.Controllers
                 {
                     return BadRequest("The company at that address already exists");
                 }
-                else
-                {
-                    var result = _companyService.AddCompany(company);
-                    msg = "Add company successfully";
-                }
             }
+
+            _companyService.AddCompany(company);
             return Ok(msg);
 
         }

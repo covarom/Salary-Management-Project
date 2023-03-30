@@ -11,8 +11,8 @@ using SalaryManagement.Infrastructure.Persistence.Repositories;
 namespace SalaryManagement.Infrastructure.Migrations
 {
     [DbContext(typeof(SalaryManagementContext))]
-    [Migration("20230310185443_AddEmailAndPhoneForCompany")]
-    partial class AddEmailAndPhoneForCompany
+    [Migration("20230329234658_FirstInit")]
+    partial class FirstInit
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)

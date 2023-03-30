@@ -36,9 +36,9 @@ namespace SalaryManagement.Api.Controllers
         }
 
         [HttpGet("holidays/{holidayId}")]
-        public async Task<IActionResult> FindById(string id)
+        public async Task<IActionResult> FindById(string holidayId)
         {
-            var holiday = await _holidayService.GetHolidaysById(id);
+            var holiday = await _holidayService.GetHolidaysById(holidayId);
 
             if (holiday == null)
 

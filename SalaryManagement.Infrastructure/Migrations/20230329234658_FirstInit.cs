@@ -6,7 +6,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 namespace SalaryManagement.Infrastructure.Migrations
 {
     /// <inheritdoc />
-    public partial class AddCreatedDateToProduct : Migration
+    public partial class FirstInit : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -40,7 +40,9 @@ namespace SalaryManagement.Infrastructure.Migrations
                 {
                     companyid = table.Column<string>(name: "company_id", type: "varchar(255)", nullable: false),
                     companyname = table.Column<string>(name: "company_name", type: "varchar(255)", maxLength: 255, nullable: true),
-                    Address = table.Column<string>(type: "longtext", nullable: true)
+                    Address = table.Column<string>(type: "longtext", nullable: true),
+                    email = table.Column<string>(type: "varchar(255)", maxLength: 255, nullable: true),
+                    phone = table.Column<string>(type: "varchar(50)", maxLength: 50, nullable: true)
                 },
                 constraints: table =>
                 {
