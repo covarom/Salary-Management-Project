@@ -78,38 +78,6 @@ namespace SalaryManagement.Application.Services.ContractServices
             return await _contractRepository.GetContractByCompanyId(companyId);
         }
 
-      /*  public async Task<Contract?> UpdateContractAsync(string id, Contract contract)
-        {
-            var existingContract = await _contractRepository.GetContractByIdAsync(id);
-
-            if (existingContract == null)
-            {
-                return null;
-            }
-
-            *//* if(!contract.File.IsNullOrEmpty())
-             {
-                 existingContract.File = contract.File.Trim();
-             }*//*
-
-            existingContract.File = (contract.File.IsNullOrEmpty()) ? existingContract.File : contract.File.Trim();
-            existingContract.StartDate = (contract.StartDate == null) ? existingContract.StartDate : contract.StartDate;
-            existingContract.EndDate = (contract.StartDate == null) ? existingContract.StartDate : contract.StartDate;
-            existingContract.Job = (contract.Job.IsNullOrEmpty()) ? existingContract.Job : contract.Job.Trim();
-            existingContract.BasicSalary = (contract.BasicSalary == null) ? existingContract.BasicSalary : contract.BasicSalary;
-            existingContract.Bhxh = contract.Bhxh == null ? existingContract.Bhxh : contract.Bhxh;
-            existingContract.PartnerId = contract.PartnerId.IsNullOrEmpty() ? existingContract.PartnerId : contract.PartnerId.Trim();
-            existingContract.PartnerPrice = contract.PartnerPrice == null ? existingContract.PartnerPrice : contract.PartnerPrice;
-            existingContract.EmployeeId = contract.EmployeeId.IsNullOrEmpty() ? existingContract.EmployeeId : contract.EmployeeId.Trim();
-      *//*      existingContract.ContractStatus = contract.ContractStatus == null ? existingContract.ContractTypeId : contract.ContractTypeId.Trim();
-            existingContract.SalaryTypeId = contract.SalaryTypeId.IsNullOrEmpty() ? existingContract.SalaryTypeId : contract.SalaryTypeId.Trim();
-            existingContract.ContractStatusId = contract.ContractStatusId.IsNullOrEmpty() ? existingContract.ContractStatusId : contract.ContractStatusId.Trim();*//*
-
-            var updatedContract = await _contractRepository.UpdateContractAsync(existingContract);
-            return updatedContract;
-        }*/
-
-
         public async Task<PaginatedResponse<ContractResponse>> GetAllContracts(int pageNumber, int pageSize, string? sortBy, bool isDesc, string? searchKeyword)
         {
             return await _contractRepository.GetAllContracts(pageNumber, pageSize, sortBy, isDesc, searchKeyword);

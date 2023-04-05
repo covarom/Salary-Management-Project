@@ -34,28 +34,25 @@ namespace SalaryManagement.Insfrastructure
             string connectionString = configuration.GetConnectionString("SalaryManagementDBContext");
 
             //Open comment in the production enviroment
-           /* string dbServer = Environment.GetEnvironmentVariable("DB_SERVER");
+            string dbServer = Environment.GetEnvironmentVariable("DB_SERVER");
             string dbUser = Environment.GetEnvironmentVariable("DB_USER");
             string dbPassword = Environment.GetEnvironmentVariable("DB_PASSWORD");
             string dbPort = Environment.GetEnvironmentVariable("DB_PORT");
+            string dbDatabase = Environment.GetEnvironmentVariable("DB_DATABASE");
             connectionString = connectionString
               .Replace("{DB_SERVER}", dbServer)
               .Replace("{DB_USER}", dbUser)
               .Replace("{DB_PASSWORD}", dbPassword)
-              .Replace("{DB_PORT}", dbPort);*/
+              .Replace("{DB_PORT}", dbPort)
+              .Replace("{DB_DATABASE}", dbDatabase);
 
             services.AddDbContext<SalaryManagementContext>(options =>
-        options.UseMySQL(configuration.GetConnectionString("SalaryManagementDBContext")).EnableSensitiveDataLogging());
-
-
+        options.UseMySQL(connectionString).EnableSensitiveDataLogging());
 
             services.AddScoped<IAdminRepository, AdminRepository>(); 
             services.AddScoped<IContractRepository, ContractRepository>();
             services.AddScoped<ICompanyRepository,CompanyRepository>();
-
             services.AddScoped<IEmployeeRepository,EmployeeRepository>();
-
-
             services.AddScoped<IHolidayRepository, HolidayRepository>();
             services.AddScoped<ILeaveLogRepository, LeaveLogRepository>();
             services.AddScoped<IOvertimeLogRepository, OvertimeLogRepository>();
@@ -73,6 +70,8 @@ namespace SalaryManagement.Insfrastructure
         {
             var jwtSettings = new JwtSettings();
             configuration.Bind(JwtSettings.SectionName, jwtSettings);
+            string secretKey = Environment.GetEnvironmentVariable("JWT_SECRETKET");
+            jwtSettings.SecretKey = secretKey;
             services.AddSingleton(Options.Create(jwtSettings));
             services.AddSingleton<IJwtTokenGenerator, JwtTokenGenerator>();
 

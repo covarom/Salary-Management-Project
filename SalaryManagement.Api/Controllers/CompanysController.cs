@@ -1,13 +1,13 @@
+using Mapster;
 using MapsterMapper;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using MySqlX.XDevAPI.Common;
 using SalaryManagement.Api.Common.Helper;
 using SalaryManagement.Application.Services.CompanyServices;
 using SalaryManagement.Application.Services.ContractServices;
 using SalaryManagement.Contracts.Companys;
+using SalaryManagement.Contracts.Contracts;
 using SalaryManagement.Domain.Entities;
-using System.Net;
 
 namespace SalaryManagement.Api.Controllers
 {
@@ -31,9 +31,10 @@ namespace SalaryManagement.Api.Controllers
         [HttpGet("all")]
         public async Task<IActionResult> GetAll()
         {
-            var company = await _companyService.GetAllCompanys();
+            var companies = await _companyService.GetAllCompanys();
 
-            return Ok(company);
+            var response = companies.Adapt<List<CompanyResponse>>();
+            return Ok(response);
         }
 
         [HttpGet("{id}")]
@@ -43,15 +44,14 @@ namespace SalaryManagement.Api.Controllers
                 return BadRequest("Invalid input");
             }
             var company = await _companyService.GetById(id);
-            //  if(!company){
-            //      var testResponse = "Không có công ty nào !!!";
-            //      return Ok(testResponse);
-            // }
+
             if (company == null)
             {
                 return NotFound("Company is not found");
             }
-            return Ok(company);
+
+            var response = company.Adapt<CompanyResponse>();
+            return Ok(response);
         }
 
         [HttpPost("")]

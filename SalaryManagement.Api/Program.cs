@@ -12,6 +12,9 @@ var builder = WebApplication.CreateBuilder(new WebApplicationOptions()
     EnvironmentName = Microsoft.Extensions.Hosting.EnvironmentName.Development
 });
 
+// Load the values from the .env file
+DotNetEnv.Env.Load();
+
 // Add services to the container.
 builder.Services
     .AddPresentation()
