@@ -27,12 +27,36 @@ namespace SalaryManagement.Infrastructure.Authentication
                 new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_jwtSettings.SecretKey)),
                 SecurityAlgorithms.HmacSha256);
 
-            var claims = new[]
+            var claims = new List<Claim>
             {
                 new Claim(JwtRegisteredClaimNames.Sub, admin.AdminId.ToString()),
-                new Claim(JwtRegisteredClaimNames.Name, admin.Name),
                 new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString()),
             };
+
+            if (!string.IsNullOrEmpty(admin.Name))
+            {
+                claims.Add(new Claim(JwtRegisteredClaimNames.Name, admin.Name));
+            }
+
+            if (!string.IsNullOrEmpty(admin.Image))
+            {
+                claims.Add(new Claim("image", admin.Image));
+            }
+
+            if (!string.IsNullOrEmpty(admin.PhoneNumber))
+            {
+                claims.Add(new Claim("phoneNumber", admin.PhoneNumber));
+            }
+
+            if (!string.IsNullOrEmpty(admin.Email))
+            {
+                claims.Add(new Claim("email", admin.Email));
+            }
+
+            if (!string.IsNullOrEmpty(admin.Username))
+            {
+                claims.Add(new Claim("username", admin.Username));
+            }
 
             var securityToken = new JwtSecurityToken(
                 issuer: _jwtSettings.Issuer,

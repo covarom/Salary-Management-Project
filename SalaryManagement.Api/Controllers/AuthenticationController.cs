@@ -25,7 +25,7 @@ namespace SalaryManagement.Api.Controllers
         {
             await Task.CompletedTask;
 
-            var authResult = _authenticationServices.Register(request.Name, request.PhoneNumber, request.Username, request.Password);
+            var authResult = _authenticationServices.Register(request.Name, request.PhoneNumber, request.Email ,request.Username, request.Password);
             AuthenticationResponse response = _mapper.Map<AuthenticationResponse>(authResult); 
             
             return Ok(response);
