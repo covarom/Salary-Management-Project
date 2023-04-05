@@ -11,7 +11,6 @@ using SalaryManagement.Application.Services.SalaryServices;
 using SalaryManagement.Contracts.Salary;
 
 using System.Net;
-using static System.Runtime.InteropServices.JavaScript.JSType;
 
 
 namespace SalaryManagement.Api.Controllers
@@ -94,45 +93,4 @@ namespace SalaryManagement.Api.Controllers
         }
     }
 
-
-       /* [HttpGet("{id}/partner-salary")]
-        public async Task<ActionResult<SalaryResponse>> GetEmployeeSalaryForPartner(string id)
-        {
-            try
-            {
-                var employee = await _employeeService.GetById(id);
-
-                if (employee == null)
-                {
-                    return NotFound();
-                }
-
-                var contract = await _contractServices.GetContractByEmployeeId(employee.EmployeeId);
-
-                if (contract == null)
-                {
-                    var problemDetails = new ProblemDetails
-                    {
-                        Status = (int)HttpStatusCode.BadRequest,
-                        Title = "Bad Request",
-                        Detail = "Employee do not applied any contract in the current!"
-                    };
-
-                    return new BadRequestObjectResult(problemDetails);
-                }
-
-                var otTime = await _overtimeService.GetOvertimeHoursAsync(id);
-
-                var leaveDays = await _leaveLogService.GetTotalLeaveDateByEmployeeIdInMonthAcsyn(id);
-
-                var salaryResponse = await _salaryService.CalculateSalaryForPartnerAsync(employee, otTime, leaveDays);
-
-                return Ok(salaryResponse);
-            }
-            catch (Exception ex)
-            {
-                // log the exception
-                return StatusCode(StatusCodes.Status500InternalServerError, ex.Message);
-            }
-        }*/
 }

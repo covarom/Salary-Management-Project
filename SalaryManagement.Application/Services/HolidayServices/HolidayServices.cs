@@ -28,7 +28,7 @@ namespace SalaryManagement.Application.Services.HolidayServices
             var existHoliday = await _repository.GetHolidayById(holiday.HolidayId);
             if (existHoliday != null)
             {
-                existHoliday.IsDeleted = false;
+                existHoliday.IsDeleted = true;
 
                 return await _repository.DeleteHoliday(existHoliday);
             }

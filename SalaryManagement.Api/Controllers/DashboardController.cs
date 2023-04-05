@@ -7,7 +7,6 @@ using SalaryManagement.Application.Services.EmployeeServices;
 using SalaryManagement.Application.Services.PaidHistoryServices;
 using SalaryManagement.Contracts.Dashboards;
 using SalaryManagement.Domain.Common.Enum;
-using System.Net;
 
 namespace SalaryManagement.Api.Controllers
 {

@@ -26,9 +26,7 @@ namespace SalaryManagement.Api.Controllers
             await Task.CompletedTask;
 
             var authResult = _authenticationServices.Register(request.Name, request.PhoneNumber, request.Username, request.Password);
-            AuthenticationResponse response = _mapper.Map<AuthenticationResponse>(authResult); //MapResponse(authResult);
-
-            //var testResponse = new Response<object>(response, (int)HttpStatusCode.OK, "register success");
+            AuthenticationResponse response = _mapper.Map<AuthenticationResponse>(authResult); 
             
             return Ok(response);
         }
@@ -40,18 +38,8 @@ namespace SalaryManagement.Api.Controllers
 
             var authResult = _authenticationServices.Login(request.Username, request.Password);
             AuthenticationResponse response = _mapper.Map<AuthenticationResponse>(authResult);
-
-           // var testResponse = new Response<object>(response, (int)HttpStatusCode.OK, "No message");
             return Ok(response);
         }
 
-     /*   [HttpGet("test")]
-        public async Task<IActionResult> Test(string a)
-        {
-            await Task.CompletedTask;
-            var response = a;
-          //  var testResponse = new Response<object>(response, (int)HttpStatusCode.OK, "Have a message !");
-            return Ok(response);
-        }*/
     }
 }

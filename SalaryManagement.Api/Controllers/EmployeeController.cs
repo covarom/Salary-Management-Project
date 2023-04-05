@@ -6,6 +6,7 @@ using SalaryManagement.Domain.Entities;
 using SalaryManagement.Contracts.Employee;
 using System.Net;
 using SalaryManagement.Api.Common.Helper;
+using SalaryManagement.Contracts.Employees;
 
 namespace SalaryManagement.Api.Controllers
 {
@@ -26,26 +27,24 @@ namespace SalaryManagement.Api.Controllers
         [HttpGet("all")]
          public async Task<IActionResult> GetAll()
         {
-            var Employee = await _EmployeeService.GetAllEmployees();
+            var employees = await _EmployeeService.GetAllEmployees();
+
+            var reponse = _mapper.Map<List<EmployeeResponse>>(employees);
             
-            return Ok(Employee);    
+            return Ok(reponse);    
         }
 
         [HttpGet("{id}")]
         public async Task<IActionResult> Find(string id)
         {
-            var Employee = await _EmployeeService.GetById(id);
-            //  if(!Employee){
-            //      var testResponse = "Không có công ty nào !!!";
-            //      return Ok(testResponse);
-            // }
-
-             if (Employee == null)
+            var employee = await _EmployeeService.GetById(id);
+             if (employee == null)
             {
                 return NotFound("Employee is not found");
             }
 
-            return Ok(Employee);    
+            var response = _mapper.Map<EmployeeResponse>(employee);
+            return Ok(response);    
         }
 
         [HttpPost("")]
@@ -68,29 +67,19 @@ namespace SalaryManagement.Api.Controllers
                 PhoneNumber = rq.PhoneNumber,
                 Email = rq.Email
             };
-            var msg = "";
+
             foreach(var employee in existEmployee)
             {
                 if(employee.Email.Equals(Employee.Email) || employee.PhoneNumber.Equals(Employee.PhoneNumber))
                 {
                     return BadRequest("An employee with this email or phone number already exists ");
                 }
-                else
-                {
-                    var result = await _EmployeeService.AddEmployee(Employee);
-                    if (result != null)
-                    {
-                        msg = "Add employee successfully";
-                    }
-                    else
-                    {
-                        return BadRequest("Add employee failed");
-                    }
-                    
-                }
             }
-            //var result = _EmployeeService.AddEmployee(Employee);
-            return Ok(msg);
+
+            var result = await _EmployeeService.AddEmployee(Employee);
+            var response = _mapper.Map<EmployeeResponse>(result);
+
+            return Ok(response);
         }
         [HttpPut("update")]
          public async Task<IActionResult> Update(EmployeeUpdate rq)

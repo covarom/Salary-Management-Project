@@ -11,7 +11,9 @@ namespace SalaryManagement.Api.Common.Mapping
             config.NewConfig<Company, CompanyResponse>()
                 .Map(dest => dest.CompanyId, src => src.CompanyId)
                 .Map(dest => dest.CompanyName, src => src.CompanyName)
-                .Map(dest => dest.Address, src => src.Address);
+                .Map(dest => dest.Address, src => src.Address)
+                .Map(dest => dest.Email, src => src.Email)
+                .Map(dest => dest.Phone, src => src.Phone);
         }
     }
 }

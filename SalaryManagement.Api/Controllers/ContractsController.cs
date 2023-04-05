@@ -1,17 +1,9 @@
-﻿using Mapster;
-using MapsterMapper;
+﻿using MapsterMapper;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using SalaryManagement.Application.Services.ContractServices;
-using SalaryManagement.Contracts;
-using SalaryManagement.Contracts.Authentication;
 using SalaryManagement.Contracts.Contracts;
 using SalaryManagement.Domain.Contracts;
-using SalaryManagement.Domain.Entities;
-using System.Collections.Generic;
-using System.Diagnostics.Contracts;
-using System.Net;
-
 namespace SalaryManagement.Api.Controllers
 {
     [Route("api/v1")]
@@ -36,7 +28,6 @@ namespace SalaryManagement.Api.Controllers
                 pageSize = 10;
             }
             var contracts = await _contractService.GetAllContracts(pageNumber, pageSize, sortBy, isDesc, searchKeyword);
-           // var response = contracts.Adapt<List<ContractResponse>>();
 
             return Ok(contracts);
         }
@@ -49,8 +40,6 @@ namespace SalaryManagement.Api.Controllers
             {
                 return NotFound();
             }
-
-           // var response = _mapper.Map<ContractResponse>(contracts); 
 
             return Ok(contracts);
         }
@@ -75,7 +64,7 @@ namespace SalaryManagement.Api.Controllers
                     return NotFound();
                 }
 
-                var contract = existingContract;//request.Adapt(existingContract);
+                var contract = existingContract;
 
                 if (!string.IsNullOrEmpty(request.File))
                 {

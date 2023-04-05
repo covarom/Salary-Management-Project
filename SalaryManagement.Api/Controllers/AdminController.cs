@@ -4,12 +4,8 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using SalaryManagement.Api.Common.Helper;
 using SalaryManagement.Application.Services.AdminServices;
-using SalaryManagement.Application.Services.Authentication;
-using SalaryManagement.Contracts;
 using SalaryManagement.Contracts.Admin;
-using SalaryManagement.Domain.Entities;
 using System.IdentityModel.Tokens.Jwt;
-using System.Net;
 
 namespace SalaryManagement.Api.Controllers
 {
@@ -51,29 +47,6 @@ namespace SalaryManagement.Api.Controllers
             string token = Request.Headers["Authorization"].ToString().Replace("Bearer ", "");
             var admin = await _adminServices.GetAdminById(JwtTokenHelper.GetClaimValue(token, JwtRegisteredClaimNames.Sub));
 
-            /*    string updateName = rq.name;
-                string image = rq.image;
-                string phoneNumber = rq.phoneNumber;
-                string email = rq.email;
-                string password = rq.password;
-                if(rq.adminId == ""){
-                    return BadRequest();
-                }
-                var adminExistInfo = await _adminServices.GetAdminById(id);
-                if(adminExistInfo == null){
-                    return NotFound();
-                }
-                adminExistInfo.Name =  updateName.IsNullOrEmpty() ? adminExistInfo.Name : updateName.Trim();
-                adminExistInfo.Image = image.IsNullOrEmpty() ?  adminExistInfo.Image : image.Trim();  
-                adminExistInfo.PhoneNumber = phoneNumber.IsNullOrEmpty() ?  adminExistInfo.PhoneNumber : phoneNumber.Trim();  
-                adminExistInfo.Email = email.IsNullOrEmpty() ?  adminExistInfo.Email : email.Trim();
-                if (adminExistInfo.Password == _adminServices.HashPassword(password))
-                {
-                    return BadRequest("Password have been used!");
-                }
-                adminExistInfo.Password = password.IsNullOrEmpty() ? adminExistInfo.Password : password.Trim();
-                var HashPW = _adminServices.HashPassword(adminExistInfo.Password);
-                adminExistInfo.Password = HashPW;*/
             admin.Name = rq.Name.IsNullOrEmpty() ? admin.Name : rq.Name.Trim();
             admin.Email = rq.Email.IsNullOrEmpty() ? admin.Email : rq.Email.Trim();
             admin.PhoneNumber = rq.PhoneNumber.IsNullOrEmpty() ? admin.PhoneNumber : rq.PhoneNumber.Trim();
