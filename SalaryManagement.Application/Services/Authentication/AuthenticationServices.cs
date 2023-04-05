@@ -38,7 +38,7 @@ namespace SalaryManagement.Application.Services.Authentication
                      token);
         }
 
-        public AuthenticationResult Register(string name, string phoneNumer, string username, string password)
+        public AuthenticationResult Register(string name, string phoneNumber, string email, string username, string password)
         {
             //Check if the user is already exists
             if (_adminRepository.GetAdminByUsername(username) is not null)
@@ -50,18 +50,21 @@ namespace SalaryManagement.Application.Services.Authentication
             string adminId = Guid.NewGuid().ToString();
             var admin = new Admin
             {
-                AdminId= adminId,
+                AdminId = adminId,
                 Name = name,
-                PhoneNumber = phoneNumer,
+                PhoneNumber = phoneNumber,
+                Email = email,
                 Username = username,
-                Password = password
+                Password = password,
+                IsActive = true,
+                IsFirstLogin = true
             };
-            bool success =  _adminRepository.AddAdmin(admin);
+
+            bool success = _adminRepository.AddAdmin(admin);
 
             if (!success)
             {
-                throw new Exception("An error has occur, please contact your admin!");
-                //throw new Exception("An error has occur, please contact your admin!");
+                throw new Exception("An error has occurred, please contact your admin!");
             }
 
             //Create JWT token
@@ -69,8 +72,8 @@ namespace SalaryManagement.Application.Services.Authentication
 
             return new AuthenticationResult(
                      admin,
-                     token                  
-                     );        
+                     token
+                     );
         }
     }
 }

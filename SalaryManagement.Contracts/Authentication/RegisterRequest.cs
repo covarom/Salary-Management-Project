@@ -9,6 +9,7 @@ namespace SalaryManagement.Contracts.Authentication
     public record RegisterRequest(
     string Username,
     string Password,
+    string Email,
     string Name,
     string PhoneNumber);
        
