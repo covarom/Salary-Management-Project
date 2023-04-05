@@ -1,10 +1,19 @@
-﻿namespace SalaryManagement.Contracts.OverTimeLog
+﻿using SalaryManagement.Contracts.Employees;
+
+namespace SalaryManagement.Contracts.OverTimeLog
 {
     public record OvertimeLogResponse
     {
-        public string OvertimeLogId { get; init; }
-        public DateTime? Date { get; init; }
-        public double? Duration { get; init; }
-        public bool? Approved { get; init; }
+        public string OvertimeId { get; set; } = null!;
+
+        public DateTime? OvertimeDay { get; set; }
+
+        public int? Hours { get; set; }
+
+        public string? Status { get; set; }
+
+        public string? EmployeeId { get; set; }
+
+        public virtual EmployeeResponse? Employee { get; set; }
     }
 }

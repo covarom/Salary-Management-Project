@@ -6,6 +6,8 @@ using SalaryManagement.Application.Services.ContractServices;
 
 using SalaryManagement.Contracts.OvertimeLog;
 using SalaryManagement.Domain.Entities;
+using MapsterMapper;
+using SalaryManagement.Contracts.OverTimeLog;
 
 namespace SalaryManagement.Api.Controllers
 {
@@ -17,20 +19,22 @@ namespace SalaryManagement.Api.Controllers
 
         private readonly IEmployeeServices _employeeService;
         private readonly IContractServices _contractService;
+        private readonly IMapper _mapper;
         public OvertimeLogController(IOvertimeLogService overtimeLogService,
-         IEmployeeServices employeeService, IContractServices contractServices)
+         IEmployeeServices employeeService, IContractServices contractServices, IMapper mapper)
         {
             _overtimeLogService = overtimeLogService;
-            _employeeService =  employeeService;
+            _employeeService = employeeService;
             _contractService = contractServices;
-
+            _mapper = mapper;
         }
 
         [HttpGet("all")]
         public async Task<IActionResult> GetAllOvertimeLogs()
         {
             var overtimeLogs = await _overtimeLogService.GetAllOverTimeLogs();
-            return Ok(overtimeLogs);
+            var response = _mapper.Map<List<OvertimeLogResponse>>(overtimeLogs);
+            return Ok(response);
         }
 
         [HttpGet("{id}")]
@@ -43,7 +47,9 @@ namespace SalaryManagement.Api.Controllers
                 return NotFound("Not found the Overtime log");
 
             }
-            return Ok(overtimeLog);
+
+            var response = _mapper.Map<OvertimeLogResponse>(overtimeLog);
+            return Ok(response);
         }
 
         [HttpPost]
@@ -91,7 +97,6 @@ namespace SalaryManagement.Api.Controllers
         }
 
         [HttpPut]
-
         public async Task<IActionResult> UpdateOvertimeLog(OTUpdateRequest overtimeLogRequest)
         {
             if (!IsValidUpdateRequest(overtimeLogRequest))
