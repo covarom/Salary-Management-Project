@@ -8,10 +8,11 @@ using SalaryManagement.Domain.Entities;
 using SalaryManagement.Infrastructure.Persistence.Repositories;
 using System.Net.Mail;
 using System.Net;
+using SalaryManagement.Contracts.Holidays;
 
 namespace SalaryManagement.Api.Controllers
 {
-    [Route("api/v1/")]
+    [Route("api/v1")]
     [ApiController]
     [Authorize]
     public class HolidayController : ControllerBase
@@ -31,14 +32,15 @@ namespace SalaryManagement.Api.Controllers
         public async Task<IActionResult> GetAllHoliday()
         {
             var holidays = await _holidayService.GetAllHoliday();
+            var response = _mapper.Map<List<HolidayResponse>>(holidays);
 
-            return Ok(holidays);
+            return Ok(response);
         }
 
-        [HttpGet("holidays/{holidayId}")]
-        public async Task<IActionResult> FindById(string holidayId)
+        [HttpGet("holidays/{id}")]
+        public async Task<IActionResult> FindById(string id)
         {
-            var holiday = await _holidayService.GetHolidaysById(holidayId);
+            var holiday = await _holidayService.GetHolidaysById(id);
 
             if (holiday == null)
 
@@ -47,8 +49,9 @@ namespace SalaryManagement.Api.Controllers
             }
             else
             {
+                var response = _mapper.Map<HolidayResponse>(holiday);
 
-                return Ok(holiday);
+                return Ok(response);
             }
         }
 
@@ -69,11 +72,12 @@ namespace SalaryManagement.Api.Controllers
 
             };
             var result = await _holidayService.AddHoliday(holiday);
+            var response = _mapper.Map<HolidayResponse>(result);
 
-            return Ok(result);
+            return Ok(response);
         }
 
-        [HttpDelete("holidays/{holidayId}")]
+        [HttpDelete("holidays/{id}")]
         public async Task<IActionResult> DeleteHoliday(HolidayDelete request)
         {
             Holiday holiday = new Holiday
@@ -97,10 +101,10 @@ namespace SalaryManagement.Api.Controllers
             return Ok(msg);
         }
 
-        [HttpPut("holidays/{holidayId}")]
-        public async Task<IActionResult> UpdateHoliday(string holidayId, HolidayUpdate request)
+        [HttpPut("holidays/{id}")]
+        public async Task<IActionResult> UpdateHoliday(string id, HolidayUpdate request)
         {
-            var existHoliday = await _holidayService.GetHolidaysById(holidayId);
+            var existHoliday = await _holidayService.GetHolidaysById(id);
             if (existHoliday == null)
             {
                 return NotFound();

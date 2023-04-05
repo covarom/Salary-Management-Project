@@ -1,4 +1,4 @@
-﻿namespace SalaryManagement.Application.Services.HolidayServices
+﻿namespace SalaryManagement.Contracts.Holidays
 {
 
     public record HolidayRequest
