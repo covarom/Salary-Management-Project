@@ -16,6 +16,7 @@ namespace SalaryManagement.Contracts.Employees
         public bool? IsActive { get; init; }
         public string? PhoneNumber { get; init; }
         public string? Email { get; init; }
+        public string? Code { get; init; }
         /* public ICollection<ContractResponse> Contracts { get; init; } = new List<ContractResponse>();
          public ICollection<LeaveLogResponse> LeaveLogs { get; init; } = new List<LeaveLogResponse>();
          public ICollection<OvertimeLogResponse> OvertimeLogs { get; init; } = new List<OvertimeLogResponse>();
